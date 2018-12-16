@@ -72,10 +72,10 @@ class ResultModal extends React.Component {
   
   async getResultData() {
     let response = await axios('/admin/result');
+    console.log( 'response : ', response );
     if ( response.status == 201 ) {
-      let rows = await response.json();
       this.setState({
-        rows
+        rows: response.data
       });
     } else {
       alert( 'ERROR : 최종결과 데이타를 가져오는 중에 에러가 발생하였습니다' );

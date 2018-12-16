@@ -1,5 +1,5 @@
 // utils
-import 'whatwg-fetch';
+import axios from 'axios';
 
 // react & redux
 import React, { Component } from 'react';
@@ -32,20 +32,17 @@ class App extends Component {
 
   async handleLoginBtnClick(e) {
     if ( this.state.password ) {
-      let response = await fetch('/entrance/login', {
+      let response = await axios({
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+        url: '/entrance/login',
+        data: {
           password: this.state.password
-        })
+        }
       });
       if ( response.status == 201 ) {
-        let json = await response.json();
-        console.log( 'login result json : ', json );
+        console.log( 'login result json : ', response.data );
         alert('성공');
-        window.location.href = '/' + json.role;
+        window.location.href = '/' + response.data.role;
       } else {
         alert( '비밀번호를 다시 확인해 주세요' );
       }

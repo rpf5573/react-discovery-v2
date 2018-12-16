@@ -38,7 +38,7 @@ class TimerModal extends React.Component {
     });
 
     if ( response.status == 201 ) {
-      let newTeamTimers = await response.json();
+      let newTeamTimers = response.data;
       this.props.updateTeamTimerState(newTeamTimers);
       alert( team+'팀의 타이머를 '+actionWord+'하였습니다' );
     }
@@ -56,7 +56,7 @@ class TimerModal extends React.Component {
     });
 
     if ( response.status == 201 ) {
-      let newTeamTimers = await response.json();
+      let newTeamTimers = response.data;
       this.props.updateTeamTimerState(newTeamTimers);
       alert("전체 타이머를 시작하였습니다");
     } else {

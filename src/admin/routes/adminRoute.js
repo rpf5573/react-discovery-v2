@@ -1,5 +1,5 @@
-import path from 'path';
-import ssr from '../client/ssr';
+const path = require('path');
+const template = require('../client/template');
 
 module.exports = (app, DCQuery, upload) => {
 
@@ -10,8 +10,10 @@ module.exports = (app, DCQuery, upload) => {
     // 1. get initial state from DB
     let initialSettings = await DCQuery.getInitialState();
 
+    console.log( 'initialSettings : ', initialSettings );
+
     // 2. make document with initialState
-    let document = ssr(initialSettings);
+    let document = template(initialSettings);
 
     return res.set('Content-Type', 'text/html').end(document);
   

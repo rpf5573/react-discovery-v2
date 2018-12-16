@@ -4,10 +4,11 @@ const join = require('path').join;
 module.exports = {
   mode: 'development',
   name: 'admin',
-  entry: [join(__dirname, '../src/admin/client/index.js')],
+  entry: ["@babel/polyfill", join(__dirname, '/index.js')],
+  devtool: 'source-map',
   output: {
-    filename: "admin.js",
-    path: join(__dirname, '../dist')
+    filename: "main.js",
+    path: join(__dirname, '../../../public/admin/')
   },
   module: {
     rules: [
@@ -42,8 +43,8 @@ module.exports = {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: "admin.css",
-      path: join(__dirname, '../dist'),
+      filename: "style.css",
+      path: join(__dirname, '../../../public/admin/'),
       chunkFilename: "[id].css"
     })
   ],

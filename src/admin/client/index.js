@@ -1,16 +1,19 @@
 // defaults
 import React from 'react';
+import ReactDOM from 'react-dom';
 import App from './components/app';
 import configureStore from './store';
-import { hydrate } from 'react-dom';
+import { Provider  } from 'react-redux';
 
 let initialSettings = window.__PRELOADED_STATE__;
 
 if ( initialSettings ) {
 
+  console.log( 'initialSettings : ', initialSettings );
+
   let store = configureStore(initialSettings);
 
-  hydrate(
+  ReactDOM.render(
     <Provider store={store}>
       <App></App>
     </Provider>,

@@ -154,7 +154,7 @@ class TeamSetting extends React.Component {
       });
 
       if ( response.status == 201 ) {
-        let newTeamPasswords = await response.json();
+        let newTeamPasswords = response.data;
         
         for ( var i = 0; i < teamPasswords.length; i++ ) {
           let index = teamPasswords[i].team - 1;
