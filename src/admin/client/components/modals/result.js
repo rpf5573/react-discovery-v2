@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, Table, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal } from '../../actions';
-import 'whatwg-fetch';
+import axios from 'axios';
 import { runInThisContext } from 'vm';
 
 class ResultModal extends React.Component {
@@ -71,7 +71,7 @@ class ResultModal extends React.Component {
   }
   
   async getResultData() {
-    let response = await fetch('/admin/result');
+    let response = await axios('/admin/result');
     if ( response.status == 201 ) {
       let rows = await response.json();
       this.setState({

@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, Label, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal } from '../../actions';
-import 'whatwg-fetch';
+import axios from 'axios';
 
 class ResetModal extends React.Component {
 
@@ -39,14 +39,12 @@ class ResetModal extends React.Component {
 
   async handleResetBtn(e) {
     if ( this.state.isResetReady ) {
-      let response = await fetch('/admin/reset', {
+      let response = await axios({
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+        url: '/admin/reset',
+        data: {
           reset_password: 'discovery_reset'
-        })
+        }
       });
       if ( response.status == 201 ) {
         alert( "성공 !" );

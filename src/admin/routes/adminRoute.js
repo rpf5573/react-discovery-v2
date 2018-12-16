@@ -1,4 +1,4 @@
-const path = require('path');
+import path from 'path';
 import ssr from '../client/ssr';
 
 module.exports = (app, DCQuery, upload) => {

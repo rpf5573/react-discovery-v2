@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label } from 'reactstrap';
 import { closeModal, uploadImageFile } from '../../actions';
-import 'whatwg-fetch';
+import axios from 'axios';
 
 class Uploads extends React.Component {
 
@@ -24,9 +24,10 @@ class Uploads extends React.Component {
     const companyImage = e.target.files[0];
     const fd = new FormData();
     fd.append('companyImage', companyImage, companyImage.name);
-    const response = await fetch('/admin/upload', {
+    const response = await axios({
       method: 'POST',
-      body: fd
+      url: '/admin/upload',
+      data: fd
     });
     
     if ( response.status == 201 ) {
@@ -42,9 +43,10 @@ class Uploads extends React.Component {
     const map = e.target.files[0];
     const fd = new FormData();
     fd.append('map', map, map.name);
-    const response = await fetch('/admin/upload', {
+    const response = await axios({
       method: 'POST',
-      body: fd
+      url: '/admin/upload',
+      data: fd
     });
     
     if ( response.status == 201 ) {

@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal, updateTeamPasswords, updateTeamCount } from '../../actions';
-import 'whatwg-fetch';
+import axios from 'axios';
 import { number } from 'prop-types';
 
 class TeamSetting extends React.Component {
@@ -145,14 +145,12 @@ class TeamSetting extends React.Component {
         }
       }
 
-      let response = await fetch('/admin/team-setting/passwords', {
+      let response = await axios({
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+        url: '/admin/team-setting/passwords',
+        data: {
           teamPasswords: teamPasswords
-        })
+        }
       });
 
       if ( response.status == 201 ) {

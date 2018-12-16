@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal } from '../../actions';
-import 'whatwg-fetch';
+import axios from 'axios';
 
 class PointReward extends React.Component {
 
@@ -52,14 +52,12 @@ class PointReward extends React.Component {
         }
       }
 
-      let response = await fetch('/admin/point-reward/points', {
+      let response = await fetch({
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+        url: '/admin/point-reward/points',
+        data: {
           points
-        })
+        }
       });
 
       if ( response.status == 201 ) {

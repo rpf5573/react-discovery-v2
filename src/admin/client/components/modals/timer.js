@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup } from 'reactstrap';
 import { closeModal, updateTeamTimerState, updateLapTime } from '../../actions';
-import 'whatwg-fetch';
+import axios from 'axios';
 import cn from 'classnames';
 
 class TimerModal extends React.Component {
@@ -29,14 +29,12 @@ class TimerModal extends React.Component {
     let newState = state ? OFF : ON;
     let actionWord = newState ? START : STOP;
 
-    let response = await fetch('/admin/timer/team-timers', {
+    let response = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/timer/team-timers',
+      data: {
         newState, team
-      })
+      }
     });
 
     if ( response.status == 201 ) {
@@ -47,16 +45,14 @@ class TimerModal extends React.Component {
   }
 
   async allTimerStart(e) {
-    let response = await fetch('/admin/timer/team-timers', {
+    let response = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/timer/team-timers',
+      data: {
         team: 0,
         newState: ON,
         isAll: true
-      })
+      }
     });
 
     if ( response.status == 201 ) {
@@ -78,14 +74,12 @@ class TimerModal extends React.Component {
       return;
     }
 
-    let response = await fetch('/admin/timer/laptime', {
+    let response = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/timer/laptime',
+      data: {
         laptime: laptime
-      })
+      }
     });
 
     if ( response.status == 201 ) {

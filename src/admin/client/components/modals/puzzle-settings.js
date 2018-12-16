@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, Dropdown, DropdownToggle, DropdownItem, DropdownMenu, Table } from 'reactstrap';
 import { closeModal, updatePuzzleBoxCount, updateEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState } from '../../actions';
-import 'whatwg-fetch';
+import axios from 'axios';
 import 'awesome-bootstrap-checkbox';
 
 class PuzzleSettings extends React.Component {
@@ -37,14 +37,12 @@ class PuzzleSettings extends React.Component {
 
   async updatePuzzleBoxCount(e) {
     const count = parseInt(e.currentTarget.getAttribute('data-count'));
-    let response1 = await fetch('/admin/puzzle-settings/puzzlebox-count', {
+    let response1 = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/puzzle-settings/puzzlebox-count',
+      data: {
         puzzleBoxCount: count
-      })
+      }
     });
 
     // reset
@@ -70,15 +68,13 @@ class PuzzleSettings extends React.Component {
 
       shuffle(arr);
       let json = JSON.stringify(arr);
-      let response = await fetch('/admin/puzzle-settings/eniac-words', {
+      let response = await axios({
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+        url: '/admin/puzzle-settings/eniac-words',
+        data: {
           originalEniacWords: val,
           randomEniacWords: json
-        })
+        }
       });
 
       if ( response.status == 201 ) {
@@ -94,15 +90,13 @@ class PuzzleSettings extends React.Component {
 
   async resetEniacWords() {
     // reset eniac words
-    let response = await fetch('/admin/puzzle-settings/eniac-words', {
+    let response = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/puzzle-settings/eniac-words',
+      data: {
         originalEniacWords: '',
         randomEniacWords: ''
-      })
+      }
     });
     this.eniacWordInput.current.value = '';
     this.eniacWordInput.current.placeholder = '';
@@ -116,14 +110,12 @@ class PuzzleSettings extends React.Component {
       return;
     }
 
-    let response = await fetch('/admin/puzzle-settings/lastbox-google-drive-url', {
+    let response = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/puzzle-settings/lastbox-google-drive-url',
+      data: {
         lastBoxGoogleDriveUrl: encodeURI(url)
-      })
+      }
     });
 
     if ( response.status == 201 ) {
@@ -140,14 +132,12 @@ class PuzzleSettings extends React.Component {
   async updateLastBoxState(e) {
     let val = parseInt(e.currentTarget.value);
 
-    let response = await fetch('/admin/puzzle-settings/lastbox-state', {
+    let response = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/puzzle-settings/lastbox-state',
+      data: {
         lastBoxState: val
-      })
+      }
     });
 
     if ( response.status == 201 ) {

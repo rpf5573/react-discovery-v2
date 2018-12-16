@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup, Table } from 'reactstrap';
 import { closeModal, updatePostInfo, addPostInfo, removePostInfo } from '../../actions';
-import 'whatwg-fetch';
+import axios from 'axios';
 import cn from 'classnames';
 
 class PostInfoRow extends React.Component {
@@ -51,14 +51,12 @@ class PostInfoRow extends React.Component {
   }
 
   async handleRemoveBtnClick(e) {
-    let response = await fetch('/admin/post-info/remove', {
+    let response = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/post-info/remove',
+      data: {
         post: this.state.post
-      })
+      }
     });
     if ( response.status == 201 ) {
       this.props.onRemove(this.state.post);
@@ -106,14 +104,12 @@ class PostInfoRow extends React.Component {
       googleDriveURL
     }
 
-    let response = await fetch('/admin/post-info/update-or-insert', {
+    let response = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/post-info/update-or-insert',
+      data: {
         postInfo
-      })
+      }
     });
     if ( response.status == 201 ) {
       if ( this.state.isNew ) {

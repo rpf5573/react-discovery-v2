@@ -1,4 +1,3 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const distPath = path.join(__dirname, "../../public/entrance/");
 
@@ -35,12 +34,6 @@ module.exports = {
       ]}
     ]
   },
-  plugins: [
-    new HtmlWebPackPlugin({
-      template: "./app/index.html",
-      filename: distPath+'/index.html'
-    })
-  ],
   devServer: {
     proxy: {
       '/entrance': {

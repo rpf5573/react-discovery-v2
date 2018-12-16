@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, Table, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup } from 'reactstrap';
 import { closeModal, updateMappingPoints } from '../../actions';
-import 'whatwg-fetch';
+import axios from 'axios';
 import cn from 'classnames';
 
 class PointPart extends React.Component {
@@ -43,14 +43,12 @@ class PointPart extends React.Component {
     let mapping_point = {
       [this.props.mapping_key]: parseInt(point)
     }
-    let response = await fetch('/admin/mapping-points/', {
+    let response = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/mapping-points/',
+      data: {
         mapping_point
-      })
+      }
     });
     if ( response.status == 201 ) {
       this.setState({

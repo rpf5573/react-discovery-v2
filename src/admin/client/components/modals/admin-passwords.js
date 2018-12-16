@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal, updateAdminPasswords } from '../../actions';
-import 'whatwg-fetch';
+import axios from 'axios';
 
 class AdminPasswordModal extends React.Component {
 
@@ -31,17 +31,15 @@ class AdminPasswordModal extends React.Component {
   async handleFormSubmit(e) {
     e.preventDefault();
 
-    let response = await fetch('/admin/admin-passwords/passwords', {
+    let response = await axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      url: '/admin/admin-passwords/passwords',
+      data: {
         adminPasswords: {
           super: this.superInput.current.value,
           secondary: this.secondaryInput.current.value
         }
-      })
+      }
     });
 
     if ( response.status == 201 ) {

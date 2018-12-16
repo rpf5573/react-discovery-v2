@@ -1,5 +1,5 @@
 // utils
-import 'whatwg-fetch';
+import axios from 'axios';
 import _ from 'lodash';
 
 // react & redux
