@@ -39,18 +39,22 @@ class ResetModal extends React.Component {
 
   async handleResetBtn(e) {
     if ( this.state.isResetReady ) {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/reset',
-        data: {
-          reset_password: 'discovery_reset'
+      try {
+        let response = await axios({
+          method: 'POST',
+          url: '/admin/reset',
+          data: {
+            reset_password: 'discovery_reset'
+          }
+        });
+        if ( response.status == 201 && !response.data.error ) {
+          alert( "성공 !" );
+          window.location.reload(); // refresh
+        } else {
+          alert( response.data.error );
         }
-      });
-      if ( response.status == 201 ) {
-        alert( "성공 !" );
-        window.location.reload(); // refresh
-      } else {
-        alert( 'ERROR : 최종결과 데이타를 가져오는 중에 에러가 발생하였습니다' );
+      } catch(error) {
+        console.error(error);
       }
     } else {
       alert( "ERROR : 다시 확인해 주세요" );

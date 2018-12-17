@@ -145,40 +145,44 @@ class TeamSetting extends React.Component {
         }
       }
 
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/team-setting/passwords',
-        data: {
-          teamPasswords: teamPasswords
-        }
-      });
-
-      if ( response.status == 201 ) {
-        let newTeamPasswords = response.data;
-        
-        for ( var i = 0; i < teamPasswords.length; i++ ) {
-          let index = teamPasswords[i].team - 1;
-          let value = teamPasswords[i].password;
-          this.passwordInputFields[index].placeholder = value;
-          this.passwordInputFields[index].value = '';
-        }
-
-        var teamCount = this.passwordInputFields.reduce((accumulator, input, index, array)=>{
-          let val = parseInt(input.placeholder);
-          if ( !isNaN(val) && val != 0 ) {
-            accumulator++;
+      try {
+        let response = await axios({
+          method: 'POST',
+          url: '/admin/team-setting/passwords',
+          data: {
+            teamPasswords: teamPasswords
           }
-          return accumulator;
-        }, 0);
+        });
 
-        this.props.updateTeamPasswords(newTeamPasswords);
-        this.props.updateTeamCount(teamCount);
+        if ( response.status == 201 && !response.data.error ) {
+          let newTeamPasswords = response.data;
+          
+          for ( var i = 0; i < teamPasswords.length; i++ ) {
+            let index = teamPasswords[i].team - 1;
+            let value = teamPasswords[i].password;
+            this.passwordInputFields[index].placeholder = value;
+            this.passwordInputFields[index].value = '';
+          }
 
-        alert( "성공" );
-        return;
+          var teamCount = this.passwordInputFields.reduce((accumulator, input, index, array)=>{
+            let val = parseInt(input.placeholder);
+            if ( !isNaN(val) && val != 0 ) {
+              accumulator++;
+            }
+            return accumulator;
+          }, 0);
+
+          this.props.updateTeamPasswords(newTeamPasswords);
+          this.props.updateTeamCount(teamCount);
+
+          alert( "성공" );
+          return;
+        } else {
+          alert( response.data.error );
+        }
+      } catch(error) {
+        console.error(error);
       }
-
-      alert("알수없는 에러가 발생하였습니다");
     }
   }
 

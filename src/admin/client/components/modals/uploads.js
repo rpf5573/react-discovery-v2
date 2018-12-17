@@ -24,38 +24,48 @@ class Uploads extends React.Component {
     const companyImage = e.target.files[0];
     const fd = new FormData();
     fd.append('companyImage', companyImage, companyImage.name);
-    const response = await axios({
-      method: 'POST',
-      url: '/admin/upload',
-      data: fd
-    });
-    
-    if ( response.status == 201 ) {
-      this.props.uploadImageFile({
-        companyImage: companyImage.name
-      })
-      alert("성공");
-    } else {
-      alert("알 수 없는 에러가 발생하였습니다");
+
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: '/admin/upload',
+        data: fd
+      });
+      
+      if ( response.status == 201 && !response.data.error ) {
+        this.props.uploadImageFile({
+          companyImage: companyImage.name
+        })
+        alert("성공");
+      } else {
+        alert( response.data.error );
+      }
+    } catch ( error ) {
+      console.error( error );
     }
   }
   async mapFileSelectHandler(e) {
     const map = e.target.files[0];
     const fd = new FormData();
     fd.append('map', map, map.name);
-    const response = await axios({
-      method: 'POST',
-      url: '/admin/upload',
-      data: fd
-    });
-    
-    if ( response.status == 201 ) {
-      this.props.uploadImageFile({
-        map: map.name
+
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: '/admin/upload',
+        data: fd
       });
-      alert("성공");
-    } else {
-      alert("알 수 없는 에러가 발생하였습니다");
+      
+      if ( response.status == 201 && !response.data.error ) {
+        this.props.uploadImageFile({
+          map: map.name
+        });
+        alert("성공");
+      } else {
+        alert( response.data.error );
+      }
+    } catch ( error ) {
+      console.error( error );
     }
   }
 
@@ -92,7 +102,7 @@ class Uploads extends React.Component {
                   <input style={{display:'none'}} className="form-control" type="file" onChange={this.mapFileSelectHandler} ref={fileInput => this.mapFileInput = fileInput}/>
                   <Button className={"align-self-center"} color="success" onClick={() => this.mapFileInput.click()}>파일 선택</Button>
                   <div>
-                    <img src={"uploads/"+this.props.map} width="100px" height="auto"></img>
+                    <img src={"admin/uploads/"+this.props.map} width="100px" height="auto"></img>
                   </div>
                 </div>
               </Col>

@@ -45,8 +45,12 @@ class PuzzleSettings extends React.Component {
       }
     });
 
+    console.log( 'response1 : ', response1 );
+
     // reset
     let response2 = await this.resetEniacWords();
+
+    console.log( 'response2 : ', response2 );
 
     if ( response1.status == 201 && response2.status == 201 ) {
       this.props.updatePuzzleBoxCount(count);
@@ -68,22 +72,27 @@ class PuzzleSettings extends React.Component {
 
       shuffle(arr);
       let json = JSON.stringify(arr);
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/puzzle-settings/eniac-words',
-        data: {
-          originalEniacWords: val,
-          randomEniacWords: json
-        }
-      });
 
-      if ( response.status == 201 ) {
-        this.props.updateEniacWords(val);
-        alert("성공");
-        this.eniacWordInput.current.value = '';
-        this.eniacWordInput.current.placeholder = val;
-      } else {
-        alert("알수없는 에러가 발생하였습니다");
+      try {
+        let response = await axios({
+          method: 'POST',
+          url: '/admin/puzzle-settings/eniac-words',
+          data: {
+            originalEniacWords: val,
+            randomEniacWords: json
+          }
+        });
+
+        if ( response.status == 201 && !response.data.error ) {
+          this.props.updateEniacWords(val);
+          alert("성공");
+          this.eniacWordInput.current.value = '';
+          this.eniacWordInput.current.placeholder = val;
+        } else {
+          alert( response.data.error );
+        }
+      } catch(error) {
+        console.error(error);
       }
     }
   }
@@ -110,21 +119,25 @@ class PuzzleSettings extends React.Component {
       return;
     }
 
-    let response = await axios({
-      method: 'POST',
-      url: '/admin/puzzle-settings/lastbox-google-drive-url',
-      data: {
-        lastBoxGoogleDriveUrl: encodeURI(url)
-      }
-    });
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/puzzle-settings/lastbox-google-drive-url',
+        data: {
+          lastBoxGoogleDriveUrl: encodeURI(url)
+        }
+      });
 
-    if ( response.status == 201 ) {
-      this.props.updateLastBoxGoogleDriveUrl(url);
-      alert("성공");
-      this.lastBoxGoogleDriveUrlInput.current.value = '';
-      this.lastBoxGoogleDriveUrlInput.current.placeholder = val;
-    } else {
-      alert("ERROR : 알수없는 에러가 발생하였습니다");
+      if ( response.status == 201 && !response.data.error ) {
+        this.props.updateLastBoxGoogleDriveUrl(url);
+        alert("성공");
+        this.lastBoxGoogleDriveUrlInput.current.value = '';
+        this.lastBoxGoogleDriveUrlInput.current.placeholder = val;
+      } else {
+        alert("ERROR : 알수없는 에러가 발생하였습니다");
+      }
+    } catch(error) {
+      console.error(error);
     }
     
   }
@@ -132,19 +145,23 @@ class PuzzleSettings extends React.Component {
   async updateLastBoxState(e) {
     let val = parseInt(e.currentTarget.value);
 
-    let response = await axios({
-      method: 'POST',
-      url: '/admin/puzzle-settings/lastbox-state',
-      data: {
-        lastBoxState: val
-      }
-    });
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/puzzle-settings/lastbox-state',
+        data: {
+          lastBoxState: val
+        }
+      });
 
-    if ( response.status == 201 ) {
-      this.props.updateLastBoxState(val);
-      alert("성공");
-    } else {
-      alert("ERROR : 알수없는 에러가 발생하였습니다");
+      if ( response.status == 201 && !response.data.error ) {
+        this.props.updateLastBoxState(val);
+        alert("성공");
+      } else {
+        alert( response.data.error );
+      }
+    } catch(error) {
+      console.error(error);
     }
   }
 

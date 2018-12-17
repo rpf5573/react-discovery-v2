@@ -1,9 +1,10 @@
 const path = require('path');
+const template = require('./client/template');
 
 module.exports = (app, DCQuery) => {
   app.get('/', (req, res) => {
-    let entrance_path = path.join(__dirname, '../../public/entrance/', 'index.html');
-    res.sendFile(entrance_path);
+    let document = template(req.query.message);
+    return res.set('Content-Type', 'text/html').end(document);
   });
 
   app.get('/entrance/companyImage', async (req, res) => {
@@ -30,8 +31,9 @@ module.exports = (app, DCQuery) => {
 
     if ( json ) {
       if ( req.body.password == json.super ) {
-        result.role = 'admin';
+        result.role = 'super';
         result.success = true;
+        result.page = 'admin';
 
         req.session.loginData = result;
         return res.status(201).json(result);
@@ -39,6 +41,7 @@ module.exports = (app, DCQuery) => {
       else if ( req.body.password == json.secondary ) {
         result.role = 'secondary';
         result.success = true;
+        result.page = 'secondary';
 
         req.session.loginData = result;
         return res.status(201).json(result);
@@ -53,6 +56,7 @@ module.exports = (app, DCQuery) => {
           result.role = 'user',
           result.success = true,
           result.team = teamPasswords[i].team;
+          result.page = 'user';
 
           req.session.loginData = result;
           return res.status(201).json(result);
@@ -60,6 +64,8 @@ module.exports = (app, DCQuery) => {
       }
     }
 
-    return res.sendStatus(401);
+    return res.status(201).json({
+      error: '비밀번호를 다시 확인해 주세요'
+    });
   });
 }

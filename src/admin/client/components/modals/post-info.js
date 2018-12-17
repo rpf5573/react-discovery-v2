@@ -51,19 +51,24 @@ class PostInfoRow extends React.Component {
   }
 
   async handleRemoveBtnClick(e) {
-    let response = await axios({
-      method: 'POST',
-      url: '/admin/post-info/remove',
-      data: {
-        post: this.state.post
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/post-info/remove',
+        data: {
+          post: this.state.post
+        }
+      });
+      if ( response.status == 201 && !response.data.error ) {
+        this.props.onRemove(this.state.post);
+        alert("성공");
+      } else {
+        alert( response.data.error );
       }
-    });
-    if ( response.status == 201 ) {
-      this.props.onRemove(this.state.post);
-      alert("성공");
-    } else {
-      alert( "ERROR : 알수없는 에러가 발생하였습니다" );
+    } catch(error) {
+      console.error(error);
     }
+    
   }
 
   async handleApplyBtnClick(e) {
@@ -104,35 +109,39 @@ class PostInfoRow extends React.Component {
       googleDriveURL
     }
 
-    let response = await axios({
-      method: 'POST',
-      url: '/admin/post-info/update-or-insert',
-      data: {
-        postInfo
-      }
-    });
-    if ( response.status == 201 ) {
-      if ( this.state.isNew ) {
-        this.props.onAdd(postInfo);
-      } else {
-        this.props.onUpdate(postInfo);
-      }
-      
-      this.setState({
-        isEditing: false,
-        isNew: false,
-        post,
-        mission,
-        googleDriveURL
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/post-info/update-or-insert',
+        data: {
+          postInfo
+        }
       });
+      if ( response.status == 201 && !response.data.error ) {
+        if ( this.state.isNew ) {
+          this.props.onAdd(postInfo);
+        } else {
+          this.props.onUpdate(postInfo);
+        }
+        
+        this.setState({
+          isEditing: false,
+          isNew: false,
+          post,
+          mission,
+          googleDriveURL
+        });
 
-      this.missionInput.current.value = null;
-      this.googleDriveURLInput.current.value = null;
+        this.missionInput.current.value = null;
+        this.googleDriveURLInput.current.value = null;
 
-      alert("성공");
+        alert("성공");
 
-    } else {
-      alert( "ERROR : 알수없는 에러가 발생하였습니다" );
+      } else {
+        alert( response.data.error );
+      }
+    } catch(error) {
+      console.error(error);
     }
   }
 

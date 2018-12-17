@@ -43,24 +43,29 @@ class PointPart extends React.Component {
     let mapping_point = {
       [this.props.mapping_key]: parseInt(point)
     }
-    let response = await axios({
-      method: 'POST',
-      url: '/admin/mapping-points/',
-      data: {
-        mapping_point
-      }
-    });
-    if ( response.status == 201 ) {
-      this.setState({
-        isEditing: false,
-        point: point
-      });
-      this.props.onPointUpdate( mapping_point );
-      this.pointInput.current.value = null;
-      alert("성공");
 
-    } else {
-      alert( "ERROR : 알수없는 에러가 발생하였습니다" );
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/mapping-points/',
+        data: {
+          mapping_point
+        }
+      });
+      if ( response.status == 201 && !response.data.error ) {
+        this.setState({
+          isEditing: false,
+          point: point
+        });
+        this.props.onPointUpdate( mapping_point );
+        this.pointInput.current.value = null;
+        alert("성공");
+
+      } else {
+        alert( response.data.error );
+      }
+    } catch(error) {
+      console.error(error);
     }
   }
 

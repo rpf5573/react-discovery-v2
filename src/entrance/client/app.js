@@ -8,7 +8,7 @@ import { Button, Modal, ModalHeader, ModalBody, Table, ModalFooter, Alert, Input
 
 // css
 import 'bootstrap/dist/css/bootstrap.css';
-import '../scss/style.scss';
+import './scss/style.scss';
 
 class App extends Component {
 
@@ -39,12 +39,14 @@ class App extends Component {
           password: this.state.password
         }
       });
-      if ( response.status == 201 ) {
-        console.log( 'login result json : ', response.data );
+
+      console.log( 'response.status : ', response.status );
+
+      if ( response.status == 201 && !response.data.error ) {
         alert('성공');
-        window.location.href = '/' + response.data.role;
+        window.location.href = '/' + response.data.page;
       } else {
-        alert( '비밀번호를 다시 확인해 주세요' );
+        alert( response.data.error );
       }
     } else {
       alert('비밀번호를 입력해 주세요');
@@ -75,9 +77,9 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    let response = await fetch('/entrance/companyImage');
+    let response = await axios('/entrance/companyImage');
     if ( response.status == 201 ) {
-      let result = await response.json();
+      let result = response.data;
       if ( result.companyImage ) {
         this.setState({
           companyImageURL: '/admin/uploads/' + result.companyImage

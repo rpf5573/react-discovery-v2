@@ -52,29 +52,33 @@ class PointReward extends React.Component {
         }
       }
 
-      let response = await fetch({
-        method: 'POST',
-        url: '/admin/point-reward/points',
-        data: {
-          points
-        }
-      });
-
-      if ( response.status == 201 ) {
-        for( var i = 0; i < this.pointInputFields.length; i++ ) {
-          let input = this.pointInputFields[i];
-          let val = parseInt(input.value);
-          if ( ! isNaN(val) && val > 0 ) {
-            input.value = '';
-            input.placeholder = val;
+      try {
+        let response = await axios({
+          method: 'POST',
+          url: '/admin/point-reward/points',
+          data: {
+            points
           }
+        });
+
+        if ( response.status == 201 && !response.data.error ) {
+          for( var i = 0; i < this.pointInputFields.length; i++ ) {
+            let input = this.pointInputFields[i];
+            let val = parseInt(input.value);
+            if ( ! isNaN(val) && val > 0 ) {
+              input.value = '';
+              input.placeholder = val;
+            }
+          }
+          alert( "성공" );
+          return;
+        } else {
+          alert( response.data.error );
+          return;
         }
-
-        alert( "성공" );
-        return;
+      } catch(error) {
+        console.error(error);
       }
-
-      alert("알수없는 에러가 발생하였습니다");
     }
   }
 

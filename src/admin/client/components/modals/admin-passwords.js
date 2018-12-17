@@ -31,25 +31,40 @@ class AdminPasswordModal extends React.Component {
   async handleFormSubmit(e) {
     e.preventDefault();
 
-    let response = await axios({
-      method: 'POST',
-      url: '/admin/admin-passwords/passwords',
-      data: {
-        adminPasswords: {
-          super: this.superInput.current.value,
-          secondary: this.secondaryInput.current.value
+    if ( !this.superInput.current.value && !this.secondaryInput.current.value ) {
+      alert("ERROR : 비밀번호를 입력해 주시기 바랍니다");
+      return;
+    }
+
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/admin-passwords/passwords',
+        data: {
+          adminPasswords: {
+            super: (this.superInput.current.value ? this.superInput.current.value : this.props.super),
+            secondary: (this.secondaryInput.current.value ? this.secondaryInput.current.value : this.props.secondary )
+          }
         }
+      });
+
+      if ( response.status == 201 && !response.data.error ) {
+        alert( '성공' );
+
+        if ( this.superInput.current.value ) {
+          this.superInput.current.placeholder = this.superInput.current.value;
+          this.superInput.current.value = '';
+        }
+
+        if ( this.secondaryInput.current.value ) {
+          this.secondaryInput.current.placeholder = this.secondaryInput.current.value;
+          this.secondaryInput.current.value = '';
+        }
+      } else {
+        alert( response.data.error );
       }
-    });
-
-    if ( response.status == 201 ) {
-      alert( '성공' );
-
-      this.superInput.current.placeholder = this.superInput.current.value;
-      this.superInput.current.value = '';
-
-      this.secondaryInput.current.placeholder = this.secondaryInput.current.value;
-      this.secondaryInput.current.value = '';
+    } catch(error) {
+      console.error(error);
     }
   }
 

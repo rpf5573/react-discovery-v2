@@ -1,15 +1,14 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const join = require('path').join;
+const join = require("path").join;
+const distPath = join(__dirname, "../../../public/entrance/");
 
 module.exports = {
   mode: 'development',
-  name: 'admin',
-  entry: ["@babel/polyfill", join(__dirname, '/index.js')],
+  entry: ["@babel/polyfill", join(__dirname, "/index.js")],
   devtool: 'source-map',
   output: {
     filename: "main.js",
-    path: join(__dirname, '../../../public/admin/'),
-    publicPath: '/admin',
+    path: distPath,
   },
   module: {
     rules: [
@@ -45,19 +44,14 @@ module.exports = {
       // Options similar to the same options in webpackOptions.output
       // both options are optional
       filename: "style.css",
-      path: join(__dirname, '../../../public/admin/'),
+      path: distPath,
       chunkFilename: "[id].css"
     })
   ],
   devServer: {
     proxy: {
-      '/admin': {
+      '/': {
         target: 'http://localhost:8080',
-        changeOrigin: true
-      },
-      '/uploads': {
-        target: 'http://localhost:8080',
-        pathRewrite: {'^/uploads' : '/admin/uploads/'},
         changeOrigin: true
       },
     }

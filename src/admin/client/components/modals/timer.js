@@ -29,40 +29,49 @@ class TimerModal extends React.Component {
     let newState = state ? OFF : ON;
     let actionWord = newState ? START : STOP;
 
-    let response = await axios({
-      method: 'POST',
-      url: '/admin/timer/team-timers',
-      data: {
-        newState, team
-      }
-    });
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/timer/team-timers',
+        data: {
+          newState, team
+        }
+      });
 
-    if ( response.status == 201 ) {
-      let newTeamTimers = response.data;
-      this.props.updateTeamTimerState(newTeamTimers);
-      alert( team+'팀의 타이머를 '+actionWord+'하였습니다' );
+      if ( response.status == 201 && !response.data.error ) {
+        let newTeamTimers = response.data;
+        this.props.updateTeamTimerState(newTeamTimers);
+        alert( team+'팀의 타이머를 '+actionWord+'하였습니다' );
+      } else {
+        alert( response.data.error );
+      }
+    } catch (error) {
+      console.error( error );
     }
   }
 
   async allTimerStart(e) {
-    let response = await axios({
-      method: 'POST',
-      url: '/admin/timer/team-timers',
-      data: {
-        team: 0,
-        newState: ON,
-        isAll: true
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/timer/team-timers',
+        data: {
+          team: 0,
+          newState: ON,
+          isAll: true
+        }
+      });
+
+      if ( response.status == 201 && !response.data.error ) {
+        let newTeamTimers = response.data;
+        this.props.updateTeamTimerState(newTeamTimers);
+        alert("전체 타이머를 시작하였습니다");
+      } else {
+        alert( response.data.error );
       }
-    });
-
-    if ( response.status == 201 ) {
-      let newTeamTimers = response.data;
-      this.props.updateTeamTimerState(newTeamTimers);
-      alert("전체 타이머를 시작하였습니다");
-    } else {
-      alert("ERROR : 알수없는 에러가 발생하였습니다");
+    } catch(error) {
+      console.error(error);
     }
-
   }
 
   async updateLapTime(e) {
@@ -74,19 +83,25 @@ class TimerModal extends React.Component {
       return;
     }
 
-    let response = await axios({
-      method: 'POST',
-      url: '/admin/timer/laptime',
-      data: {
-        laptime: laptime
-      }
-    });
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/timer/laptime',
+        data: {
+          laptime: laptime
+        }
+      });
 
-    if ( response.status == 201 ) {
-      this.lapTimeInput.value = '';
-      this.lapTimeInput.placeholder = secondToMinute(laptime);
-      this.props.updateLapTime(laptime);
-      alert( "성공" );
+      if ( response.status == 201 && !response.data.error ) {
+        this.lapTimeInput.value = '';
+        this.lapTimeInput.placeholder = secondToMinute(laptime);
+        this.props.updateLapTime(laptime);
+        alert( "성공" );
+      } else {
+        alert( response.data.error );
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 

@@ -28,7 +28,7 @@ app.use(session({
 }));
 
 // entrance
-// require('./entrance/init')(app, pool);
+require('./entrance/init')(app, pool);
 
 // admin
 require('./admin/init')(app, path, multer, pool);
