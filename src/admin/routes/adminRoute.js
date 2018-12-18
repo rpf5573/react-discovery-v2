@@ -10,15 +10,14 @@ module.exports = (app, DCQuery, upload) => {
     };
     // /admin이라고 하면 relative path가 localhost:8081/ 로 되버려서, style.css나 main.js파일을 읽어들일 수 없어
     if ( req.originalUrl == '/admin' ) {
-      console.log( 'here', ' is called' );
       srcPath.style = 'admin/style.css';
       srcPath.js = 'admin/main.js';
     }
 
     // 먼저 관리자로 로그인이 되어있는지 부터 확인해야지
     console.log( 'req.session : ', req.session );
-    if ( req.session.loginData && req.session.loginData.role == 'super' ) {
-      let initialSettings = await DCQuery.getInitialState();
+    if ( req.session.loginData && req.session.loginData.role == 'admin' ) {
+      let initialSettings = await DCQuery.getInitialState('admin');
       let document = template(initialSettings, srcPath);
       return res.set('Content-Type', 'text/html').end(document);
     } else {

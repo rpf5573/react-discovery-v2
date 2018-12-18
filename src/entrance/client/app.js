@@ -39,14 +39,9 @@ class App extends Component {
           password: this.state.password
         }
       });
-
-      console.log( 'response.status : ', response.status );
-
       if ( response.status == 201 && !response.data.error ) {
         alert('성공');
-        console.log( 'response.data : ', response.data );
-
-        window.location.href = '/' + response.data.page;
+        window.location.href = '/' + response.data.role + '/map';
       } else {
         alert( response.data.error );
       }

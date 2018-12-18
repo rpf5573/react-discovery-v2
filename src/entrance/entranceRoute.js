@@ -31,9 +31,8 @@ module.exports = (app, DCQuery) => {
 
     if ( json ) {
       if ( req.body.password == json.super ) {
-        result.role = 'super';
+        result.role = 'admin';
         result.success = true;
-        result.page = 'admin';
 
         req.session.loginData = result;
         return res.status(201).json(result);
@@ -41,7 +40,6 @@ module.exports = (app, DCQuery) => {
       else if ( req.body.password == json.secondary ) {
         result.role = 'secondary';
         result.success = true;
-        result.page = 'secondary';
 
         req.session.loginData = result;
         return res.status(201).json(result);
@@ -56,7 +54,6 @@ module.exports = (app, DCQuery) => {
           result.role = 'user',
           result.success = true,
           result.team = teamPasswords[i].team;
-          result.page = 'user';
 
           req.session.loginData = result;
           return res.status(201).json(result);

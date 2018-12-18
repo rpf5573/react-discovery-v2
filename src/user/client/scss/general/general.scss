@@ -9,6 +9,7 @@ html, body, #app, #app > .container {
   flex-direction: column;
   .l-top {
     flex-grow: 1;
+    position: relative;
   }
   .l-bottom {
     

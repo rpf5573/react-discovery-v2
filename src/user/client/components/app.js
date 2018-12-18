@@ -20,7 +20,8 @@ class App extends Component {
         <div className="container">
           <div className="l-top">
               <Switch>
-                <Route path="/user/map" component={Map} />
+                <Route exact path={"/user"} component={Map} />
+                <Route path={"/user/map"} component={Map} />
                 <Route path="/user/point" component={Point} />
                 <Route path="/user/puzzle" component={Puzzle} />
                 <Route path="/user/upload" component={Upload} />

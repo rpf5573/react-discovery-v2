@@ -18,18 +18,30 @@ class DCQuery {
     this.puzzle = new Puzzle(this.tables.puzzle, this.mysql);
     this.postInfo = new PostInfo(this.tables.postInfo, this.mysql);
   }
-  async getInitialState() {
-    let teamPasswords = await this.teamPasswords.getAll();
-    let teamCount = await this.teamPasswords.getTeamCount();
-    let metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'admin_passwords', 'mapping_points']);
-    let teamTimers = await this.timer.getAll();
-    let postInfos = await this.postInfo.getAll();
-    return {
-      ...metas,
-      teamPasswords,
-      teamCount,
-      teamTimers,
-      postInfos
+  async getInitialState(page) {
+    switch( page ) {
+      case 'admin':
+        let teamPasswords = await this.teamPasswords.getAll();
+        let teamCount = await this.teamPasswords.getTeamCount();
+        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'admin_passwords', 'mapping_points']);
+        let teamTimers = await this.timer.getAll();
+        let postInfos = await this.postInfo.getAll();
+        return {
+          ...metas,
+          teamPasswords,
+          teamCount,
+          teamTimers,
+          postInfos
+        }
+
+      case 'user':
+        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'mapping_points']);
+        return {
+          ...metas
+        };
+        
+      default:
+        return {};
     }
   }
   async resultData() {
