@@ -1,0 +1,80 @@
+/*  Vendors ( SCSS Plugin made by other developers )
+/* --------------------------------------------------- */
+/*  Utils ( useful functions, mixins )
+/* --------------------------------------------------- */
+/*  ripple button effects
+/* --------------------------------------------------- */
+.ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent; }
+  .ripple__circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(212, 196, 196, 0.45); }
+  .ripple.is-ripple .ripple__circle {
+    animation: a-ripple .4s ease-in; }
+
+@keyframes a-ripple {
+  0% {
+    opacity: 0; }
+  25% {
+    opacity: 1; }
+  100% {
+    width: 200%;
+    padding-bottom: 200%;
+    opacity: 0; } }
+
+/*  General ( default setup , override other plugin's settings )
+/* ----------------------------------------------------------------- */
+html, body, #app, #app > .container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
+#app > .container {
+  display: flex;
+  flex-direction: column; }
+  #app > .container .l-top {
+    flex-grow: 1; }
+
+/*  Components
+/* --------------------------------------------------- */
+.bottom-navigation {
+  width: 100%;
+  display: flex; }
+  .bottom-navigation a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    flex-grow: 1;
+    flex-basis: 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    position: relative;
+    overflow: hidden; }
+    .bottom-navigation a.active {
+      color: #2196f3; }
+      .bottom-navigation a.active .ripple {
+        animation: a-ripple .4s ease-in; }
+
+/*  Layout
+/* --------------------------------------------------- */
+/*  Pages
+/* --------------------------------------------------- */
+/*  Responsive ( response to site's dynamic width )
+/* --------------------------------------------------- */
+
+
+/*# sourceMappingURL=style.css.map*/

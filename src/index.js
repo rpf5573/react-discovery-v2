@@ -33,6 +33,9 @@ require('./entrance/init')(app, pool);
 // admin
 require('./admin/init')(app, path, multer, pool);
 
+// user
+require('./user/init')(app, path, multer, pool);
+
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 8080;

@@ -44,6 +44,8 @@ class App extends Component {
 
       if ( response.status == 201 && !response.data.error ) {
         alert('성공');
+        console.log( 'response.data : ', response.data );
+
         window.location.href = '/' + response.data.page;
       } else {
         alert( response.data.error );

@@ -3,13 +3,13 @@ const join = require('path').join;
 
 module.exports = {
   mode: 'development',
-  name: 'admin',
+  name: 'user',
   entry: ["@babel/polyfill", join(__dirname, '/index.js')],
   devtool: 'source-map',
   output: {
     filename: "main.js",
-    path: join(__dirname, '../../../public/admin/'),
-    publicPath: '/admin',
+    path: join(__dirname, '../../../public/user/'),
+    publicPath: '/user'
   },
   module: {
     rules: [
@@ -45,7 +45,7 @@ module.exports = {
       // Options similar to the same options in webpackOptions.output
       // both options are optional
       filename: "style.css",
-      path: join(__dirname, '../../../public/admin/'),
+      path: join(__dirname, '../../../public/user/'),
       chunkFilename: "[id].css"
     })
   ],
@@ -60,6 +60,7 @@ module.exports = {
         pathRewrite: {'^/uploads' : '/admin/uploads/'},
         changeOrigin: true
       },
-    }
+    },
+    historyApiFallback: true,
   }
 };

@@ -179,7 +179,7 @@ function (_Component) {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!this.state.password) {
-                  _context.next = 9;
+                  _context.next = 8;
                   break;
                 }
 
@@ -194,23 +194,23 @@ function (_Component) {
 
               case 3:
                 response = _context.sent;
-                console.log('response : ', response);
                 console.log('response.status : ', response.status);
 
                 if (response.status == 201 && !response.data.error) {
-                  console.log('login result json : ', response.data);
-                  alert('성공'); // window.location.href = '/' + response.data.page;
+                  alert('성공');
+                  console.log('response.data : ', response.data);
+                  window.location.href = '/' + response.data.page;
                 } else {
-                  alert(response.data.err);
+                  alert(response.data.error);
                 }
 
-                _context.next = 10;
+                _context.next = 9;
                 break;
 
-              case 9:
+              case 8:
                 alert('비밀번호를 입력해 주세요');
 
-              case 10:
+              case 9:
               case "end":
                 return _context.stop();
             }
