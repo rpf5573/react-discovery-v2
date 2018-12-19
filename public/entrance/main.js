@@ -197,7 +197,7 @@ function (_Component) {
 
                 if (response.status == 201 && !response.data.error) {
                   alert('성공');
-                  window.location.href = '/' + response.data.role;
+                  window.location.href = '/' + response.data.role + (response.data.role == 'user' ? 'map' : '');
                 } else {
                   alert(response.data.error);
                 }
@@ -45706,7 +45706,7 @@ module.exports = g;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! @babel/polyfill */"./node_modules/@babel/polyfill/lib/index.js");
-module.exports = __webpack_require__(/*! /Users/mac88/Desktop/react-discovery-v2/src/entrance/client/index.js */"./index.js");
+module.exports = __webpack_require__(/*! /Users/mac88/Desktop/react-discovery-v2/src/entrance/entrance-client/index.js */"./index.js");
 
 
 /***/ })

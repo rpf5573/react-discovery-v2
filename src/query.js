@@ -21,23 +21,29 @@ class DCQuery {
   async getInitialState(page) {
     switch( page ) {
       case 'admin':
-        let teamPasswords = await this.teamPasswords.getAll();
-        let teamCount = await this.teamPasswords.getTeamCount();
+        console.log( 'admin switch', ' is called' );
+        var teamPasswords = await this.teamPasswords.getAll();
+        var teamCount = await this.teamPasswords.getTeamCount();
         var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'admin_passwords', 'mapping_points']);
-        let teamTimers = await this.timer.getAll();
-        let postInfos = await this.postInfo.getAll();
+        var teamTimers = await this.timer.getAll();
+        var postInfos = await this.postInfo.getAll();
         return {
           ...metas,
           teamPasswords,
           teamCount,
           teamTimers,
           postInfos
-        }
+        };
 
       case 'user':
+        console.log( 'user switch', ' is called' );
         var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'mapping_points']);
+        var teamCount = await this.teamPasswords.getTeamCount();
+        var points = await this.points.get('useable');
         return {
-          ...metas
+          ...metas,
+          teamCount,
+          points
         };
         
       default:
@@ -243,6 +249,11 @@ class Points {
   }
   async getAll() {
     const sql = `SELECT * FROM ${this.table} ORDER BY team`;
+    const result = await this.mysql.query(sql);
+    return result;
+  }
+  async get(column) {
+    const sql = `SELECT team, ${column} FROM ${this.table} ORDER BY team`;
     const result = await this.mysql.query(sql);
     return result;
   }

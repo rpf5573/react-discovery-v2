@@ -1,5 +1,5 @@
 const path = require('path');
-const template = require('../client/template');
+const template = require('../user-client/template');
 
 module.exports = (app, DCQuery, upload) => {
 
@@ -18,7 +18,6 @@ module.exports = (app, DCQuery, upload) => {
       }
   
       let initialSettings = await DCQuery.getInitialState('user');
-      console.log( 'initialSettings : ', initialSettings );
       let document = template(initialSettings, srcPath);
       return res.set('Content-Type', 'text/html').end(document);
     } else {
@@ -27,10 +26,15 @@ module.exports = (app, DCQuery, upload) => {
 
   });
 
+  app.get('/user/get-updated-points', async (req, res) => {
+    let result = await DCQuery.points.get('useable');
+    return res.status(201).json(result);
+  });
+
   app.get('/user/*', async (req, res) => {
 
     // 먼저 유저로 로그인이 되어있는지 부터 확인해야지
-    if ( req.session.loginData && req.session.loginData.role == 'user' ) {
+    if ( req.session.loginData && req.session.loginData.role == 'user' && req.session.loginData.team > 0) {
       var srcPath = {
         style: 'style.css',
         js: 'main.js'
@@ -42,7 +46,7 @@ module.exports = (app, DCQuery, upload) => {
       }
   
       let initialSettings = await DCQuery.getInitialState('user');
-      console.log( 'initialSettings : ', initialSettings );
+      initialSettings.loginData = req.session.loginData;
       let document = template(initialSettings, srcPath);
       return res.set('Content-Type', 'text/html').end(document);
     } else {

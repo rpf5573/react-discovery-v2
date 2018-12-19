@@ -1,5 +1,5 @@
 const path = require('path');
-const template = require('../client/template');
+const template = require('../admin-client/template');
 
 module.exports = (app, DCQuery, upload) => {
 

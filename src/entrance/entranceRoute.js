@@ -1,5 +1,5 @@
 const path = require('path');
-const template = require('./client/template');
+const template = require('./entrance-client/template');
 
 module.exports = (app, DCQuery) => {
   app.get('/', (req, res) => {

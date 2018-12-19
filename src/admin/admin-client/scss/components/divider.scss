@@ -1,0 +1,12 @@
+.divider {
+  height: 2px;
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  background-color: green;
+}
+.divider--uncolor {
+  @extend .divider;
+  background-color: white;
+  opacity: 0;
+}

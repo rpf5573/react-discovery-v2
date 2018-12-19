@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+/*  Vendors ( SCSS Plugin made by other developers )
+/* --------------------------------------------------- */
+
+/*  Utils ( useful functions, mixins )
+/* --------------------------------------------------- */
+@import "utils/ripple";
+
+/*  General ( default setup , override other plugin's settings )
+/* ----------------------------------------------------------------- */
+@import "general/general",
+        "general/variables";
+
+
+/*  Components
+/* --------------------------------------------------- */
+@import "components/modals/team-setting",
+        "components/sidebar",
+        "components/divider",
+        "components/modals/timer",
+        "components/modals/point-reward",
+        "components/modals/mapping-points",
+        "components/modals/result",
+        "components/modals/post-info";
+
+/*  Layout
+/* --------------------------------------------------- */
+
+
+/*  Pages
+/* --------------------------------------------------- */
+
+/*  Responsive ( response to site's dynamic width )
+/* --------------------------------------------------- */
+@import "responsive";

@@ -1,0 +1,28 @@
+.modal-dialog.modal--team-setting {
+  .modal-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-right: 20px;
+  }
+  input {
+    text-align: center;
+  }
+
+  .tab-content {
+    .input-group {
+      margin-top: 20px;
+      .input-group-prepend {
+        width: 20%;
+        padding: 0;
+        text-align: center;
+        .input-group-text {
+          padding: 0;
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
