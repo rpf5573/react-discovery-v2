@@ -19,14 +19,14 @@ class App extends Component {
       <BrowserRouter>
         <div className="container">
           <div className="l-top">
-              <Switch>
-                <Route exact path={"/user"} component={Map} />
-                <Route path={"/user/map"} component={Map} />
-                <Route path="/user/point" render={(props) => <Point {...props} chartData={[]}></Point>} />
-                <Route path="/user/puzzle" component={Puzzle} />
-                <Route path="/user/upload" component={Upload} />
-                <Route path="/user/post-info" component={PostInfo} />
-              </Switch>
+            <Switch>
+              <Route exact path={"/user"} component={Map} />
+              <Route path={"/user/map"} component={Map} />
+              <Route path="/user/point" render={(props) => <Point {...props} chartData={[]}></Point>} />
+              <Route path="/user/puzzle" component={Puzzle} />
+              <Route path="/user/upload" component={Upload} />
+              <Route path="/user/post-info" component={PostInfo} />
+            </Switch>
           </div>
           <div className="l-bottom">
             <BottomNavigation></BottomNavigation>

@@ -6,6 +6,7 @@ module.exports = function (initialState = {}, srcPath = { style: 'style.css', js
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="X-UA-Compatible" content="ie=edge">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+                <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
                 <title> Discovery </title>
                 <link href="${srcPath.style}" rel="stylesheet">
               </head>

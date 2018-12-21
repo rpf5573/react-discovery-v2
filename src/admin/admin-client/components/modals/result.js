@@ -97,9 +97,9 @@ function TableRow(props) {
       <td colSpan="2">{props.obj.useable}</td>
       <td colSpan="2">{props.obj.stack}</td>
       <td colSpan="2">{props.obj.timer}</td>
-      <td colSpan="2">{props.obj.boxOpenGetEmpty}</td>
+      <td colSpan="2">{props.obj.puzzle}</td>
       <td colSpan="2">{props.obj.puzzleOpenCount}</td>
-      <td colSpan="2">{props.obj.boxOpenGetWord}</td>
+      <td colSpan="2">{props.obj.wordPuzzle}</td>
       <td colSpan="2">{props.obj.eniac}</td>
       <td colSpan="2">{props.obj.totalPoint}</td>
       <td colSpan="2">{props.obj.rank}</td>

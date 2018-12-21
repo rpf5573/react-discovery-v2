@@ -31,6 +31,24 @@ module.exports = (app, DCQuery, upload) => {
     return res.status(201).json(result);
   });
 
+  app.get('/user/get-puzzle-colon-info', async (req, res) => {
+    let result = await DCQuery.puzzle.getAll();
+    return res.status(201).json(result);
+  });
+
+  app.post('/user/openBox', async (req, res) => {
+    try {
+      await DCQuery.puzzle.update( req.body.team, req.body.boxNumber );
+      await DCQuery.points.updateOneRow({ team: req.body.team, puzzle: req.body.point });
+      res.sendStatus(201);
+    } catch (err) {
+      console.log( 'err : ', err );
+      return res.status(201).json({
+        error: '데이터베이스 통신중 에러가 발생하였습니다'
+      })
+    } 
+  });
+
   app.get('/user/*', async (req, res) => {
 
     // 먼저 유저로 로그인이 되어있는지 부터 확인해야지

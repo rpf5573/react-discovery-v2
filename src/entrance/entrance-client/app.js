@@ -41,7 +41,7 @@ class App extends Component {
       });
       if ( response.status == 201 && !response.data.error ) {
         alert('성공');
-        window.location.href = '/' + response.data.role + ( response.data.role == 'user' ? 'map' : '' );
+        window.location.href = '/' + response.data.role + ( response.data.role == 'user' ? '/map' : '' );
       } else {
         alert( response.data.error );
       }

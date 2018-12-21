@@ -18,8 +18,8 @@ class DCQuery {
     this.puzzle = new Puzzle(this.tables.puzzle, this.mysql);
     this.postInfo = new PostInfo(this.tables.postInfo, this.mysql);
   }
-  async getInitialState(page) {
-    switch( page ) {
+  async getInitialState(role) {
+    switch( role ) {
       case 'admin':
         console.log( 'admin switch', ' is called' );
         var teamPasswords = await this.teamPasswords.getAll();
@@ -37,13 +37,15 @@ class DCQuery {
 
       case 'user':
         console.log( 'user switch', ' is called' );
-        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'mapping_points']);
+        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'random_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'mapping_points']);
         var teamCount = await this.teamPasswords.getTeamCount();
         var points = await this.points.get('useable');
+        var puzzleColonInfo = await this.puzzle.getAll();
         return {
           ...metas,
           teamCount,
-          points
+          points,
+          puzzleColonInfo
         };
         
       default:
@@ -60,21 +62,13 @@ class DCQuery {
     var rows = [];
 
     for( var i = 0; i < total_team_count; i++ ) {
-      const puzzleEmpty = (function(raw) {
+      const puzzleNumbers = (function(raw) {
         try {
             return JSON.parse(raw);
         } catch (err) {
             return [];
         }
-      })(points[i].puzzle_empty);
-
-      const puzzleWord = (function(raw) {
-        try {
-            return JSON.parse(raw);
-        } catch (err) {
-            return [];
-        }
-      })(points[i].puzzle_word);
+      })(puzzles[i].numbers);
 
       let row = {
         team: i+1,
@@ -82,10 +76,10 @@ class DCQuery {
         stack: points[i].stack,
         timer: points[i].timer,
         eniac: points[i].eniac,
-        boxOpenGetEmpty: points[i].box_open_get_empty,
-        boxOpenGetWord: points[i].box_open_get_word,
-        puzzleOpenCount: puzzleEmpty.length + puzzleWord.length,
-        totalPoint: points[i].useable + points[i].timer + points[i].eniac + points[i].box_open_get_empty + points[i].box_open_get_word,
+        puzzle: points[i].puzzle,
+        puzzleOpenCount: puzzleNumbers.length,
+        wordPuzzle: 10, // temp
+        totalPoint: points[i].useable + points[i].timer + points[i].eniac + points[i].puzzle,
         rank: total_team_count
       }
       rows.push(row);
@@ -271,16 +265,19 @@ class Points {
   async updateOneRow(obj) {
     let team = obj.team;
     let useable = obj.hasOwnProperty('useable') ? obj.useable : 0;
-    let stack = useable > 0 ? useable : 0;
     let timer = obj.hasOwnProperty('timer') ? obj.timer : 0;
     let eniac = obj.hasOwnProperty('eniac') ? obj.eniac : 0;
+    let puzzle = obj.hasOwnProperty('puzzle') ? obj.puzzle : 0;
 
-    let sql = `UPDATE ${this.table} SET useable = useable + ${useable}, stack = stack + ${stack}, timer = timer + ${timer}, eniac = eniac + ${eniac} WHERE team = ${team}`;
+    useable = ( useable + timer + eniac + puzzle );
+    let stack = useable > 0 ? useable : 0; // 왜냐면 얻는 점수만 쌓는거거든 !
+
+    let sql = `UPDATE ${this.table} SET useable = useable + ${useable}, stack = stack + ${stack}, timer = timer + ${timer}, eniac = eniac + ${eniac}, puzzle = puzzle + ${puzzle} WHERE team = ${team}`;
     let result = await this.mysql.query(sql);
     return result;
   }
   async reset() {
-    let sql = `UPDATE ${this.table} SET useable = 0, stack = 0, timer = 0, eniac = 0, box_open_get_empty = 0, box_open_get_word = 0`;
+    let sql = `UPDATE ${this.table} SET useable = 0, stack = 0, timer = 0, eniac = 0, puzzle = 0`;
     let result = await this.mysql.query(sql);
     return result;
   }
@@ -296,8 +293,38 @@ class Puzzle {
     const result = await this.mysql.query(sql);
     return result;
   }
+  async get(team) {
+    const sql = `SELECT * FROM ${this.table} WHERE team=${team}`;
+    const result = await this.mysql.query(sql);
+
+    return result;
+  }
+  async update(team, boxNumber) {
+    let puzzleColonInfo = await this.get(team);
+
+    console.log( 'puzzleColonInfo : ', puzzleColonInfo );
+
+    let puzzleNumbers = (function(raw) {
+      try {
+        console.log( 'puzzle number json parse raw : ', raw );
+        if ( raw == null ) {
+          return [];
+        }
+        return JSON.parse(raw);
+      } catch (err) {
+          console.log( 'err in JSON.parse : ', err );
+          return [];
+      }
+    })(puzzleColonInfo[0].numbers);
+
+    puzzleNumbers.push(boxNumber);
+    
+    const sql = `UPDATE ${this.table} SET numbers='${JSON.stringify(puzzleNumbers)}' WHERE team=${team}`;
+    const result = await this.mysql.query(sql);
+    return result;
+  }
   async reset() {
-    let sql = `UPDATE ${this.table} SET puzzle_empty = NULL, puzzle_word = NULL`;
+    let sql = `UPDATE ${this.table} SET numbers = ${JSON.stringify([])}`;
     let result = await this.mysql.query(sql);
     return result;
   }
