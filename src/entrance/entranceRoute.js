@@ -20,45 +20,52 @@ module.exports = (app, DCQuery) => {
       success: false,
       team: null
     }
-    let adminPasswords = await DCQuery.meta.get('admin_passwords');
-    const json = (function(raw) {
-      try {
-          return JSON.parse(raw);
-      } catch (err) {
-          return false;
-      }
-    })(adminPasswords);
+    try {
+      let adminPasswords = await DCQuery.meta.get('admin_passwords');
+      const json = (function(raw) {
+        try {
+            return JSON.parse(raw);
+        } catch (err) {
+            return false;
+        }
+      })(adminPasswords);
 
-    if ( json ) {
-      if ( req.body.password == json.super ) {
-        result.role = 'admin';
-        result.success = true;
+      if ( json ) {
+        if ( req.body.password == json.super ) {
+          result.role = 'admin';
+          result.success = true;
 
-        req.session.loginData = result;
-        return res.status(201).json(result);
-      }
-      else if ( req.body.password == json.secondary ) {
-        result.role = 'secondary';
-        result.success = true;
-
-        req.session.loginData = result;
-        return res.status(201).json(result);
-      }
-    }
-
-    let pw = parseInt(req.body.password);
-    if ( ! isNaN(pw) && pw > 0 ) {
-      let teamPasswords = await DCQuery.teamPasswords.getAll();
-      for ( var i = 0; i < teamPasswords.length; i++ ) {
-        if ( pw == teamPasswords[i].password ) {
-          result.role = 'user',
-          result.success = true,
-          result.team = teamPasswords[i].team;
+          req.session.loginData = result;
+          return res.status(201).json(result);
+        }
+        else if ( req.body.password == json.secondary ) {
+          result.role = 'secondary';
+          result.success = true;
 
           req.session.loginData = result;
           return res.status(201).json(result);
         }
       }
+
+      let pw = parseInt(req.body.password);
+      if ( ! isNaN(pw) && pw > 0 ) {
+        let teamPasswords = await DCQuery.teamPasswords.getAll();
+        for ( var i = 0; i < teamPasswords.length; i++ ) {
+          if ( pw == teamPasswords[i].password ) {
+            result.role = 'user',
+            result.success = true,
+            result.team = teamPasswords[i].team;
+
+            req.session.loginData = result;
+
+            console.log( 'req.session : ', req.session );
+
+            return res.status(201).json(result);
+          }
+        }
+      }
+    } catch (err) {
+      console.log( 'err : ', err );
     }
 
     return res.status(201).json({

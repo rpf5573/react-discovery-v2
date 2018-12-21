@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import socketIOClient from "socket.io-client";
 import cn from 'classnames';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -44,6 +45,9 @@ class PuzzleBox extends Component {
 class Puzzle extends Component {
   constructor(props) {
     super(props);
+
+    const socket = socketIOClient(this.props.endPoint);
+    socket.on("puzzle_box_opened", data => { console.log( 'data : ', data ); });
 
     this.renderPuzzleBoxes = this.renderPuzzleBoxes.bind(this);
     this.openBox = this.openBox.bind(this);
@@ -148,7 +152,8 @@ function mapStateToProps(state, ownProps) {
     ourTeam: state.loginData.team,
     count: state.puzzlebox_count,
     puzzleColonInfo: state.puzzleColonInfo,
-    mappingPoints: state.mapping_points
+    mappingPoints: state.mapping_points,
+    endPoint: state.rootPath
   };
 }
 

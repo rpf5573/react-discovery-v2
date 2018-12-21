@@ -27,6 +27,11 @@ app.use(session({
   store: sessionStore
 }));
 
+// websocket for puzzle update
+var server = require('http').createServer(app);
+// http server를 socket.io server로 upgrade한다
+var io = require('socket.io')(server);
+
 // entrance
 require('./entrance/init')(app, pool);
 
@@ -34,7 +39,7 @@ require('./entrance/init')(app, pool);
 require('./admin/init')(app, path, multer, pool);
 
 // user
-require('./user/init')(app, path, multer, pool);
+require('./user/init')(app, path, multer, pool, io);
 
 app.use(express.static('public'));
 

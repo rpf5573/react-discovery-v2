@@ -105,6 +105,72 @@ html, body, #app, #app > .container {
     display: flex;
     align-items: center; }
 
+.puzzle-page {
+  display: flex;
+  flex-direction: column; }
+  .puzzle-page .puzzle-container {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    border: 1px solid black; }
+    .puzzle-page .puzzle-container .puzzle-box-wrapper {
+      position: relative;
+      box-sizing: border-box;
+      border: 1px solid black; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.w-25 {
+        width: 25%; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.w-20 {
+        width: 20%; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.w-18 {
+        width: calc(100%/6); }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box {
+        width: 100%;
+        height: 100%;
+        position: relative; }
+        .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--normal {
+          display: flex;
+          justify-content: center;
+          align-items: center; }
+        .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--flipper {
+          transform-style: preserve-3d;
+          transition: transform 3.3s ease-in; }
+          .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--flipper.flipping {
+            animation: flip 0.6s;
+            animation-fill-mode: forwards; }
+          .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--flipper .front {
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            z-index: 2;
+            transform: rotateY(0deg);
+            background-color: red; }
+          .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--flipper .back {
+            backface-visibility: hidden;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            transform: rotateY(180deg);
+            background-color: green; }
+        .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box .word {
+          font-size: 34px; }
+  .puzzle-page .open-eniac-modal-btn {
+    border: 0;
+    border-radius: 0;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px; }
+
+@keyframes flip {
+  from {
+    transform: rotateY(0deg); }
+  to {
+    transform: rotateY(180deg); } }
+
 /*  Layout
 /* --------------------------------------------------- */
 /*  Pages

@@ -21,11 +21,11 @@ class App extends Component {
           <div className="l-top">
             <Switch>
               <Route exact path={"/user"} component={Map} />
-              <Route path={"/user/map"} component={Map} />
-              <Route path="/user/point" render={(props) => <Point {...props} chartData={[]}></Point>} />
-              <Route path="/user/puzzle" component={Puzzle} />
-              <Route path="/user/upload" component={Upload} />
-              <Route path="/user/post-info" component={PostInfo} />
+              <Route path={"/user/page/map"} component={Map} />
+              <Route path="/user/page/point" render={(props) => <Point {...props} chartData={[]}></Point>} />
+              <Route path="/user/page/puzzle" component={Puzzle} />
+              <Route path="/user/page/upload" component={Upload} />
+              <Route path="/user/page/post-info" component={PostInfo} />
             </Switch>
           </div>
           <div className="l-bottom">

@@ -22,27 +22,27 @@ class BottomNavigation extends Component {
 
     return (
       <div className="bottom-navigation">
-        <NavLink to="/user/map">
+        <NavLink to="/user/page/map">
           <div className="icon"><FontAwesomeIcon icon={faMap} /></div>
           <div className="text">지도</div>
           <div className={rippleCN}></div>
         </NavLink>
-        <NavLink to="/user/point">
+        <NavLink to="/user/page/point">
           <div className="icon"><FontAwesomeIcon icon={faChartBar} /></div>
           <div className="text">포인트</div>
           <div className={rippleCN}></div>
         </NavLink>
-        <NavLink to="/user/puzzle">
+        <NavLink to="/user/page/puzzle">
           <div className="icon"><FontAwesomeIcon icon={faChessBoard} /></div>
           <div className="text">퍼즐</div>
           <div className={rippleCN}></div>
         </NavLink>
-        <NavLink to="/user/upload">
+        <NavLink to="/user/page/upload">
           <div className="icon"><FontAwesomeIcon icon={faImages} /></div>
           <div className="text">업로드</div>
           <div className={rippleCN}></div>
         </NavLink>
-        <NavLink to="/user/post-info">
+        <NavLink to="/user/page/post-info">
           <div className="icon"><FontAwesomeIcon icon={faInfo} /></div>
           <div className="text">포스트</div>
           <div className={rippleCN}></div>
