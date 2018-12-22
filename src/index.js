@@ -28,7 +28,7 @@ app.use(session({
 }));
 
 // websocket for puzzle update
-var server = require('http').createServer(app);
+var server = require('http').Server(app);
 // http server를 socket.io server로 upgrade한다
 var io = require('socket.io')(server);
 
@@ -44,4 +44,18 @@ require('./user/init')(app, path, multer, pool, io);
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT);
+server.listen(PORT);
+
+
+// for real time puzzle update
+io.on('connection', function(socket) {
+  console.log( 'socket is connected !' );
+  socket.on('open_puzzle_box', function(data) {
+    console.log( 'data : ', data );
+    io.emit('puzzle_box_opened', data);
+  });
+  
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  })
+});

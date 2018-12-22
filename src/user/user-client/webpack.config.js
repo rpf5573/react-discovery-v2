@@ -60,7 +60,7 @@ module.exports = {
         pathRewrite: {'^/uploads' : '/admin/uploads/'},
         changeOrigin: true
       },
-      '/socket.io': {
+      '/socket.io/': {
         target: 'http://localhost:8080'
       }
     },

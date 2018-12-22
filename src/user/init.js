@@ -1,6 +1,6 @@
 const fileExtensions = require('./user-client/file-extensions');
 
-module.exports = (app, path, multer, mysql, io) => {
+module.exports = (app, path, multer, mysql) => {
   const DCQuery = new (require('../query'))(mysql);
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -30,17 +30,4 @@ module.exports = (app, path, multer, mysql, io) => {
     }
   }).fields([{name: 'empty_test', maxCount: 1}, {name: 'emtpy_test_2', maxCount: 1}]);
   require('./routes/userRoute')(app, DCQuery, upload);
-
-  // for real time puzzle update
-  io.on('connection', function(socket) {
-    console.log( 'socket is connected !' );
-    socket.on('open_puzzle_box', function(data) {
-      console.log( 'data : ', data );
-      io.emit('puzzle_box_opened', data);
-    });
-    
-    socket.on('disconnect', () => {
-      console.log('user disconnected');
-    })
-  });
 }

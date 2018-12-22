@@ -16,9 +16,9 @@ class PuzzleBox extends Component {
     let flipperBoxCN = cn({
       'puzzle-box': true,
       'puzzle-box--flipper': true,
-      'flipping': this.props.isFlipped
+      'flipping': this.props.isFlipping
     })
-    if ( ! this.props.owner ) {
+    if ( ! this.props.owner || this.props.isFlipping ) {
       boxContent = <div className={flipperBoxCN}>
                     <button className="front" data-number={this.props.number} data-hasword={(this.props.word ? true : false)} onClick={this.props.onBoxClick}>
                     </button>
@@ -46,8 +46,13 @@ class Puzzle extends Component {
   constructor(props) {
     super(props);
 
-    const socket = socketIOClient(this.props.endPoint);
-    socket.on("puzzle_box_opened", data => { console.log( 'data : ', data ); });
+    this.boxes = [];
+
+    this.socket = socketIOClient(this.props.endPoint);
+    this.socket.on("puzzle_box_opened", data => {
+      console.log( 'data : ', data );
+      console.log( 'this.boxes : ', this.boxes );
+    });
 
     this.renderPuzzleBoxes = this.renderPuzzleBoxes.bind(this);
     this.openBox = this.openBox.bind(this);
@@ -63,16 +68,13 @@ class Puzzle extends Component {
       classWidth = 'w-18';
     }
 
-    let flippedBoxNumber = 5;
-
     // 이거 시간 계산좀 해봐야 겠다,, 루프가 꽤 많이 도네, 많이 돌면 2천번은 돌겠는데 ?
     var boxes = [];
     for ( var i = 0; i < boxCount; i++ ) {
       var boxNumber = i+1;
-      var isFlipped = ( flippedBoxNumber == boxNumber ? true : false );
       var team = false;
       for ( var z = 0; z < teamCount; z++ ) {
-        for ( var m = 0; m < puzzleColonInfo[z].numbers.length; i++ ) {
+        for ( var m = 0; m < puzzleColonInfo[z].numbers.length; m++ ) {
           if ( boxNumber == puzzleColonInfo[z].numbers[m] ) {
             team = puzzleColonInfo[z].team;
           }
@@ -82,7 +84,8 @@ class Puzzle extends Component {
           break;
         }
       }
-      boxes.push(<PuzzleBox className={classWidth} key={'box-'+boxNumber} number={boxNumber} owner={team} isFlipped={isFlipped} word="A" onBoxClick={this.openBox}></PuzzleBox>);
+
+      boxes.push(<PuzzleBox className={classWidth} key={'box-'+boxNumber} number={boxNumber} owner={team} isFlipping={isNewOpendBox} word="A" onBoxClick={this.openBox} ref={(input) => {this.boxes.push(input)}}></PuzzleBox>);
     }
 
     return boxes;
@@ -95,7 +98,6 @@ class Puzzle extends Component {
     if ( hasWord == 'true' ) {
       point = this.props.mappingPoints.boxOpenGetWord;
     }
-    
     try {
       let response = await axios({
         url: '/user/openBox',
@@ -108,6 +110,7 @@ class Puzzle extends Component {
       });
       if ( response.status == 201 && !response.data.error ) {
         alert( "성공" );
+        this.socket.emit('open_puzzle_box', response.data);
       } 
       else if ( response.data.error ) {
         alert( response.data.error );
@@ -148,10 +151,23 @@ class Puzzle extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
+
+  let puzzleColonInfo = [];
+  for ( var i = 0; i < state.teamCount; i++ ) {
+    const parsed = JSON.parse(state.puzzleColonInfo[i].numbers);
+    puzzleColonInfo.push({
+      team: state.puzzleColonInfo[i].team,
+      numbers: (parsed ? parsed : [] )
+    });
+  }
+
+  console.log( 'puzzleConlonInfo : ', puzzleColonInfo );
+
   return {
+    teamCount: state.teamCount,
     ourTeam: state.loginData.team,
     count: state.puzzlebox_count,
-    puzzleColonInfo: state.puzzleColonInfo,
+    puzzleColonInfo,
     mappingPoints: state.mapping_points,
     endPoint: state.rootPath
   };

@@ -3,15 +3,12 @@ const template = require('../user-client/template');
 
 module.exports = (app, DCQuery, upload) => {
 
-  // app.get(['/user', '/user/page'], (res, req) => {
-  //   console.log( '/user/page', ' is called' );
-  //   // return res.redirect('/user/page/map');
-  // });
+  app.get(['/user', '/user/page'], (req, res) => {
+    return res.redirect('/user/page/map');
+  });
 
-  app.get('/user/page/*', async (res, req) => {
-
+  app.get('/user/page/*', async (req, res) => {
     console.log( 'req.session : ', req.session );
-
     // 먼저 유저로 로그인이 되어있는지 부터 확인해야지
     if ( req.session.loginData && req.session.loginData.role == 'user' ) {
       var srcPath = {
@@ -54,7 +51,10 @@ module.exports = (app, DCQuery, upload) => {
     try {
       await DCQuery.puzzle.update( req.body.team, req.body.boxNumber );
       await DCQuery.points.updateOneRow({ team: req.body.team, puzzle: req.body.point });
-      res.sendStatus(201);
+      res.status(201).json({
+        team: req.body.team,
+        boxNumber: req.body.boxNumber
+      });
     } catch (err) {
       console.log( 'err : ', err );
       return res.status(201).json({
