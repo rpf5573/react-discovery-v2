@@ -8,7 +8,6 @@ module.exports = (app, DCQuery, upload) => {
   });
 
   app.get('/user/page/*', async (req, res) => {
-    console.log( 'req.session : ', req.session );
     // 먼저 유저로 로그인이 되어있는지 부터 확인해야지
     if ( req.session.loginData && req.session.loginData.role == 'user' ) {
       var srcPath = {
@@ -32,7 +31,6 @@ module.exports = (app, DCQuery, upload) => {
         return res.sendStatus(404);
       }
     } else {
-      console.log( 'redirect', ' is called' );
       return res.redirect('/?message=' + encodeURIComponent('접근 권한이 없습니다'));
     }
   });

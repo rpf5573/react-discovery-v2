@@ -57,7 +57,6 @@ class TeamSetting extends React.Component {
     for( var i = 0; i < inputs.length; i++ ) {
       let l = this.getNumberFromInput(inputs[i]);
       if ( l > 0 ) {
-        // console.log( 'inputs.length : ', inputs.length );
         for( var z = i+1; z < inputs.length; z++ ) {
           let r = this.getNumberFromInput(inputs[z]);
           // placeholder끼리 비교하는 경우도 있지만,,, 뭐 어때 ! 그 둘은 절대 같을 일이 없을 텐데 ㅎㅎ

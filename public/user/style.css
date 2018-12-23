@@ -58,6 +58,18 @@ html, body, #app, #app > .container {
   bottom: 0;
   overflow: hidden; }
 
+.d-f-center, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-1 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-2 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-3 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-4 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-5 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-6 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-7 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-8 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-9 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-10 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-11 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-12 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-13 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-14 .team:before, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-15 .team:before {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.outline {
+  color: black;
+  text-shadow: white  .02em   0     0, white  0       .02em 0, white -.02em   0     0, white  0      -.02em 0; }
+
+.d-none {
+  display: none !important; }
+
 /*  Components
 /* --------------------------------------------------- */
 .bottom-navigation {
@@ -116,6 +128,7 @@ html, body, #app, #app > .container {
     border: 1px solid black; }
     .puzzle-page .puzzle-container .puzzle-box-wrapper {
       position: relative;
+      overflow: hidden;
       box-sizing: border-box;
       border: 1px solid black; }
       .puzzle-page .puzzle-container .puzzle-box-wrapper.w-25 {
@@ -128,35 +141,198 @@ html, body, #app, #app > .container {
         width: 100%;
         height: 100%;
         position: relative; }
-        .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--normal {
-          display: flex;
-          justify-content: center;
-          align-items: center; }
         .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--flipper {
           transform-style: preserve-3d;
           transition: transform 3.3s ease-in; }
-          .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--flipper.flipping {
-            animation: flip 0.6s;
-            animation-fill-mode: forwards; }
           .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--flipper .front {
             backface-visibility: hidden;
             position: absolute;
             width: 100%;
-            height: 100%;
+            height: calc(100% + 2px);
             padding: 0;
             z-index: 2;
             transform: rotateY(0deg);
-            background-color: red; }
+            background-color: white;
+            border: none; }
           .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--flipper .back {
             backface-visibility: hidden;
             position: relative;
             width: 100%;
-            height: 100%;
+            height: calc(100% + 2px);
             z-index: 2;
-            transform: rotateY(180deg);
-            background-color: green; }
+            transform: rotateY(180deg); }
         .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box .word {
           font-size: 34px; }
+          .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box .word.placeholder {
+            opacity: 0; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.flipping .puzzle-box--flipper {
+        animation: flip 0.6s;
+        animation-fill-mode: forwards; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-1 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-1 .puzzle-box--normal {
+        background-color: #1B378A; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-1 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "1"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-2 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-2 .puzzle-box--normal {
+        background-color: #B6171E; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-2 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "2"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-3 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-3 .puzzle-box--normal {
+        background-color: #41B33B; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-3 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "3"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-4 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-4 .puzzle-box--normal {
+        background-color: #e162dc; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-4 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "4"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-5 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-5 .puzzle-box--normal {
+        background-color: #f76904; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-5 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "5"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-6 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-6 .puzzle-box--normal {
+        background-color: #a8f908; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-6 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "6"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-7 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-7 .puzzle-box--normal {
+        background-color: #479eef; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-7 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "7"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-8 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-8 .puzzle-box--normal {
+        background-color: #F4297D; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-8 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "8"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-9 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-9 .puzzle-box--normal {
+        background-color: #1C1A25; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-9 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "9"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-10 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-10 .puzzle-box--normal {
+        background-color: #f3f3fd; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-10 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "10"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-11 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-11 .puzzle-box--normal {
+        background-color: #9C27B0; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-11 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "11"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-12 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-12 .puzzle-box--normal {
+        background-color: #607D8B; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-12 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "12"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-13 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-13 .puzzle-box--normal {
+        background-color: #795548; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-13 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "13"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-14 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-14 .puzzle-box--normal {
+        background-color: #9E9E9E; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-14 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "14"; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-15 .back, .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-15 .puzzle-box--normal {
+        background-color: #00BCD4; }
+      .puzzle-page .puzzle-container .puzzle-box-wrapper.owner-15 .team:before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        background-color: white;
+        content: "15"; }
   .puzzle-page .open-eniac-modal-btn {
     border: 0;
     border-radius: 0;
@@ -170,6 +346,26 @@ html, body, #app, #app > .container {
     transform: rotateY(0deg); }
   to {
     transform: rotateY(180deg); } }
+
+.eniac-modal > .modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  background-color: white;
+  width: 90%;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12); }
+  .eniac-modal > .modal-content .eniac-form {
+    display: flex;
+    flex-direction: column; }
+    .eniac-modal > .modal-content .eniac-form > .l-top {
+      margin-bottom: 20px; }
+    .eniac-modal > .modal-content .eniac-form .eniac-input,
+    .eniac-modal > .modal-content .eniac-form .eniac-btn {
+      width: 100%; }
 
 /*  Layout
 /* --------------------------------------------------- */

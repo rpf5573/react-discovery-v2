@@ -34,7 +34,13 @@ class TimerModal extends React.Component {
         method: 'POST',
         url: '/admin/timer/team-timers',
         data: {
-          newState, team
+          newState, 
+          team,
+          mappingPoints: {
+            timer_plus: this.props.mappingPoints.timer_plus,
+            timer_minus: this.props.mappingPoints.timer_minus,
+          },
+          laptime: this.props.laptime
         }
       });
 
@@ -178,11 +184,12 @@ class TimerModal extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  return { 
+  return {
     activeModalClassName : state.modalControl.activeModalClassName,
     laptime: state.timer.laptime,
     teamCount: state.teamSettings.teamCount,
-    teamTimers: state.timer.teamTimers
+    teamTimers: state.timer.teamTimers,
+    mappingPoints: state.mappingPoints
   };
 }
 

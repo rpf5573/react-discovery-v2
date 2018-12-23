@@ -24,7 +24,7 @@ export default function configureStore(initialSettings) {
       activeMenuBtnClassName: ""
     },
     timer: {
-      laptime: initialSettings.laptime,
+      laptime: parseInt(initialSettings.laptime),
       teamTimers: initialSettings.teamTimers
     },
     uploads: {
@@ -34,7 +34,7 @@ export default function configureStore(initialSettings) {
     puzzleSettings: {
       puzzleBoxCount: parseInt(initialSettings.puzzlebox_count),
       eniacWords: initialSettings.original_eniac_words,
-      eniacState: initialSettings.eniac_state,
+      eniacState: parseInt(initialSettings.eniac_state),
       lastBoxGoogleDriveUrl: decodeURI(initialSettings.lastbox_google_drive_url),
       lastBoxState: parseInt(initialSettings.lastbox_state)
     },

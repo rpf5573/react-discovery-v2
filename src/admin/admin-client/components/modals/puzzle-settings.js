@@ -46,12 +46,8 @@ class PuzzleSettings extends React.Component {
       }
     });
 
-    console.log( 'response1 : ', response1 );
-
     // reset
     let response2 = await this.resetEniacWords();
-
-    console.log( 'response2 : ', response2 );
 
     if ( response1.status == 201 && response2.status == 201 ) {
       this.props.updatePuzzleBoxCount(count);

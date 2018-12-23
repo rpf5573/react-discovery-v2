@@ -10,8 +10,6 @@ class PostInfoRow extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log( 'props.postInfo in PostInfoRow : ', props.postInfo );
-
     this.state = {
       isEditing: false,
       post: this.props.postInfo.post,
@@ -38,7 +36,6 @@ class PostInfoRow extends React.Component {
 
   handleCancelBtnClick(e) {
     if ( this.state.isNew ) {
-      console.log( 'handleCancelBnClick', ' is called after rerendered' );
       this.props.onCancelAdd();
       return;
     }
@@ -146,7 +143,6 @@ class PostInfoRow extends React.Component {
   }
 
   render() {
-    console.log( 'render in child post info row', ' is called' );
     return (
       <tr className="post-info-row">
         <td>
@@ -208,15 +204,12 @@ class PostInfoModal extends React.Component {
   }
 
   handleCancelAdd(e) {
-    console.log( 'handleCancelAdd in PostInfoModal Component', ' is called' );
     this.setState({
       newRows: this.state.newRows - 1
     })
   }
 
   validateAdd(post) {
-    console.log( 'post : ', post );
-    console.log( 'this.props.postInfos : ', this.props.postInfos );
     for( var i = 0; i < this.props.postInfos.length; i++ ) {
       if ( post == this.props.postInfos[i].post ) {
         return false;
@@ -255,8 +248,6 @@ class PostInfoModal extends React.Component {
   }
 
   render() {
-    console.log( 'render in post-info.js', ' is called' );
-    console.log( 'this.props.postInfos in render : ', this.props.postInfos );
     return (
       <Modal style={{maxWidth: '1100px'}} isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className}>
         <ModalHeader toggle={this.close}>
@@ -300,7 +291,6 @@ class PostInfoModal extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  console.log( 'new postinfos in mapStateToProps : ', state.postInfos );
   return {
     activeModalClassName: state.modalControl.activeModalClassName,
     postInfos: state.postInfos

@@ -61,7 +61,6 @@ class Puzzle extends Component {
         node.classList.add('flipping', `owner-${data.team}`);
       } else {
         console.error( "박스의 개수가 일치하지 않습니다" );
-        console.log( 'this.boxes.length : ', this.boxes.length );
       }
     });
 
@@ -126,7 +125,6 @@ class Puzzle extends Component {
 
   async handleEniacSubmit(e) {
     e.preventDefault();
-    console.log( 'this.props.originalEniacWords : ', this.props.originalEniacWords );
     if ( ! this.state.eniacSentance ) {
       alert( '암호해독을 입력해주세요' );
       return;
@@ -153,7 +151,6 @@ class Puzzle extends Component {
           alert("성공 : " + response.data.point + '점을 획득하셨습니다');
           this.setState({ isModalOpen: false });
         } else {
-          console.log( 'response.data : ', response.data );
           alert( response.data.error );
         }
       } catch(e) {
@@ -164,7 +161,6 @@ class Puzzle extends Component {
       alert("다시 확인해 주시기 바랍니다");
     }
     
-    console.log( 'this.state.eniacSentance : ', this.state.eniacSentance );
   }
 
   handleEniacSentanceInput(e) {
@@ -217,7 +213,6 @@ class Puzzle extends Component {
   }
 
   componentWillUnmount() {
-    console.log( 'componentWillUnmount', ' is called' );
     this.socket.disconnect();
   }
 

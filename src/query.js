@@ -21,7 +21,6 @@ class DCQuery {
   async getInitialState(role) {
     switch( role ) {
       case 'admin':
-        console.log( 'admin switch', ' is called' );
         var teamPasswords = await this.teamPasswords.getAll();
         var teamCount = await this.teamPasswords.getTeamCount();
         var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'eniac_state', 'lastbox_state', 'admin_passwords', 'mapping_points']);
@@ -36,7 +35,6 @@ class DCQuery {
         };
 
       case 'user':
-        console.log( 'user switch', ' is called' );
         var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'random_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'mapping_points']);
         var teamCount = await this.teamPasswords.getTeamCount();
         var points = await this.points.get('useable');
@@ -97,27 +95,12 @@ class DCQuery {
     return rows;
   }
   async reset() {
-    var result = this.meta.reset();
-    if ( result.err ) {
-      return result;
-    }
-    result = this.points.reset();
-    if ( result.err ) {
-      return result;
-    }
-
-    result = this.puzzle.reset();
-    if ( result.err ) {
-      return result;
-    }
-
-    result = this.teamPasswords.reset();
-    if ( result.err ) {
-      return result;
-    }
-
-    result = this.timer.reset();
-    return result;
+    this.meta.reset();
+    this.points.reset();
+    this.puzzle.reset();
+    this.teamPasswords.reset();
+    this.timer.reset();
+    this.postInfo.reset();
   }
 }
 
@@ -159,13 +142,13 @@ class Meta {
     return result;
   }
   async reset() {
-    var sql = `UPDATE ${this.table} SET meta_value = 0 WHERE meta_key IN ('total_team_count', 'game_state', 'posts_count', 'lastbox_state', 'laptime', 'puzzlebox_count')`;
+    var sql = `UPDATE ${this.table} SET meta_value = 0 WHERE meta_key IN ('total_team_count', 'game_state', 'posts_count', 'eniac_state', 'lastbox_state', 'laptime', 'puzzlebox_count')`;
     var result = await this.mysql.query(sql);
     if ( result.err ) {
       return result;
     }
 
-    sql = `UPDATE ${this.table} SET meta_value = NULL WHERE meta_key IN ('company_image', 'map', 'original_eniac_word', 'random_eniac_words', 'lastbox_google_drive_url')`;
+    sql = `UPDATE ${this.table} SET meta_value = NULL WHERE meta_key IN ('company_image', 'map', 'original_eniac_words', 'eniac_success_teams', 'random_eniac_words', 'lastbox_google_drive_url')`;
     var result = await this.mysql.query(sql);
     return result;
   }
@@ -213,6 +196,12 @@ class Timer {
   async getAll() {
     const sql = `SELECT * FROM ${this.table} ORDER BY team`;
     const result = await this.mysql.query(sql);
+    return result;
+  }
+
+  async get(team) {
+    let sql = `SELECT startTime, state FROM ${this.table} WHERE team = ${team}`;
+    let result = await this.mysql.query(sql);
     return result;
   }
 
@@ -303,17 +292,13 @@ class Puzzle {
   async update(team, boxNumber) {
     let puzzleColonInfo = await this.get(team);
 
-    console.log( 'puzzleColonInfo : ', puzzleColonInfo );
-
     let puzzleNumbers = (function(raw) {
       try {
-        console.log( 'puzzle number json parse raw : ', raw );
         if ( raw == null ) {
           return [];
         }
         return JSON.parse(raw);
       } catch (err) {
-          console.log( 'err in JSON.parse : ', err );
           return [];
       }
     })(puzzleColonInfo[0].numbers);
@@ -325,7 +310,7 @@ class Puzzle {
     return result;
   }
   async reset() {
-    let sql = `UPDATE ${this.table} SET numbers = ${JSON.stringify([])}`;
+    let sql = `UPDATE ${this.table} SET numbers = NULL`;
     let result = await this.mysql.query(sql);
     return result;
   }
@@ -348,13 +333,17 @@ class PostInfo {
               VALUES(${postInfo.post}, '${postInfo.mission}', '${postInfo.googleDriveURL}') 
               ON DUPLICATE KEY UPDATE 
               post=${postInfo.post}, mission='${postInfo.mission}', google_drive_url='${postInfo.googleDriveURL}'`;
-    console.log( 'sql : ', sql );
     let result = await this.mysql.query(sql);
     return result;
   }
   async remove(post) {
     let sql = `DELETE FROM ${this.table} WHERE post=${post}`;
     let result = this.mysql.query(sql);
+    return result;
+  }
+  async reset() {
+    let sql = `DELETE FROM ${this.table}`;
+    let result = await this.mysql.query(sql);
     return result;
   }
 }

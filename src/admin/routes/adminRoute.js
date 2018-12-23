@@ -1,5 +1,6 @@
 const path = require('path');
 const template = require('../admin-client/template');
+const utils = new(require('../../utils'))();
 
 module.exports = (app, DCQuery, upload) => {
 
@@ -15,7 +16,6 @@ module.exports = (app, DCQuery, upload) => {
     }
 
     // 먼저 관리자로 로그인이 되어있는지 부터 확인해야지
-    console.log( 'req.session : ', req.session );
     if ( req.session.loginData && req.session.loginData.role == 'admin' ) {
       let initialSettings = await DCQuery.getInitialState('admin');
       let document = template(initialSettings, srcPath);
@@ -85,21 +85,25 @@ module.exports = (app, DCQuery, upload) => {
     return;
   });
   app.post('/admin/timer/team-timers', async (req, res) => {
-    let result = await DCQuery.timer.updateState(req.body.team, req.body.newState, req.body.isAll);
-    if ( result.err ) {
-      return res.status(201).json({
-        error: result.err
-      });
+    console.log( 'req.body : ', req.body );
+    try {
+      // 만약에 타이머를 끄는거라면, 시간에 맞게 포인트를 주거나 빼야지
+      if ( req.body.newState == 0 ) {
+        let result = await DCQuery.timer.get(req.body.team);
+        const startTime = result[0].startTime;
+        const currentTime = utils.getCurrentTimeInSeconds();
+        let td = req.body.laptime - ( currentTime - startTime );
+        var point = Math.floor(td/30) * ( td > 0 ? req.body.mappingPoints.timer_plus : req.body.mappingPoints.timer_minus );
+        await DCQuery.points.updateOneRow({team: req.body.team, timer: point});
+      }
+      
+      await DCQuery.timer.updateState(req.body.team, req.body.newState, req.body.isAll);
+      let newTeamTimers = await DCQuery.timer.getAll();
+      return res.status(201).json(newTeamTimers);
+    } catch (e) {
+      console.log( 'e : ', e );
+      return res.sendStatus(401);
     }
-    let newTeamTimers = await DCQuery.timer.getAll();
-    if ( newTeamTimers.err ) {
-      return res.status(201).json({
-        error: newTeamTimers.err
-      });
-    }
-
-    res.status(201).json(newTeamTimers);
-    return;
   });
 
   // puzzle settings
@@ -172,7 +176,6 @@ module.exports = (app, DCQuery, upload) => {
 
   // admin passwords
   app.post('/admin/admin-passwords/passwords', async (req, res) => {
-    console.log( 'req.body.adminPasswords : ', req.body.adminPasswords );
     let result = await DCQuery.meta.update('admin_passwords', JSON.stringify(req.body.adminPasswords));
     if ( result.err ) {
       return res.status(201).json({
@@ -198,22 +201,29 @@ module.exports = (app, DCQuery, upload) => {
 
   // result data
   app.get('/admin/result', async (req, res) => {
-    let rows = await DCQuery.resultData();
-    return res.status(201).json(rows);
+    try {
+      let rows = await DCQuery.resultData();
+      return res.status(201).json(rows);
+    } catch (e) {
+      console.log( 'e : ', e );
+      return res.sendStatus(401);
+    }
   });
 
   // reset
   app.post('/admin/reset', async (req, res) => {
     let pw = req.body.reset_password;
     if ( pw && pw == 'discovery_reset' ) {
-      let result = await DCQuery.reset();
-      if ( result.err ) {
-        return res.status(201).json({
-          error: result.err
-        });
+      try {
+        await DCQuery.reset();
+        return res.sendStatus(201);
+      } catch(e) {
+        return res.sendStatus(401);
       }
-      return res.sendStatus(201);
     }
+    return res.status(201).json({
+      error: '잘못된 접근입니다'
+    });
   });
 
   // post info
@@ -234,5 +244,5 @@ module.exports = (app, DCQuery, upload) => {
       });
     }
     return res.sendStatus(201);
-  })
+  });
 }

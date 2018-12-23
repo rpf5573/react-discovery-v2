@@ -16,7 +16,6 @@ class Point extends Component {
   async componentDidMount() {
     try {
       let response = await axios('/user/get-updated-points');
-      console.log( 'response.data : ', response.data );
       if ( response.status == 201 && !response.data.error ) {
         this.props.updatePoints(response.data);
       } else {

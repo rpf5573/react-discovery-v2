@@ -24,9 +24,9 @@ module.exports = (app, DCQuery) => {
       let adminPasswords = await DCQuery.meta.get('admin_passwords');
       const json = (function(raw) {
         try {
-            return JSON.parse(raw);
+          return JSON.parse(raw);
         } catch (err) {
-            return false;
+          return false;
         }
       })(adminPasswords);
 
@@ -57,15 +57,13 @@ module.exports = (app, DCQuery) => {
             result.team = teamPasswords[i].team;
 
             req.session.loginData = result;
-
-            console.log( 'req.session : ', req.session );
-
             return res.status(201).json(result);
           }
         }
       }
     } catch (err) {
       console.log( 'err : ', err );
+      return res.sendStatus(401);
     }
 
     return res.status(201).json({

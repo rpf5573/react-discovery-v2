@@ -183,7 +183,6 @@ class MappingPointModal extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  console.log( 'state.mappingPoints : ', state.mappingPoints );
   return { 
     activeModalClassName: state.modalControl.activeModalClassName,
     mappingPoints: state.mappingPoints

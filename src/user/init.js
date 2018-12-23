@@ -14,7 +14,6 @@ module.exports = (app, path, multer, mysql) => {
     storage: storage,
     fileFilter: (req, file, cb) => {
       const fileTypes = fileExtensions.video.concat(fileExtensions.image);
-      console.log( 'fileTypes : ', fileTypes );
       const ext = path.extname(file.originalname).toLowerCase();
       var fileExtensionOK = false;
       for ( var i = 0; i < fileTypes.length; i++ ) {
