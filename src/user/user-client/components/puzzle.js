@@ -1,10 +1,14 @@
 import React, { Component, Fragment } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import socketIOClient from "socket.io-client";
+import { teamColors } from '../utils';
 import cn from 'classnames';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { updatePuzzleColonInfo } from '../actions';
+import Modal from '@material-ui/core/Modal';
+import TextField from '@material-ui/core/TextField';
 
 class PuzzleBox extends Component {
   constructor(props) {
@@ -16,21 +20,20 @@ class PuzzleBox extends Component {
     let flipperBoxCN = cn({
       'puzzle-box': true,
       'puzzle-box--flipper': true,
-      'flipping': this.props.isFlipping
     })
-    if ( ! this.props.owner || this.props.isFlipping ) {
+    if ( ! this.props.owner ) {
       boxContent = <div className={flipperBoxCN}>
                     <button className="front" data-number={this.props.number} data-hasword={(this.props.word ? true : false)} onClick={this.props.onBoxClick}>
                     </button>
-                    <div className="back">
-                      { this.props.owner ? <span className="team">{this.props.owner}</span> : '' }
-                      { this.props.word ? <span className="word">{this.props.word}</span> : '' }
+                    <div className="back d-f-center">
+                      <span className="team d-f-center"></span>
+                      { this.props.word ? <span className="word outline">{this.props.word}</span> : <span className="word placeholder">강</span> }
                     </div>
                   </div>
     } else {
-      boxContent = <div className="puzzle-box puzzle-box--normal" style={{backgroundColor: this.props.teamColor}}>
-                    { this.props.owner ? <span className="team">{this.props.owner}</span> : '' }
-                    { this.props.word ? <span className="word">{this.props.word}</span> : '' }
+      boxContent = <div className="puzzle-box puzzle-box--normal d-f-center" style={{backgroundColor: this.props.teamColor}}>
+                    { this.props.owner ? <span className="team"></span> : '' }
+                    { this.props.word ? <span className="word outline">{this.props.word}</span> : <span className="word placeholder">강</span> }
                   </div>
     }
 
@@ -45,20 +48,35 @@ class PuzzleBox extends Component {
 class Puzzle extends Component {
   constructor(props) {
     super(props);
-
-    this.boxes = [];
+    this.state = {
+      isModalOpen: false,
+      eniacSentance: false
+    };
 
     this.socket = socketIOClient(this.props.endPoint);
     this.socket.on("puzzle_box_opened", data => {
       console.log( 'data : ', data );
-      console.log( 'this.boxes : ', this.boxes );
+      if ( this.boxes.length == this.props.count ) {
+        var node = ReactDOM.findDOMNode(this.boxes[data.boxNumber-1]);
+        node.classList.add('flipping', `owner-${data.team}`);
+      } else {
+        console.error( "박스의 개수가 일치하지 않습니다" );
+        console.log( 'this.boxes.length : ', this.boxes.length );
+      }
     });
 
     this.renderPuzzleBoxes = this.renderPuzzleBoxes.bind(this);
     this.openBox = this.openBox.bind(this);
+    this.handleModalOpen = this.handleModalOpen.bind(this);
+    this.handleModalClose = this.handleModalClose.bind(this);
+    this.handleEniacSubmit = this.handleEniacSubmit.bind(this);
+    this.handleEniacSentanceInput = this.handleEniacSentanceInput.bind(this);
   }
 
-  renderPuzzleBoxes(teamCount, boxCount, puzzleColonInfo) {
+  renderPuzzleBoxes(teamCount, boxCount, puzzleColonInfo, randomEniacWords) {
+
+    this.boxes = [];
+
     // 20( 4 x 5 ), 24( 4 x 6 ), 30( 5 x 6 ), 35( 5 x 7 ), 40( 5 x 8 ), 48( 6 x 8 )
     var classWidth = 'w-25';
     if ( boxCount == 30 || boxCount == 35 || boxCount == 40 ) {
@@ -72,6 +90,7 @@ class Puzzle extends Component {
     var boxes = [];
     for ( var i = 0; i < boxCount; i++ ) {
       var boxNumber = i+1;
+      const word = ( randomEniacWords ? (randomEniacWords[i] ? randomEniacWords[i] : false) : false );
       var team = false;
       for ( var z = 0; z < teamCount; z++ ) {
         for ( var m = 0; m < puzzleColonInfo[z].numbers.length; m++ ) {
@@ -85,10 +104,71 @@ class Puzzle extends Component {
         }
       }
 
-      boxes.push(<PuzzleBox className={classWidth} key={'box-'+boxNumber} number={boxNumber} owner={team} isFlipping={isNewOpendBox} word="A" onBoxClick={this.openBox} ref={(input) => {this.boxes.push(input)}}></PuzzleBox>);
+      let puzzleBoxClassName = classWidth + ( team ? ` owner-${team}` : '' );
+
+      boxes.push(<PuzzleBox className={puzzleBoxClassName} key={'box-'+boxNumber} number={boxNumber} owner={team} word={word} onBoxClick={this.openBox} ref={(input) => {
+        if ( input != null ) {
+          this.boxes.push(input);
+        }
+      }}></PuzzleBox>);
     }
 
     return boxes;
+  }
+
+  handleModalOpen = () => {
+    this.setState({ isModalOpen: true });
+  };
+
+  handleModalClose = () => {
+    this.setState({ isModalOpen: false });
+  };
+
+  async handleEniacSubmit(e) {
+    e.preventDefault();
+    console.log( 'this.props.originalEniacWords : ', this.props.originalEniacWords );
+    if ( ! this.state.eniacSentance ) {
+      alert( '암호해독을 입력해주세요' );
+      return;
+    }
+
+    if ( ! this.props.originalEniacWords ) {
+      alert( '관리자가 설정값을 지정하지 않았습니다' );
+      return window.location.reload(true); // force refresh
+    }
+
+    const a = this.state.eniacSentance.replace(/\s/g, "");
+    const b = this.props.originalEniacWords.replace(/\s/g, "");
+    if ( a === b ) {
+      try {
+        let response = await axios({
+          url: '/user/eniac',
+          method: 'POST',
+          data: {
+            team: this.props.ourTeam,
+            point: this.props.mappingPoints.eniac
+          }
+        });
+        if ( response.status == 201 && !response.data.error ) {
+          alert("성공 : " + response.data.point + '점을 획득하셨습니다');
+          this.setState({ isModalOpen: false });
+        } else {
+          console.log( 'response.data : ', response.data );
+          alert( response.data.error );
+        }
+      } catch(e) {
+        alert('알수없는 에러가 발생했습니다');
+        console.error(e);
+      } 
+    } else {
+      alert("다시 확인해 주시기 바랍니다");
+    }
+    
+    console.log( 'this.state.eniacSentance : ', this.state.eniacSentance );
+  }
+
+  handleEniacSentanceInput(e) {
+    this.setState({ eniacSentance: event.target.value });
   }
 
   async openBox(e) {
@@ -105,7 +185,8 @@ class Puzzle extends Component {
         data: {
           team: this.props.ourTeam,
           boxNumber,
-          point
+          point,
+          boxOpenUse: this.props.mappingPoints.boxOpenUse
         }
       });
       if ( response.status == 201 && !response.data.error ) {
@@ -124,7 +205,6 @@ class Puzzle extends Component {
   async componentDidMount() {
     try {
       let response = await axios('/user/get-puzzle-colon-info');
-
       if ( response.status == 201 && !response.data.error ) {
         this.props.updatePuzzleColonInfo(response.data);
       } else {
@@ -136,22 +216,58 @@ class Puzzle extends Component {
     }
   }
 
+  componentWillUnmount() {
+    console.log( 'componentWillUnmount', ' is called' );
+    this.socket.disconnect();
+  }
+
   render() {
+    let eniacBtnCN = cn({
+      'open-eniac-modal-btn': true,
+      'd-none': (this.props.originalEniacWords ? false : true)
+    });
+    let eniacModal = cn({
+      'eniac-modal': true,
+      'd-none': (this.props.originalEniacWords ? false : true)
+    })
     return (
       <div className="puzzle-page full-container">
         <div className="puzzle-container">
-          { this.renderPuzzleBoxes(this.props.teamCount, this.props.count, this.props.puzzleColonInfo) }
+          { this.renderPuzzleBoxes(this.props.teamCount, this.props.count, this.props.puzzleColonInfo, this.props.randomEniacWords) }
         </div>
-        <Button variant="contained" color="secondary" className="open-eniac-modal-btn">
+        <Button variant="contained" color="secondary" className={eniacBtnCN} onClick={this.handleModalOpen}>
           암호해독
         </Button>
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={this.state.isModalOpen}
+          onClose={this.handleModalClose}
+          className={eniacModal}>
+            <div className="modal-content">
+              <form className="eniac-form" noValidate autoComplete="off" onSubmit={this.handleEniacSubmit}>
+                <div className="l-top">
+                  <TextField
+                    className="eniac-input"
+                    label="문장입력"
+                    variant="outlined"
+                    onChange={this.handleEniacSentanceInput}
+                  />
+                </div>
+                <div className="l-bottom">
+                  <Button className="eniac-btn" variant="contained" color="primary" type="submit">
+                    확인
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </Modal>
       </div>
     );
   }
 }
 
 function mapStateToProps(state, ownProps) {
-
   let puzzleColonInfo = [];
   for ( var i = 0; i < state.teamCount; i++ ) {
     const parsed = JSON.parse(state.puzzleColonInfo[i].numbers);
@@ -161,15 +277,15 @@ function mapStateToProps(state, ownProps) {
     });
   }
 
-  console.log( 'puzzleConlonInfo : ', puzzleColonInfo );
-
   return {
     teamCount: state.teamCount,
     ourTeam: state.loginData.team,
     count: state.puzzlebox_count,
     puzzleColonInfo,
     mappingPoints: state.mapping_points,
-    endPoint: state.rootPath
+    endPoint: state.rootPath,
+    randomEniacWords: state.random_eniac_words,
+    originalEniacWords: state.original_eniac_words
   };
 }
 

@@ -24,7 +24,7 @@ class DCQuery {
         console.log( 'admin switch', ' is called' );
         var teamPasswords = await this.teamPasswords.getAll();
         var teamCount = await this.teamPasswords.getTeamCount();
-        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'admin_passwords', 'mapping_points']);
+        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'eniac_state', 'lastbox_state', 'admin_passwords', 'mapping_points']);
         var teamTimers = await this.timer.getAll();
         var postInfos = await this.postInfo.getAll();
         return {
@@ -37,7 +37,7 @@ class DCQuery {
 
       case 'user':
         console.log( 'user switch', ' is called' );
-        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'random_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'mapping_points']);
+        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'random_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'mapping_points']);
         var teamCount = await this.teamPasswords.getTeamCount();
         var points = await this.points.get('useable');
         var puzzleColonInfo = await this.puzzle.getAll();
@@ -246,8 +246,11 @@ class Points {
     const result = await this.mysql.query(sql);
     return result;
   }
-  async get(column) {
-    const sql = `SELECT team, ${column} FROM ${this.table} ORDER BY team`;
+  async get(column, team) {
+    let sql = `SELECT team, ${column} FROM ${this.table} ORDER BY team`;
+    if ( team ) {
+      sql = `SELECT ${column} FROM ${this.table} WHERE team = ${team}`;
+    } 
     const result = await this.mysql.query(sql);
     return result;
   }
@@ -268,8 +271,6 @@ class Points {
     let timer = obj.hasOwnProperty('timer') ? obj.timer : 0;
     let eniac = obj.hasOwnProperty('eniac') ? obj.eniac : 0;
     let puzzle = obj.hasOwnProperty('puzzle') ? obj.puzzle : 0;
-
-    useable = ( useable + timer + eniac + puzzle );
     let stack = useable > 0 ? useable : 0; // 왜냐면 얻는 점수만 쌓는거거든 !
 
     let sql = `UPDATE ${this.table} SET useable = useable + ${useable}, stack = stack + ${stack}, timer = timer + ${timer}, eniac = eniac + ${eniac}, puzzle = puzzle + ${puzzle} WHERE team = ${team}`;

@@ -7,8 +7,8 @@ let middleWare = [thunk];
 
 export default function configureStore(initialSettings = {}) {
   
-  initialSettings.mapping_points = JSON.parse(initialSettings.mapping_points);
-  initialSettings.random_eniac_words = JSON.parse(initialSettings.random_eniac_words);
+  initialSettings.mapping_points = JSON.parse(initialSettings.mapping_points); // 실패할리 없음
+  initialSettings.random_eniac_words = JSON.parse(initialSettings.random_eniac_words); // 실패할일 없음 어차피 null도 받으니까
 
   var initialState = initialSettings;
 

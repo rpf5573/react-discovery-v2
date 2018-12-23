@@ -110,8 +110,6 @@ function mapStateToProps(state, ownProps) {
     chartData.push(data);
   }
 
-  console.log( 'state.loginData : ', state.loginData );
-
   return {
     ourTeam: ( state.loginData ? state.loginData.team : false ),
     teamCount: state.teamCount,

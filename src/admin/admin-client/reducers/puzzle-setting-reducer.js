@@ -1,4 +1,4 @@
-import { UPDATE_PUZZLE_BOX_COUNT, UPDATE_ENIAC_WORDS, UPDATE_LASTBOX_GOOGLEDRIVE_URL, UPDATE_LASTBOX_STATE } from '../actions/types';
+import { UPDATE_PUZZLE_BOX_COUNT, UPDATE_ENIAC_WORDS, UPDATE_LASTBOX_GOOGLEDRIVE_URL, UPDATE_ENIAC_STATE, UPDATE_LASTBOX_STATE } from '../actions/types';
 
 export default function(state = {
   puzzleBoxCount: 20
@@ -22,6 +22,11 @@ export default function(state = {
     case UPDATE_LASTBOX_STATE:
       return Object.assign({}, state, {
         lastBoxState: action.payload
+      });
+
+    case UPDATE_ENIAC_STATE:
+      return Object.assign({}, state, {
+        eniacState: action.payload
       });
     
     default:

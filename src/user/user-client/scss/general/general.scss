@@ -23,3 +23,18 @@ html, body, #app, #app > .container {
   bottom: 0;
   overflow: hidden;
 }
+.d-f-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.outline {
+  color: black;
+  text-shadow: white  .02em   0     0,
+               white  0       .02em 0,
+               white -.02em   0     0,
+               white  0      -.02em 0;
+}
+.d-none {
+  display: none !important;
+}

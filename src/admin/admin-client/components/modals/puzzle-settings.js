@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, Dropdown, DropdownToggle, DropdownItem, DropdownMenu, Table } from 'reactstrap';
-import { closeModal, updatePuzzleBoxCount, updateEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState } from '../../actions';
+import { closeModal, updatePuzzleBoxCount, updateEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState, updateEniacState } from '../../actions';
 import axios from 'axios';
 import 'awesome-bootstrap-checkbox';
 
@@ -28,6 +28,7 @@ class PuzzleSettings extends React.Component {
     this.lastBoxGoogleDriveUrlInput = React.createRef();
     this.updateLastBoxGoogleDriveUrl = this.updateLastBoxGoogleDriveUrl.bind(this);
 
+    this.updateEniacState = this.updateEniacState.bind(this);
     this.updateLastBoxState = this.updateLastBoxState.bind(this);
   }
 
@@ -70,8 +71,10 @@ class PuzzleSettings extends React.Component {
         return;
       }
 
-      shuffle(arr);
-      let json = JSON.stringify(arr);
+      let zeroArr = new Array(this.props.puzzleBoxCount - arr.length).fill(0);
+      let resultArr = [...zeroArr, ...arr];
+      shuffle(resultArr);
+      let json = JSON.stringify(resultArr);
 
       try {
         let response = await axios({
@@ -165,6 +168,29 @@ class PuzzleSettings extends React.Component {
     }
   }
 
+  async updateEniacState(e) {
+    let val = parseInt(e.currentTarget.value);
+
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/puzzle-settings/eniac-state',
+        data: {
+          eniacState: val
+        }
+      });
+
+      if ( response.status == 201 && !response.data.error ) {
+        this.props.updateEniacState(val);
+        alert("성공");
+      } else {
+        alert( response.data.error );
+      }
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
   renderPuzzleBoxCountDropdownMenuItems() {
     let counts = [20, 24, 30, 35, 40, 48];
     var list = [];
@@ -227,7 +253,7 @@ class PuzzleSettings extends React.Component {
           </Row>
           <div className="divider--uncolor"></div>
           <Row>
-            <Col xs="12">
+            <Col xs="6">
               <div className="d-flex">
                 <span className="mr-3">
                   최종 박스 : 
@@ -239,6 +265,21 @@ class PuzzleSettings extends React.Component {
                 <div className="radio abc-radio abc-radio-danger">
                   <input type="radio" id="lastBoxStateRadioInput02" onChange={this.updateLastBoxState} checked={ this.props.lastBoxState ? false : true } value={OFF}/>
                   <label htmlFor="lastBoxStateRadioInput02">비공개</label>
+                </div>
+              </div>
+            </Col>
+            <Col xs="6">
+              <div className="d-flex">
+                <span className="mr-3">
+                  암호해독 : 
+                </span>
+                <div className="radio abc-radio abc-radio-primary mr-3">
+                  <input type="radio" id="eniacStateRadioInput01" onChange={this.updateEniacState} checked={ this.props.eniacState ? true : false } value={ON}/>
+                  <label htmlFor="eniacStateRadioInput01">ON</label>
+                </div>
+                <div className="radio abc-radio abc-radio-danger">
+                  <input type="radio" id="eniacStateRadioInput02" onChange={this.updateEniacState} checked={ this.props.eniacState ? false : true } value={OFF}/>
+                  <label htmlFor="eniacStateRadioInput02">OFF</label>
                 </div>
               </div>
             </Col>
@@ -254,9 +295,10 @@ function mapStateToProps(state, ownProps) {
     activeModalClassName: state.modalControl.activeModalClassName,
     puzzleBoxCount: state.puzzleSettings.puzzleBoxCount,
     eniacWords: state.puzzleSettings.eniacWords,
+    eniacState: state.puzzleSettings.eniacState,
     lastBoxGoogleDriveUrl: state.puzzleSettings.lastBoxGoogleDriveUrl,
     lastBoxState: state.puzzleSettings.lastBoxState
   };
 }
 
-export default connect(mapStateToProps, { closeModal, updatePuzzleBoxCount, updateEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState })(PuzzleSettings);
+export default connect(mapStateToProps, { closeModal, updatePuzzleBoxCount, updateEniacWords, updateEniacState, updateLastBoxGoogleDriveUrl, updateLastBoxState })(PuzzleSettings);

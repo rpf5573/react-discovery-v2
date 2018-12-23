@@ -33,7 +33,7 @@ module.exports = (app, DCQuery, upload) => {
       }
     } else {
       console.log( 'redirect', ' is called' );
-      // return res.redirect('/?message=' + encodeURIComponent('접근 권한이 없습니다'));
+      return res.redirect('/?message=' + encodeURIComponent('접근 권한이 없습니다'));
     }
   });
 
@@ -49,8 +49,16 @@ module.exports = (app, DCQuery, upload) => {
 
   app.post('/user/openBox', async (req, res) => {
     try {
-      await DCQuery.puzzle.update( req.body.team, req.body.boxNumber );
+      // 돈먼저 체크 합니다잉~
+      var result = await DCQuery.points.get('useable', req.body.team);
+
+      if ( result[0].useable < req.body.boxOpenUse ) {
+        return res.status(201).json({ error: '포인트가 부족합니다' });
+      }
+
+      await DCQuery.points.updateOneRow({ team: req.body.team, useable: -(req.body.boxOpenUse) });
       await DCQuery.points.updateOneRow({ team: req.body.team, puzzle: req.body.point });
+      await DCQuery.puzzle.update( req.body.team, req.body.boxNumber );
       res.status(201).json({
         team: req.body.team,
         boxNumber: req.body.boxNumber
@@ -60,6 +68,65 @@ module.exports = (app, DCQuery, upload) => {
       return res.status(201).json({
         error: '데이터베이스 통신중 에러가 발생하였습니다'
       })
-    } 
+    }
+  });
+
+  app.post('/user/eniac', async (req, res) => {
+    try {
+      // 1. eniac state check
+      var result = await DCQuery.meta.get('eniac_state');
+      result = parseInt(result);
+      if ( isNaN(result) || !result ) {
+        return res.status(201).json({ error: '현재 암호해독이 불가능한 상태입니다' });
+      }
+
+      var result = await DCQuery.meta.get('eniac_success_teams');
+      result = JSON.parse(result);
+      if ( ! Array.isArray(result) ) {
+        result = [];
+      }
+      var point = req.body.point; // 기본은 1등
+      if ( result.length > 0 ) {
+        // 먼저 이미 맞춘 이력이 있는지 체크
+        for ( var i = 0; i < result.length; i++ ) {
+          if ( result[i] == req.body.team ) {
+            return res.status(201).json({ error: '이미 맞추셨습니다' });
+          }
+        }
+
+        switch( result.length ) {
+          case 1:
+            point = Math.floor( (point * 0.9) * 0.01 ) * 100;
+            break;
+          case 2:
+            point = Math.floor( (point * 0.8) * 0.01 ) * 100;
+            break;
+          case 3:
+            point = Math.floor( (point * 0.7) * 0.01 ) * 100;
+            break;
+          case 4:
+            point = Math.floor( (point * 0.6) * 0.01 ) * 100;
+            break;
+          case 5:
+            point = Math.floor( (point * 0.5) * 0.01 ) * 100;
+            break;
+        }
+      }
+
+      result.push(req.body.team);
+
+      await DCQuery.points.updateOneRow({ team: req.body.team, eniac: point });
+      await DCQuery.meta.update('eniac_success_teams', JSON.stringify(result));
+
+      res.status(201).json({
+        point
+      });
+
+    } catch (err) {
+      console.log( 'err : ', err );
+      return res.status(201).json({
+        error: '데이터베이스 통신중 에러가 발생하였습니다'
+      })
+    }
   });
 }

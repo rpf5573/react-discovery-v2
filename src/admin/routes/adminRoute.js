@@ -149,6 +149,15 @@ module.exports = (app, DCQuery, upload) => {
     res.sendStatus(201);
     return;
   });
+  app.post('/admin/puzzle-settings/eniac-state', async (req, res) => {
+    try {
+      await DCQuery.meta.update('eniac_state', req.body.eniacState);
+      return res.sendStatus(201);
+    } catch (e) {
+      console.log( 'error : ', e );
+      return res.sendStatus(404);
+    }
+  });
 
   // points
   app.post('/admin/point-reward/points', async (req, res) => {
