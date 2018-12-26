@@ -1,5 +1,6 @@
 const path = require('path');
 const template = require('../user-client/template');
+const utils = new(require('../../utils'))();
 
 module.exports = (app, DCQuery, upload) => {
 
@@ -142,12 +143,11 @@ module.exports = (app, DCQuery, upload) => {
           });
         } else {
           try {
-            console.log( 'req.body.point : ', req.body.point );
             DCQuery.points.updateOneRow({
               team: req.body.team,
-              useable: req.body.point
+              temp: req.body.point // useable이 아니라 temp를 업데이트 한다
             });
-            DCQuery.uploads.update(req.body.team, req.files.userFile[0].filename);
+            DCQuery.uploads.update(req.body.team, req.files.userFile[0].filename, true);
             res.sendStatus(201);
           } catch (e) {
             console.log( 'e : ', e );
@@ -156,5 +156,32 @@ module.exports = (app, DCQuery, upload) => {
         }
       }
     });
+  });
+
+  app.post('/user/timer-check', async (req, res) => {
+    try {
+      let result = await DCQuery.timer.get(req.body.team);
+      let timerState = parseInt(result[0].state);
+      if ( ! timerState ) {
+        return res.status(201).json({
+          error: "타이머가 꺼져있습니다. 잠시 후에 다시 시도해 주시기 바랍니다"
+        });
+      }
+
+      const startTime = result[0].startTime;
+      const currentTime = utils.getCurrentTimeInSeconds();
+      let td = req.body.laptime - ( currentTime - startTime );
+      if ( td <= 0 ) {
+        return res.status(201).json({
+          error: "타이머 시간이 지났습니다"
+        });
+      } 
+    
+      return res.sendStatus(201);
+
+    } catch (e) {
+      console.log( 'e : ', e );
+      return res.sendStatus(404);
+    }
   });
 }

@@ -11,6 +11,11 @@ export default function configureStore(initialSettings = {}) {
   initialSettings.random_eniac_words = JSON.parse(initialSettings.random_eniac_words); // 실패할일 없음 어차피 null도 받으니까
 
   var initialState = initialSettings;
+  initialState.fileInfo = {
+    src: null,
+    type: null
+  }
+  // initialState.progressVal = 0;
 
   console.log( 'initialState : ', initialState );
   const store = createStore(

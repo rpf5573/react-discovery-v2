@@ -1,4 +1,4 @@
-import { UPLOAD_FILE, UPDATE_PREVIEW_IMAGE } from './types';
+import { UPLOAD_FILE, UPDATE_FILE_INFO, UPDATE_PROGRESS_VAL } from './types';
 
 export const uploadFile = (test) => dispatch => {
   dispatch({
@@ -7,9 +7,16 @@ export const uploadFile = (test) => dispatch => {
   });
 }
 
-export const updatePreviewImage = (previewImgSrc) => dispatch => {
+export const updateFileInfo = (fileInfo) => dispatch => {
   dispatch({
-    type: UPDATE_PREVIEW_IMAGE,
-    payload: previewImgSrc
+    type: UPDATE_FILE_INFO,
+    payload: fileInfo
+  });
+}
+
+export const updateProgressVal = (val) => dispatch => {
+  dispatch({
+    type: UPDATE_PROGRESS_VAL,
+    payload: val
   });
 }

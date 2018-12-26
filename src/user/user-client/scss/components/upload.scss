@@ -1,5 +1,6 @@
 .upload-page {
   height: 100%;
+
   .upload-box {
     width: calc(100% - 20px);
     height: calc(100% - 20px);
@@ -67,11 +68,32 @@
         color: green;
       }
     }
+    &--image {
+      video {
+        display: none;
+        max-height: 80%;
+      }
+    }
+    &--video {
+      img {
+        display: none;
+      }
+    }
+    .progress-bar {
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      height: 12px;      
+    }
+  }
+  .slide-left {
+    animation: slideLeft 0.6s;
+    animation-fill-mode: forwards;
   }
 
   @keyframes slideLeft {
     from {
-      transform: translateX(-150%);
+      transform: translateX(150%);
     }
   
     to {

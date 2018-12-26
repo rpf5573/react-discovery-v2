@@ -46,7 +46,7 @@ html, body, #app, #app > .container {
 #app > .container {
   display: flex;
   flex-direction: column; }
-  #app > .container .l-top {
+  #app > .container > .l-top {
     flex-grow: 1;
     position: relative; }
 
@@ -366,6 +366,73 @@ html, body, #app, #app > .container {
     .eniac-modal > .modal-content .eniac-form .eniac-input,
     .eniac-modal > .modal-content .eniac-form .eniac-btn {
       width: 100%; }
+
+.upload-page {
+  height: 100%; }
+  .upload-page .upload-box {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    margin: 10px;
+    padding: 0;
+    border: 2px dotted gray;
+    background-color: #F9F9FB;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; }
+    .upload-page .upload-box > .l-top {
+      margin-bottom: 10px; }
+      .upload-page .upload-box > .l-top .note-add-icon {
+        font-size: 46px; }
+    .upload-page .upload-box > .l-bottom {
+      font-size: 20px; }
+  .upload-page .preview {
+    position: relative;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .upload-page .preview img {
+      width: 96%; }
+    .upload-page .preview .check-btns {
+      position: absolute;
+      right: 0;
+      bottom: 40px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      background-color: white;
+      font-size: 34px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 4px;
+      padding-right: 10px;
+      margin-right: -10px;
+      border: 1px solid #5217ff;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); }
+      .upload-page .preview .check-btns .cancel > svg, .upload-page .preview .check-btns .ok > svg {
+        font-size: 40px; }
+      .upload-page .preview .check-btns .cancel {
+        margin-right: 10px;
+        color: red; }
+      .upload-page .preview .check-btns .ok {
+        margin-right: 10px;
+        color: green; }
+    .upload-page .preview--image video {
+      display: none; }
+    .upload-page .preview--video image {
+      display: none; }
+  .upload-page .slide-left {
+    animation: slideLeft 0.6s;
+    animation-fill-mode: forwards; }
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(150%); }
+  to {
+    transform: translateX(0); } }
 
 /*  Layout
 /* --------------------------------------------------- */

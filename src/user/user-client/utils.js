@@ -1,3 +1,5 @@
+import fileExtensions from './file-extensions';
+
 export const teamColors = [
   '#1B378A', // 1
   '#B6171E', // 2
@@ -16,6 +18,27 @@ export const teamColors = [
   '#00BCD4'  // 15
 ];
 
+export const IMAGE = 'image';
+export const VIDEO = 'video';
+
 export const getFileExtension = (filename) => {
   return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+}
+
+export const fileTypeCheck = (filename) => {
+  // file 확장자명 체크
+  const extension = getFileExtension(filename);
+  for ( var i = 0; i < fileExtensions.image.length; i++ ) {
+    if ( extension == fileExtensions.image[i] ) {
+      return IMAGE;
+    }
+  }
+
+  for ( var i = 0; i < fileExtensions.video.length; i++ ) {
+    if ( extension == fileExtensions.video[i] ) {
+      return VIDEO;
+    }
+  }
+
+  return null;
 }
