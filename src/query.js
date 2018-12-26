@@ -9,7 +9,8 @@ class DCQuery {
       timer: 'dc_timer',
       points: 'dc_points',
       puzzle: 'dc_puzzle',
-      postInfo: 'dc_post_info'
+      postInfo: 'dc_post_info',
+      uploads: 'dc_uploads'
     }
     this.meta = new Meta(this.tables.meta, this.mysql);
     this.teamPasswords = new TeamPasswords(this.tables.teamPasswords, this.mysql);
@@ -17,6 +18,7 @@ class DCQuery {
     this.points = new Points(this.tables.points, this.mysql);
     this.puzzle = new Puzzle(this.tables.puzzle, this.mysql);
     this.postInfo = new PostInfo(this.tables.postInfo, this.mysql);
+    this.uploads = new Uploads(this.tables.uploads, this.mysql);
   }
   async getInitialState(role) {
     switch( role ) {
@@ -62,7 +64,10 @@ class DCQuery {
     for( var i = 0; i < total_team_count; i++ ) {
       const puzzleNumbers = (function(raw) {
         try {
-            return JSON.parse(raw);
+          if ( raw == null ) {
+            return [];
+          }
+          return JSON.parse(raw);
         } catch (err) {
             return [];
         }
@@ -346,6 +351,29 @@ class PostInfo {
     let result = await this.mysql.query(sql);
     return result;
   }
+}
+
+class Uploads {
+  constructor(table, mysql) {
+    this.table = table;
+    this.mysql = mysql;
+  }
+
+  async get(team) {
+    let sql = `SELECT files FROM ${this.table} WHERE team = ${team}`;
+    let result = await this.mysql.query(sql);
+    return result;
+  }
+
+  async update(team, filename) {
+    let result = await this.get(team);
+    let files = (result[0].files ? JSON.parse(result[0].files) : []);
+    files.push(filename);
+    let sql = `UPDATE ${this.table} SET files = '${JSON.stringify(files)}' WHERE team = ${team}`;
+    result = await this.mysql.query(sql);
+    return result;
+  }
+
 }
 
 module.exports = DCQuery;

@@ -1,32 +1,23 @@
 const fileExtensions = require('./user-client/file-extensions');
+const utils = new(require('../utils'))();
 
 module.exports = (app, path, multer, mysql) => {
   const DCQuery = new (require('../query'))(mysql);
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, 'public/user/uploads/');
+      let team = (req.body.team ? req.body.team : req.session.loginData.team );
+      cb(null, `public/user/uploads/${req.body.team}`);
     },
     filename: (req, file, cb) => {
-      cb(null, file.originalname);
+      let date = utils.getYYYYMMDDHHMMSS();
+      let filename = date + path.extname(file.originalname);
+      console.log( 'filename : ', filename );
+      cb(null, filename);
     }
   });
   const upload = multer({
     storage: storage,
-    fileFilter: (req, file, cb) => {
-      const fileTypes = fileExtensions.video.concat(fileExtensions.image);
-      const ext = path.extname(file.originalname).toLowerCase();
-      var fileExtensionOK = false;
-      for ( var i = 0; i < fileTypes.length; i++ ) {
-        if ( ext == fileTypes[i] ) {
-          fileExtensionOK = true;
-        }
-      }
-      if ( fileExtensionOK ) {
-        return cb(null, true);
-      } else {
-        cb('Error : 지원하지 않는 파일 타입입니다');
-      }
-    }
-  }).fields([{name: 'empty_test', maxCount: 1}, {name: 'emtpy_test_2', maxCount: 1}]);
+    limits:{fileSize: 100000000} // about 100MB
+  }).fields([{name: 'userFile', maxCount: 1}]);
   require('./routes/userRoute')(app, DCQuery, upload);
 }

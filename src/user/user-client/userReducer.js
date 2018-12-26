@@ -1,8 +1,9 @@
-import { UPDATE_POINTS, UPDATE_PUZZLE_COLON_INFO } from './actions/types';
+import { UPDATE_POINTS, UPDATE_PUZZLE_COLON_INFO, UPDATE_PREVIEW_IMAGE } from './actions/types';
 
 var initialState = {
   points: [],
-  puzzleColonInfo: []
+  puzzleColonInfo: [],
+  previewImgSrc: null
 };
 
 export default (state = initialState, action) => {
@@ -16,6 +17,11 @@ export default (state = initialState, action) => {
     case UPDATE_PUZZLE_COLON_INFO:
       return Object.assign({}, state, {
         puzzleColonInfo: action.payload
+      });
+
+    case UPDATE_PREVIEW_IMAGE:
+      return Object.assign({}, state, {
+        previewImgSrc: action.payload
       });
 
     default: return state;

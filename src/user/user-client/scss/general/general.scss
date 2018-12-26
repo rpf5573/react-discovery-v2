@@ -7,11 +7,11 @@ html, body, #app, #app > .container {
 #app > .container {
   display: flex;
   flex-direction: column;
-  .l-top {
+  & > .l-top {
     flex-grow: 1;
     position: relative;
   }
-  .l-bottom {
+  & > .l-bottom {
     
   }
 }

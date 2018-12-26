@@ -127,4 +127,34 @@ module.exports = (app, DCQuery, upload) => {
       })
     }
   });
+
+  app.post('/user/upload', async (req, res) => {
+    upload(req, res, (err) => {
+      if ( err ) {
+        console.log( 'upload err : ', err );
+        res.status(201).json({
+          error: err
+        });
+      } else {
+        if ( req.files == undefined || ( req.files && req.files.userFile == undefined ) ) {
+          res.status(201).json({
+            error: '파일이 없습니다'
+          });
+        } else {
+          try {
+            console.log( 'req.body.point : ', req.body.point );
+            DCQuery.points.updateOneRow({
+              team: req.body.team,
+              useable: req.body.point
+            });
+            DCQuery.uploads.update(req.body.team, req.files.userFile[0].filename);
+            res.sendStatus(201);
+          } catch (e) {
+            console.log( 'e : ', e );
+            res.sendStatus(401);
+          }
+        }
+      }
+    });
+  });
 }

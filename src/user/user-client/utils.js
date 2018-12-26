@@ -15,3 +15,7 @@ export const teamColors = [
   '#9E9E9E', // 14
   '#00BCD4'  // 15
 ];
+
+export const getFileExtension = (filename) => {
+  return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+}
