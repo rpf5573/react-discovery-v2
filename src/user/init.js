@@ -1,5 +1,4 @@
-const fileExtensions = require('./user-client/file-extensions');
-const utils = new(require('../utils'))();
+const utils = new(require('../utils/server'))();
 
 module.exports = (app, path, multer, mysql) => {
   const DCQuery = new (require('../query'))(mysql);

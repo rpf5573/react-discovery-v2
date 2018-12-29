@@ -7587,10 +7587,6 @@ input.form-control::placeholder {
 
 .sidebar {
   background-color: #ffffff;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
   box-shadow: 0 0px 15px 8px rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02); }
   .sidebar .menu-item {
     position: relative;
@@ -7699,6 +7695,21 @@ input.form-control::placeholder {
 
 .modal-dialog.modal--post-info .post-info-row input, .modal-dialog.modal--post-info .post-info-row .cancel-btn, .modal-dialog.modal--post-info .post-info-row .apply-btn {
   display: none; }
+
+.load-files-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 42px;
+  height: 42px;
+  background-color: red;
+  color: white;
+  border: 1px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  cursor: pointer; }
 
 /*  Layout
 /* --------------------------------------------------- */

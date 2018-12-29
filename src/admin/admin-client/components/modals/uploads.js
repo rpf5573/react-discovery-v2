@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import _ from 'lodash';
+import { getFileExtension } from '../../../../utils/client';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label } from 'reactstrap';
 import { closeModal, uploadImageFile } from '../../actions';
 import axios from 'axios';
@@ -23,7 +24,9 @@ class Uploads extends React.Component {
   async companyImageFileSelectHandler(e) {
     const companyImage = e.target.files[0];
     const fd = new FormData();
-    fd.append('companyImage', companyImage, companyImage.name);
+    let fileExtension = getFileExtension(companyImage.name);
+    const filename = 'companyImage.' + fileExtension;
+    fd.append('companyImage', companyImage, filename);
 
     try {
       const response = await axios({
@@ -34,7 +37,7 @@ class Uploads extends React.Component {
       
       if ( response.status == 201 && !response.data.error ) {
         this.props.uploadImageFile({
-          companyImage: companyImage.name
+          companyImage: filename
         })
         alert("성공");
       } else {
@@ -47,7 +50,9 @@ class Uploads extends React.Component {
   async mapFileSelectHandler(e) {
     const map = e.target.files[0];
     const fd = new FormData();
-    fd.append('map', map, map.name);
+    let fileExtension = getFileExtension(map.name);
+    const filename = 'map.' + fileExtension;
+    fd.append('map', map, filename);
 
     try {
       const response = await axios({
@@ -58,7 +63,7 @@ class Uploads extends React.Component {
       
       if ( response.status == 201 && !response.data.error ) {
         this.props.uploadImageFile({
-          map: map.name
+          map: filename
         });
         alert("성공");
       } else {

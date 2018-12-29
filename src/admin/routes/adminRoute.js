@@ -1,6 +1,6 @@
 const path = require('path');
 const template = require('../admin-client/template');
-const utils = new(require('../../utils'))();
+const utils = new(require('../../utils/server'))();
 
 module.exports = (app, DCQuery, upload) => {
 
@@ -183,6 +183,25 @@ module.exports = (app, DCQuery, upload) => {
     }
     return res.sendStatus(201);
   });
+  app.post('/admin/point-reward/upload', async (req, res) => {
+    try {
+      // update point
+      await DCQuery.points.updateOneRow({
+        team: req.body.team,
+        useable: req.body.point
+      });
+
+      // remove the filename from files array
+      await DCQuery.uploads.remove(req.body.team, req.body.filename);
+
+      res.sendStatus(201);
+    } catch (e) {
+      console.log( 'e : ', e );
+      res.status(201).json({
+        error: e
+      });
+    }
+  });
 
   // admin passwords
   app.post('/admin/admin-passwords/passwords', async (req, res) => {
@@ -255,4 +274,31 @@ module.exports = (app, DCQuery, upload) => {
     }
     return res.sendStatus(201);
   });
+
+  // load files
+  app.post('/admin/load-upload-infos', async (req, res) => {
+    try {
+      let allNull = true;
+      let result = await DCQuery.uploads.getAll(req.body.teamCount);
+      for ( var i = 0; i < req.body.teamCount; i++ ) {
+        if ( result[i].files ) {
+          allNull = false;
+          break;
+        }
+      }
+      if ( allNull ) {
+        res.status(201).json({
+          error: '올라온 자료가 없거나, 타이머를 종료하지 않았습니다'
+        });
+      } else {
+        res.status(201).json({
+          uploadInfos: result
+        });
+      }
+    } catch(e) {
+      console.log(e);
+      return res.sendStatus(404);
+    }
+  });
+  
 }

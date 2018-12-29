@@ -1,6 +1,6 @@
 const path = require('path');
 const template = require('../user-client/template');
-const utils = new(require('../../utils'))();
+const utils = new(require('../../utils/server'))();
 
 module.exports = (app, DCQuery, upload) => {
 
@@ -147,7 +147,7 @@ module.exports = (app, DCQuery, upload) => {
               team: req.body.team,
               temp: req.body.point // useable이 아니라 temp를 업데이트 한다
             });
-            DCQuery.uploads.update(req.body.team, req.files.userFile[0].filename, true);
+            DCQuery.uploads.add(req.body.team, req.files.userFile[0].filename, true);
             res.sendStatus(201);
           } catch (e) {
             console.log( 'e : ', e );
@@ -181,6 +181,23 @@ module.exports = (app, DCQuery, upload) => {
 
     } catch (e) {
       console.log( 'e : ', e );
+      return res.sendStatus(404);
+    }
+  });
+
+  app.get('/user/open-lastbox', async (req, res) => {
+    try {
+      let result = await DCQuery.meta.get('lastbox_state');
+      result = parseInt(result);
+      if ( result ) {
+        return res.sendStatus(201);
+      } else {
+        return res.status(201).json({
+          error: "현재 해당 박스는 열 수 없습니다"
+        });
+      }
+    } catch (e) {
+      console.error(e);
       return res.sendStatus(404);
     }
   });

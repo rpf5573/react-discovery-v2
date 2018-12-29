@@ -1,0 +1,26 @@
+.file-item {
+  box-sizing: border-box;
+  // padding: 15px;
+  position: relative;
+  margin-bottom: 20px;
+  .l-top {
+    margin-bottom: 10px;
+  }
+  .team {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 40px;
+    height: 40px;
+    font-size: 32px;
+    background-color: white;
+    border: 1px solid black;
+  }
+  img {
+    width: 100%;
+  }
+}

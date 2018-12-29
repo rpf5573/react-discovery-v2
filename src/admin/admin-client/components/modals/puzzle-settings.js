@@ -1,4 +1,4 @@
-import { shuffle, isValidURL, ON, OFF } from '../../utils';
+import { shuffle, isValidURL, ON, OFF } from '../../../../utils/client';
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -61,16 +61,16 @@ class PuzzleSettings extends React.Component {
     const val = this.eniacWordInput.current.value;
     if ( val.length > 0 ) {
       var arr = val.replace(/\s/g, "").split('');
-      // this.props.puzzleBoxCount - 1 => 그 동영상 보이는 hidden box를 고려해서 1 뺀거임
-      if ( arr.length > (this.props.puzzleBoxCount - 1) ) {
-        alert("글자수가 박스개수보다 많습니다");
-        return;
-      }
 
       let zeroArr = new Array(this.props.puzzleBoxCount - arr.length).fill(0);
       let resultArr = [...zeroArr, ...arr];
       shuffle(resultArr);
       let json = JSON.stringify(resultArr);
+
+      // 참고로 : puzzleBoxCount가 이미 last box를 고려해서 1개 빼져있는 상태임
+      if ( this.props.puzzleBoxCount < resultArr.length ) {
+        return alert("ERROR : 글자개수가 박스개수보다 더 많습니다");
+      }
 
       try {
         let response = await axios({
@@ -102,8 +102,8 @@ class PuzzleSettings extends React.Component {
       method: 'POST',
       url: '/admin/puzzle-settings/eniac-words',
       data: {
-        originalEniacWords: '',
-        randomEniacWords: ''
+        originalEniacWords: null,
+        randomEniacWords: null
       }
     });
     this.eniacWordInput.current.value = '';
@@ -193,7 +193,7 @@ class PuzzleSettings extends React.Component {
     for ( var i = 0; i < counts.length; i++ ) {
       let isActive = (this.props.puzzleBoxCount == counts[i]) ? true : false;
       list.push(
-        <DropdownItem active={isActive} key={i} data-count={counts[i]} onClick={this.updatePuzzleBoxCount}>{counts[i]}개</DropdownItem>
+        <DropdownItem active={isActive} key={i} data-count={counts[i] - 1} onClick={this.updatePuzzleBoxCount}>{counts[i]}개</DropdownItem>
       );
     }
     return list;
@@ -217,7 +217,7 @@ class PuzzleSettings extends React.Component {
               <div className="l-left">
                 <Dropdown direction="right" isOpen={this.state.btnDropright} toggle={() => { this.setState({ btnDropright: !this.state.btnDropright }); }}>
                   <DropdownToggle color="success" caret>
-                    {this.props.puzzleBoxCount}개
+                    {this.props.puzzleBoxCount + 1}개
                   </DropdownToggle>
                   <DropdownMenu>
                     {this.renderPuzzleBoxCountDropdownMenuItems()}

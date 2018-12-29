@@ -1,4 +1,4 @@
-const utils = new(require('./utils'))();
+const utils = new(require('./utils/server'))();
 
 class DCQuery {
   constructor(mysql) {
@@ -41,11 +41,13 @@ class DCQuery {
         var teamCount = await this.teamPasswords.getTeamCount();
         var points = await this.points.get('useable');
         var puzzleColonInfo = await this.puzzle.getAll();
+        var postInfos = await this.postInfo.getAll();
         return {
           ...metas,
           teamCount,
           points,
-          puzzleColonInfo
+          puzzleColonInfo,
+          postInfos
         };
         
       default:
@@ -142,7 +144,10 @@ class Meta {
     }
   }
   async update(key, value) {
-    const sql = `UPDATE ${this.table} SET meta_value = '${value}' WHERE meta_key = '${key}'`;
+    let sql = `UPDATE ${this.table} SET meta_value = '${value}' WHERE meta_key = '${key}'`;
+    if ( value == null ) {
+      sql = `UPDATE ${this.table} SET meta_value = NULL WHERE meta_key = '${key}'`;
+    }
     const result = await this.mysql.query(sql);
     return result;
   }
@@ -380,12 +385,35 @@ class Uploads {
     return result;
   }
 
-  async update(team, filename, isTemp = false) {
+  async getAll(until) {
+    let sql = `SELECT team, files FROM ${this.table} WHERE team <= ${until} ORDER BY team`;
+    let result = await this.mysql.query(sql);
+    return result;
+  }
+
+  async add(team, filename, isTemp = false) {
     let result = await this.get(team);
     let col = isTemp ? 'temp' : 'files'; // 아주 기발했다 !
     let files = (result[0][col] ? JSON.parse(result[0][col]) : []);
     files.push(filename);
     let sql = `UPDATE ${this.table} SET ${col} = '${JSON.stringify(files)}' WHERE team = ${team}`;
+    result = await this.mysql.query(sql);
+
+    return result;
+  }
+
+  async remove(team, filename) {
+    let result = await this.get(team);
+    let files = JSON.parse(result[0].files);
+
+    if ( Array.isArray(files) ) {
+      files = files.filter(val => val !== filename);
+    }
+
+    let sql = `UPDATE ${this.table} SET files = '${JSON.stringify(files)}' WHERE team = ${team}`;
+    if ( files.length == 0 ) {
+      sql = `UPDATE ${this.table} SET files = NULL WHERE team = ${team}`;
+    }
     result = await this.mysql.query(sql);
 
     return result;

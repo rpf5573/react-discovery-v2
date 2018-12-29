@@ -2,13 +2,14 @@ import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import socketIOClient from "socket.io-client";
-import { teamColors } from '../utils';
+import { teamColors } from '../../../utils/client';
 import cn from 'classnames';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { updatePuzzleColonInfo } from '../actions';
 import Modal from '@material-ui/core/Modal';
 import TextField from '@material-ui/core/TextField';
+import HelpOutline from '@material-ui/icons/HelpOutline';
 
 class PuzzleBox extends Component {
   constructor(props) {
@@ -20,8 +21,15 @@ class PuzzleBox extends Component {
     let flipperBoxCN = cn({
       'puzzle-box': true,
       'puzzle-box--flipper': true,
-    })
-    if ( ! this.props.owner ) {
+    });
+
+    // last인지가 나는 중요해 !
+    if ( this.props.isLast ) {
+      boxContent = (<button className="puzzle-box puzzle-box--normal d-f-center puzzle-box--last" onClick={this.props.onBoxClick}>
+        <HelpOutline></HelpOutline>
+      </button>)
+    }
+    else if ( ! this.props.owner ) {
       boxContent = <div className={flipperBoxCN}>
                     <button className="front" data-number={this.props.number} data-hasword={(this.props.word ? true : false)} onClick={this.props.onBoxClick}>
                     </button>
@@ -30,12 +38,13 @@ class PuzzleBox extends Component {
                       { this.props.word ? <span className="word outline">{this.props.word}</span> : <span className="word placeholder">강</span> }
                     </div>
                   </div>
-    } else {
+    } 
+    else if ( this.props.owner ) {
       boxContent = <div className="puzzle-box puzzle-box--normal d-f-center" style={{backgroundColor: this.props.teamColor}}>
                     { this.props.owner ? <span className="team"></span> : '' }
                     { this.props.word ? <span className="word outline">{this.props.word}</span> : <span className="word placeholder">강</span> }
                   </div>
-    }
+    } 
 
     return (
       <div className={wrapperClassName}>
@@ -66,10 +75,13 @@ class Puzzle extends Component {
 
     this.renderPuzzleBoxes = this.renderPuzzleBoxes.bind(this);
     this.openBox = this.openBox.bind(this);
+    this.openLastBox = this.openLastBox.bind(this);
     this.handleModalOpen = this.handleModalOpen.bind(this);
     this.handleModalClose = this.handleModalClose.bind(this);
     this.handleEniacSubmit = this.handleEniacSubmit.bind(this);
     this.handleEniacSentanceInput = this.handleEniacSentanceInput.bind(this);
+
+    this.hiddenAnchorForNewTab = React.createRef();
   }
 
   renderPuzzleBoxes(teamCount, boxCount, puzzleColonInfo, randomEniacWords) {
@@ -78,16 +90,17 @@ class Puzzle extends Component {
 
     // 20( 4 x 5 ), 24( 4 x 6 ), 30( 5 x 6 ), 35( 5 x 7 ), 40( 5 x 8 ), 48( 6 x 8 )
     var classWidth = 'w-25';
-    if ( boxCount == 30 || boxCount == 35 || boxCount == 40 ) {
+    // 원래는 boxCount 가 딱 30, 35, 40, 48개인데 마지막 박스를 고려해서 1개씩 뺀거임
+    if ( boxCount == 29 || boxCount == 34 || boxCount == 39 ) {
       classWidth = 'w-20';
     } 
-    else if ( boxCount == 48 ) {
+    else if ( boxCount == 47 ) {
       classWidth = 'w-18';
     }
 
     // 이거 시간 계산좀 해봐야 겠다,, 루프가 꽤 많이 도네, 많이 돌면 2천번은 돌겠는데 ?
     var boxes = [];
-    for ( var i = 0; i < boxCount; i++ ) {
+    for ( var i = 0; i < boxCount; i++ ) { // 마지막에 하나 빼먹어야지 !
       var boxNumber = i+1;
       const word = ( randomEniacWords ? (randomEniacWords[i] ? randomEniacWords[i] : false) : false );
       var team = false;
@@ -103,7 +116,7 @@ class Puzzle extends Component {
         }
       }
 
-      let puzzleBoxClassName = classWidth + ( team ? ` owner-${team}` : '' );
+      const puzzleBoxClassName = classWidth + ( team ? ` owner-${team}` : '' );
 
       boxes.push(<PuzzleBox className={puzzleBoxClassName} key={'box-'+boxNumber} number={boxNumber} owner={team} word={word} onBoxClick={this.openBox} ref={(input) => {
         if ( input != null ) {
@@ -111,6 +124,10 @@ class Puzzle extends Component {
         }
       }}></PuzzleBox>);
     }
+
+    const puzzleBoxClassName = classWidth + ' last-box';
+    // 마지막엔 이벤트 박스 넣어줘야징 !
+    boxes.push(<PuzzleBox className={puzzleBoxClassName} key='last-box' isLast number={boxNumber} onBoxClick={this.openLastBox} href={this.props.lastBoxGoogleDriveUrl} ></PuzzleBox>);
 
     return boxes;
   }
@@ -198,6 +215,25 @@ class Puzzle extends Component {
     }
   }
 
+  async openLastBox(e) {
+    try {
+      let response = await axios('/user/open-lastbox');
+      console.log( 'response : ', response );
+      if ( response.status == 201 && !response.data.error ) {
+        if ( ! this.props.lastBoxGoogleDriveUrl ) {
+          return alert( "현재 영상이 설정되어있지 않습니다. 새로고침 하거나, 관리자에게 문의 해주시기 바랍니다" );
+        } else {
+          this.hiddenAnchorForNewTab.current.click();
+        }
+      } else {
+        alert( response.data.error );
+      }
+    } catch (e) {
+      console.error(e);
+      alert( "ERROR : 알수없는 에러가 발생했습니다" );
+    }
+  }
+
   async componentDidMount() {
     try {
       let response = await axios('/user/get-puzzle-colon-info');
@@ -227,6 +263,7 @@ class Puzzle extends Component {
     })
     return (
       <div className="puzzle-page full-container">
+        <a className="d-none" href={this.props.lastBoxGoogleDriveUrl} target="_blank" rel="noopener noreferrer" ref={this.hiddenAnchorForNewTab}></a>
         <div className="puzzle-container">
           { this.renderPuzzleBoxes(this.props.teamCount, this.props.count, this.props.puzzleColonInfo, this.props.randomEniacWords) }
         </div>
@@ -280,7 +317,8 @@ function mapStateToProps(state, ownProps) {
     mappingPoints: state.mapping_points,
     endPoint: state.rootPath,
     randomEniacWords: state.random_eniac_words,
-    originalEniacWords: state.original_eniac_words
+    originalEniacWords: state.original_eniac_words,
+    lastBoxGoogleDriveUrl: state.lastbox_google_drive_url
   };
 }
 

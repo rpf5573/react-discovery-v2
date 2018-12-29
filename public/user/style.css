@@ -103,6 +103,8 @@ html, body, #app, #app > .container {
 .map-page {
   display: flex;
   align-items: center; }
+  .map-page .wrapper {
+    width: 100%; }
   .map-page img {
     width: 100%;
     height: auto; }
@@ -161,6 +163,12 @@ html, body, #app, #app > .container {
             height: calc(100% + 2px);
             z-index: 2;
             transform: rotateY(180deg); }
+        .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--last {
+          box-sizing: border-box;
+          border: 1px solid yellow;
+          background-color: white; }
+          .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box--last svg {
+            font-size: 42px; }
         .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box .word {
           font-size: 34px; }
           .puzzle-page .puzzle-container .puzzle-box-wrapper .puzzle-box .word.placeholder {
@@ -421,9 +429,15 @@ html, body, #app, #app > .container {
         margin-right: 10px;
         color: green; }
     .upload-page .preview--image video {
+      display: none;
+      max-height: 80%; }
+    .upload-page .preview--video img {
       display: none; }
-    .upload-page .preview--video image {
-      display: none; }
+    .upload-page .preview .progress-bar {
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      height: 12px; }
   .upload-page .slide-left {
     animation: slideLeft 0.6s;
     animation-fill-mode: forwards; }
@@ -433,6 +447,17 @@ html, body, #app, #app > .container {
     transform: translateX(150%); }
   to {
     transform: translateX(0); } }
+
+.post-info-page > .title {
+  text-align: center; }
+
+.post-info-page .post-info-list span {
+  font-size: 22px; }
+  .post-info-page .post-info-list span svg {
+    font-size: 30px; }
+
+.post-info-page .post-info-list .post-info-list-item {
+  border-bottom: 1px solid #dcdcdc8a; }
 
 /*  Layout
 /* --------------------------------------------------- */

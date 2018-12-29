@@ -51,6 +51,7 @@ class App extends Component {
   }
 
   render() {
+    console.log( 'render', ' is called' );
     return (
       <div className="page">
         <div className="bg-img" style={{ backgroundImage: `url(${this.state.companyImageURL})` }}> </div>
@@ -79,13 +80,11 @@ class App extends Component {
       let result = response.data;
       if ( result.companyImage ) {
         this.setState({
-          companyImageURL: '/admin/uploads/' + result.companyImage
+          companyImageURL: '/admin/uploads/' + result.companyImage,
+          show: true
         });
       }
     }
-    setTimeout(() => {
-      this.setState({ show: true });
-    }, 500);
   }
 
 }

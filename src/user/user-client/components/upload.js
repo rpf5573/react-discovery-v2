@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { fileTypeCheck, IMAGE, VIDEO } from '../utils';
+import { fileTypeCheck, IMAGE, VIDEO } from '../../../utils/client';
 import cn from 'classnames';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';

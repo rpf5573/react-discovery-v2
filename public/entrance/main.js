@@ -225,6 +225,7 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      console.log('render', ' is called');
       return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "page"
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -276,6 +277,7 @@ function (_Component) {
                   result = response.data;
 
                   if (result.companyImage) {
+                    console.log('result.companyImage : ', result.companyImage);
                     this.setState({
                       companyImageURL: '/admin/uploads/' + result.companyImage
                     });

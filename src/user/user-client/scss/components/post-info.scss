@@ -1,0 +1,16 @@
+.post-info-page {
+  & > .title {
+    text-align: center;
+  }
+  .post-info-list {
+    span {
+      font-size: 22px;
+      svg {
+        font-size: 30px;
+      }
+    }
+    .post-info-list-item {
+      border-bottom: 1px solid #dcdcdc8a;
+    }
+  }
+}

@@ -9,6 +9,7 @@ module.exports = {
   output: {
     filename: "main.js",
     path: distPath,
+    publicPath: '/entrance',
   },
   module: {
     rules: [
