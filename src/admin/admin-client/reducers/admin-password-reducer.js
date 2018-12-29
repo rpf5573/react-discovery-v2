@@ -1,8 +1,8 @@
 import { UPDATE_ADMIN_PASSWORDS } from '../actions/types';
 
 export default function(state = {
-  super: 0,
-  secondary: 0
+  admin: 0,
+  assist: 0
 }, action) {
   switch( action.type ) {
     case UPDATE_ADMIN_PASSWORDS :

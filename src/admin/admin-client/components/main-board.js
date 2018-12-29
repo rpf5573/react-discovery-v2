@@ -148,7 +148,6 @@ class MainBoard extends Component {
   }
 
   render() {
-    console.log( 'render', ' is called' );
     return (
       <Row>
         { (this.props.teamCount && Array.isArray(this.state.uploadInfos)) ? this.renderUploadInfos(this.state.uploadInfos) : '' }

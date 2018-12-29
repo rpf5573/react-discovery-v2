@@ -51,7 +51,6 @@ class App extends Component {
   }
 
   render() {
-    console.log( 'render', ' is called' );
     return (
       <div className="page">
         <div className="bg-img" style={{ backgroundImage: `url(${this.state.companyImageURL})` }}> </div>

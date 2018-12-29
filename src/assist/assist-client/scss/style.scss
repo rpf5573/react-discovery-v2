@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+/*  Vendors ( SCSS Plugin made by other developers )
+/* --------------------------------------------------- */
+
+/*  Utils ( useful functions, mixins )
+/* --------------------------------------------------- */
+@import "utils/ripple.scss";
+
+/*  General ( default setup , override other plugin's settings )
+/* ----------------------------------------------------------------- */
+@import "general/general";
+
+/*  Components
+/* --------------------------------------------------- */
+@import "components/bottom-navigation",
+        "components/map",
+        "components/point",
+        "components/result";
+
+/*  Layout
+/* --------------------------------------------------- */
+
+
+/*  Pages
+/* --------------------------------------------------- */
+
+/*  Responsive ( response to site's dynamic width )
+/* --------------------------------------------------- */
+@import "responsive";

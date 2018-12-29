@@ -16,8 +16,8 @@ class AdminPasswordModal extends React.Component {
     };
     this.close = this.close.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.superInput = React.createRef();
-    this.secondaryInput = React.createRef();
+    this.adminInput = React.createRef();
+    this.assistInput = React.createRef();
   }
 
   close() {
@@ -31,7 +31,7 @@ class AdminPasswordModal extends React.Component {
   async handleFormSubmit(e) {
     e.preventDefault();
 
-    if ( !this.superInput.current.value && !this.secondaryInput.current.value ) {
+    if ( !this.adminInput.current.value && !this.assistInput.current.value ) {
       alert("ERROR : 비밀번호를 입력해 주시기 바랍니다");
       return;
     }
@@ -42,8 +42,8 @@ class AdminPasswordModal extends React.Component {
         url: '/admin/admin-passwords/passwords',
         data: {
           adminPasswords: {
-            super: (this.superInput.current.value ? this.superInput.current.value : this.props.super),
-            secondary: (this.secondaryInput.current.value ? this.secondaryInput.current.value : this.props.secondary )
+            admin: (this.adminInput.current.value ? this.adminInput.current.value : this.props.admin),
+            assist: (this.assistInput.current.value ? this.assistInput.current.value : this.props.assist )
           }
         }
       });
@@ -51,14 +51,14 @@ class AdminPasswordModal extends React.Component {
       if ( response.status == 201 && !response.data.error ) {
         alert( '성공' );
 
-        if ( this.superInput.current.value ) {
-          this.superInput.current.placeholder = this.superInput.current.value;
-          this.superInput.current.value = '';
+        if ( this.adminInput.current.value ) {
+          this.adminInput.current.placeholder = this.adminInput.current.value;
+          this.adminInput.current.value = '';
         }
 
-        if ( this.secondaryInput.current.value ) {
-          this.secondaryInput.current.placeholder = this.secondaryInput.current.value;
-          this.secondaryInput.current.value = '';
+        if ( this.assistInput.current.value ) {
+          this.assistInput.current.placeholder = this.assistInput.current.value;
+          this.assistInput.current.value = '';
         }
       } else {
         alert( response.data.error );
@@ -82,12 +82,12 @@ class AdminPasswordModal extends React.Component {
             <Row>
               <Col xs="12">
                 <Label>관리자</Label>
-                <input className="form-control" placeholder={this.props.super} ref={this.superInput}></input>
+                <input className="form-control" placeholder={this.props.admin} ref={this.adminInput}></input>
               </Col>
               <div className="divider--uncolor"></div>
               <Col xs="12">
                 <Label>보조관리자</Label>
-                <input className="form-control" placeholder={this.props.secondary} ref={this.secondaryInput}></input>
+                <input className="form-control" placeholder={this.props.assist} ref={this.assistInput}></input>
               </Col>
             </Row>
           </ModalBody>
@@ -104,8 +104,8 @@ class AdminPasswordModal extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     activeModalClassName : state.modalControl.activeModalClassName,
-    super: state.adminPasswords.super,
-    secondary: state.adminPasswords.secondary
+    admin: state.adminPasswords.admin,
+    assist: state.adminPasswords.assist
   };
 }
 

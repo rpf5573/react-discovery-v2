@@ -31,15 +31,15 @@ module.exports = (app, DCQuery) => {
       })(adminPasswords);
 
       if ( json ) {
-        if ( req.body.password == json.super ) {
+        if ( req.body.password == json.admin ) {
           result.role = 'admin';
           result.success = true;
 
           req.session.loginData = result;
           return res.status(201).json(result);
         }
-        else if ( req.body.password == json.secondary ) {
-          result.role = 'secondary';
+        else if ( req.body.password == json.assist ) {
+          result.role = 'assist';
           result.success = true;
 
           req.session.loginData = result;
