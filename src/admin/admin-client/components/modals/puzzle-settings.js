@@ -1,4 +1,4 @@
-import * as utils from '../../../../utils';
+import * as utils from '../../../../utils/client';
 import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -114,7 +114,7 @@ class PuzzleSettings extends React.Component {
 
   async updateLastBoxGoogleDriveUrl() {
     let url = this.lastBoxGoogleDriveUrlInput.current.value;
-    if ( ! isValidURL(url) ) {
+    if ( ! utils.isValidURL(url) ) {
       alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
       return;
     }

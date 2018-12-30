@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import _ from 'lodash';
-import * as utils from '../../../../utils';
+import * as utils from '../../../../utils/client';
 import * as constants from '../../../../utils/constants';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label } from 'reactstrap';
 import { closeModal, uploadImageFile } from '../../actions';

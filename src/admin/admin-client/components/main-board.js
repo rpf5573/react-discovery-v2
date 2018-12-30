@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import cn from 'classnames';
-import * as utils from '../../../utils';
+import * as utils from '../../../utils/client';
 import * as constants from '../../../utils/constants';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -75,7 +75,6 @@ class MainBoard extends Component {
         if ( response.data.error ) {
           return alert( response.data.error );
         }
-
         let newUploadInfos = [...this.state.uploadInfos];
         for ( var i = 0; i < newUploadInfos.length; i++ ) {
           if ( newUploadInfos[i].team == team && Array.isArray(newUploadInfos[i].files) ) {

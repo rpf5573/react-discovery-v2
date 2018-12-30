@@ -1,4 +1,4 @@
-import * as utils from '../../../../utils';
+import * as utils from '../../../../utils/client';
 import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';

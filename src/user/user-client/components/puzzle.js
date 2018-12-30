@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import socketIOClient from "socket.io-client";
-import * as utils from '../../../utils';
+import * as utils from '../../../utils/client';
 import * as constants from '../../../utils/constants';
 import cn from 'classnames';
 import Button from '@material-ui/core/Button';

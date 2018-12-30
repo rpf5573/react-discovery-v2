@@ -1,6 +1,6 @@
 const path = require('path');
 const template = require('../user-client/template');
-const utils = require('../../utils');
+const utils = require('../../utils/server');
 
 module.exports = (app, DCQuery, upload) => {
 
