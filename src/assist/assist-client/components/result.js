@@ -15,48 +15,35 @@ class Result extends Component {
   }
 
   async componentDidMount() {
-    try {
-      let response = await axios('/user/get-updated-points');
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        this.props.updatePoints(response.data);
-        this.setState({
-          chartSize: {
-            horizontal: {
-              width: this.chartWrapper.current.offsetWidth - 20,
-              height: this.chartWrapper.current.offsetHeight - 40, // for top, bottom padding
-              margin: {
-                top: 0,
-                right: 10,
-                left: 0,
-                bottom: 0
-              },
-              barSize: (this.props.chartData.length < 9) ? 30 : 20
+    utils.simpleAxios('/user/get-updated-points', config, (response) => {
+      this.props.updatePoints(response.data);
+      this.setState({
+        chartSize: {
+          horizontal: {
+            width: this.chartWrapper.current.offsetWidth - 20,
+            height: this.chartWrapper.current.offsetHeight - 40, // for top, bottom padding
+            margin: {
+              top: 0,
+              right: 10,
+              left: 0,
+              bottom: 0
             },
-            vertical: {
-              width: this.chartWrapper.current.offsetWidth - 20,
-              height: this.chartWrapper.current.offsetHeight - 40, // for top, bottom padding
-              margin: {
-                top: 0,
-                right: 10,
-                left: -20,
-                bottom: 0
-              },
-              barSize: (this.props.chartData.length < 9) ? 30 : 20
-            }
+            barSize: (this.props.chartData.length < 9) ? 30 : 20
+          },
+          vertical: {
+            width: this.chartWrapper.current.offsetWidth - 20,
+            height: this.chartWrapper.current.offsetHeight - 40, // for top, bottom padding
+            margin: {
+              top: 0,
+              right: 10,
+              left: -20,
+              bottom: 0
+            },
+            barSize: (this.props.chartData.length < 9) ? 30 : 20
           }
-        });
-
-      } else {
-        alert( constants.ERROR.unknown );
-      }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
-
+        }
+      });
+    });
   }
 
   render() {

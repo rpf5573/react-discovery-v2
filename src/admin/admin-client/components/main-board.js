@@ -61,58 +61,43 @@ class MainBoard extends Component {
   }
 
   async rewardPoint(team, point, filename) {
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/point-reward/upload',
-        data: {
-          team,
-          point,
-          filename
-        }
-      });
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        let newUploadInfos = [...this.state.uploadInfos];
-        for ( var i = 0; i < newUploadInfos.length; i++ ) {
-          if ( newUploadInfos[i].team == team && Array.isArray(newUploadInfos[i].files) ) {
-            newUploadInfos[i].files = newUploadInfos[i].files.filter( val => val !== filename );
-            break;
-          }
-        }
-        alert( `성공 : ${team}팀에게 ${point}점을 지급하였습니다` );
-        this.setState({
-          uploadInfos: newUploadInfos
-        });
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/point-reward/upload',
+      data: {
+        team,
+        point,
+        filename
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      let newUploadInfos = [...this.state.uploadInfos];
+      for ( var i = 0; i < newUploadInfos.length; i++ ) {
+        if ( newUploadInfos[i].team == team && Array.isArray(newUploadInfos[i].files) ) {
+          newUploadInfos[i].files = newUploadInfos[i].files.filter( val => val !== filename );
+          break;
+        }
+      }
+      alert( `성공 : ${team}팀에게 ${point}점을 지급하였습니다` );
+      this.setState({
+        uploadInfos: newUploadInfos
+      });
+    });
   }
 
   async loadUploadInfos(e) {
     if ( ! this.props.teamCount ) {
       return alert("아직 파일을 불러올 수 없습니다.먼저 팀설정을 해주시기 바랍니다");
     }
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/load-upload-infos',
-        data: {
-          teamCount: this.props.teamCount
-        }
-      });
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-
-        shuffle(response.data.uploadInfos); // 한번 섞어줘야 공평하게 위에서 부터 뜨지 !
+    const config = {
+      method: 'POST',
+      url: '/admin/load-upload-infos',
+      data: {
+        teamCount: this.props.teamCount
+      }
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      shuffle(response.data.uploadInfos); // 한번 섞어줘야 공평하게 위에서 부터 뜨지 !
         for ( var i = 0; i < response.data.uploadInfos.length; i++ ) {
           let parsed = JSON.parse(response.data.uploadInfos[i].files);
           response.data.uploadInfos[i].files = parsed;
@@ -120,13 +105,7 @@ class MainBoard extends Component {
         this.setState({
           uploadInfos: response.data.uploadInfos
         });
-      } else {
-        alert( constants.ERROR.unknown );
-      }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    });
   }
 
   renderUploadInfos(data) {

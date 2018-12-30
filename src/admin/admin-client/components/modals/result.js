@@ -72,22 +72,11 @@ class ResultModal extends React.Component {
   }
   
   async getResultData() {
-    try {
-      let response = await axios('/admin/result');
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        this.setState({
-          rows: response.data
-        });
-      } else {
-        alert( constants.ERROR.unknown );
-      }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    utils.simpleAxios(axios, '/admin/result', (response) => {
+      this.setState({
+        rows: response.data
+      });
+    });
   }
 
   async componentDidMount() {

@@ -145,48 +145,36 @@ class TeamSetting extends React.Component {
         }
       }
 
-      try {
-        let response = await axios({
-          method: 'POST',
-          url: '/admin/team-setting/passwords',
-          data: {
-            teamPasswords: teamPasswords
-          }
-        });
-
-        if ( response.status == 201 ) {
-          if ( response.data.error ) {
-            return alert( response.data.error );
-          }
-          let newTeamPasswords = response.data;
-          
-          for ( var i = 0; i < teamPasswords.length; i++ ) {
-            let index = teamPasswords[i].team - 1;
-            let value = teamPasswords[i].password;
-            this.passwordInputFields[index].placeholder = value;
-            this.passwordInputFields[index].value = '';
-          }
-
-          var teamCount = this.passwordInputFields.reduce((accumulator, input, index, array)=>{
-            let val = parseInt(input.placeholder);
-            if ( !isNaN(val) && val != 0 ) {
-              accumulator++;
-            }
-            return accumulator;
-          }, 0);
-
-          this.props.updateTeamPasswords(newTeamPasswords);
-          this.props.updateTeamCount(teamCount);
-
-          alert( "성공" );
-          return;
-        } else {
-          alert( constants.ERROR.unknown );
+      const config = {
+        method: 'POST',
+        url: '/admin/team-setting/passwords',
+        data: {
+          teamPasswords: teamPasswords
         }
-      } catch(e) {
-        console.error(e);
-        alert( constants.ERROR.unknown );
-      }
+      };
+
+      utils.simpleAxios(axios, config, (response) => {
+        let newTeamPasswords = response.data;
+        for ( var i = 0; i < teamPasswords.length; i++ ) {
+          let index = teamPasswords[i].team - 1;
+          let value = teamPasswords[i].password;
+          this.passwordInputFields[index].placeholder = value;
+          this.passwordInputFields[index].value = '';
+        }
+
+        var teamCount = this.passwordInputFields.reduce((accumulator, input, index, array)=>{
+          let val = parseInt(input.placeholder);
+          if ( !isNaN(val) && val != 0 ) {
+            accumulator++;
+          }
+          return accumulator;
+        }, 0);
+
+        this.props.updateTeamPasswords(newTeamPasswords);
+        this.props.updateTeamCount(teamCount);
+
+        return alert( "성공" );
+      });
     }
   }
 

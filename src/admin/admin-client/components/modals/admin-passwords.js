@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import * as utils from '../../../../utils/client';
 import * as constants from '../../../../utils/constants';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
@@ -36,42 +37,27 @@ class AdminPasswordModal extends React.Component {
       alert("ERROR : 비밀번호를 입력해 주시기 바랍니다");
       return;
     }
-
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/admin-passwords/passwords',
-        data: {
-          adminPasswords: {
-            admin: (this.adminInput.current.value ? this.adminInput.current.value : this.props.admin),
-            assist: (this.assistInput.current.value ? this.assistInput.current.value : this.props.assist )
-          }
+    const config = {
+      method: 'POST',
+      url: '/admin/admin-passwords/passwords',
+      data: {
+        adminPasswords: {
+          admin: (this.adminInput.current.value ? this.adminInput.current.value : this.props.admin),
+          assist: (this.assistInput.current.value ? this.assistInput.current.value : this.props.assist )
         }
-      });
-
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          console.error( response.data.error );
-          return alert( response.data.error );
-        }
-
-        alert( '성공' );
-        if ( this.adminInput.current.value ) {
-          this.adminInput.current.placeholder = this.adminInput.current.value;
-          this.adminInput.current.value = '';
-        }
-
-        if ( this.assistInput.current.value ) {
-          this.assistInput.current.placeholder = this.assistInput.current.value;
-          this.assistInput.current.value = '';
-        }
-      } else {
-        alert( constants.ERROR.unknown );
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      alert( '성공' );
+      if ( this.adminInput.current.value ) {
+        this.adminInput.current.placeholder = this.adminInput.current.value;
+        this.adminInput.current.value = '';
+      }
+      if ( this.assistInput.current.value ) {
+        this.assistInput.current.placeholder = this.assistInput.current.value;
+        this.assistInput.current.value = '';
+      }
+    });
   }
 
   handleInput(e) {

@@ -1,4 +1,3 @@
-require('date-utils');
 require('./constants');
 require('./file-extensions');
 
@@ -78,6 +77,23 @@ function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+async function simpleAxios(axios, config, callback) {
+  try {
+    let response = await axios(config);
+    if ( response.status == 201 ) {
+      if ( response.data.error ) {
+        return alert( response.data.error );
+      }
+      callback(response);
+    } else {
+      alert( constants.ERROR.unknown );
+    }
+  } catch(e) {
+    console.error(e);
+    alert( constants.ERROR.unknown );
+  }
+}
+
 module.exports = {
   getCurrentTimeInSeconds,
   secondToMinute,
@@ -85,5 +101,6 @@ module.exports = {
   isValidURL,
   getFileExtension,
   fileTypeCheck,
-  getRandomInteger
+  getRandomInteger,
+  simpleAxios
 }

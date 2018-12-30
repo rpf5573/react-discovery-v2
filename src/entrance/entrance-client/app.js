@@ -33,27 +33,17 @@ class App extends Component {
 
   async handleLoginBtnClick(e) {
     if ( this.state.password ) {
-      try {
-        let response = await axios({
-          method: 'POST',
-          url: '/entrance/login',
-          data: {
-            password: this.state.password
-          }
-        });
-        if ( response.status == 201 ) {
-          if ( response.data.error ) {
-            return alert( response.data.error );
-          }
-          alert('성공');
-          window.location.href = '/' + response.data.role + ( (response.data.role == 'user' || response.data.role == 'assist') ? '/page/map' : '' );
-        } else {
-          alert( constants.ERROR.unknown );
+      const config = {
+        method: 'POST',
+        url: '/entrance/login',
+        data: {
+          password: this.state.password
         }
-      } catch (e) {
-        console.error(e);
-        alert( constants.ERROR.unknown );
-      }
+      };
+      utils.simpleAxios(axios, config, (response) => {
+        alert('성공');
+        window.location.href = '/' + response.data.role + ( (response.data.role == 'user' || response.data.role == 'assist') ? '/page/map' : '' );
+      });
     } else {
       alert('비밀번호를 입력해 주세요');
     }
@@ -83,26 +73,15 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    try {
-      let response = await axios('/entrance/companyImage');
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        let result = response.data;
-        if ( result.companyImage ) {
-          this.setState({
-            companyImageURL: '/admin/uploads/' + result.companyImage,
-            show: true
-          });
-        }
-      } else {
-        alert( constants.ERROR.unknown );
+    utils.simpleAxios(axios, '/entrance/companyImage', (response) => {
+      let result = response.data;
+      if ( result.companyImage ) {
+        this.setState({
+          companyImageURL: '/admin/uploads/' + result.companyImage,
+          show: true
+        });
       }
-    } catch (e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    });
   }
 
 }

@@ -88,3 +88,9 @@ async loadUploadInfos(e) {
     alert( constants.ERROR.unknown );
   }
 }
+
+
+// 이거 쓰면 개편함 
+utils.simpleAxios(axios, config, (response) => {
+      
+});

@@ -52,37 +52,24 @@ class PointReward extends React.Component {
         return alert("포인트를 입력해 주시기 바랍니다");
       }
 
-      try {
-        let response = await axios({
-          method: 'POST',
-          url: '/admin/point-reward/points',
-          data: {
-            points
-          }
-        });
-
-        if ( response.status == 201 ) {
-          if ( response.data.error ) {
-            console.error( response.data.error );
-            return alert( response.data.error );
-          }
-
-          for( var i = 0; i < this.pointInputFields.length; i++ ) {
-            let input = this.pointInputFields[i];
-            let val = parseInt(input.value);
-            if ( ! isNaN(val) && val > 0 ) {
-              input.value = '';
-              input.placeholder = val;
-            }
-          }
-          alert( "성공" );
-        } else {
-          alert( constants.ERROR.unknown );
+      const config = {
+        method: 'POST',
+        url: '/admin/point-reward/points',
+        data: {
+          points
         }
-      } catch(e) {
-        console.error(e);
-        alert( constants.ERROR.unknown );
-      }
+      };
+      utils.simpleAxios(axios, config, (response) => {
+        for( var i = 0; i < this.pointInputFields.length; i++ ) {
+          let input = this.pointInputFields[i];
+          let val = parseInt(input.value);
+          if ( ! isNaN(val) && val > 0 ) {
+            input.value = '';
+            input.placeholder = val;
+          }
+        }
+        alert( "성공" );
+      });
     }
   }
 

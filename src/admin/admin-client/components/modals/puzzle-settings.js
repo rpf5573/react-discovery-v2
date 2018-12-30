@@ -38,34 +38,19 @@ class PuzzleSettings extends React.Component {
 
   async updatePuzzleBoxCount(e) {
     const count = parseInt(e.currentTarget.getAttribute('data-count'));
-
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/puzzle-settings/puzzlebox-count',
-        data: {
-          puzzleBoxCount: count
-        }
-      });
-
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          console.error( response.data.error );
-          return alert( response.data.error );
-        }
-
-        alert( "성공" );
-
-        this.eniacWordInput.current.value = '';
-        this.eniacWordInput.current.placeholder = '';
-        this.props.updatePuzzleBoxCount(count);
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/puzzle-settings/puzzlebox-count',
+      data: {
+        puzzleBoxCount: count
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      alert( "성공" );
+      this.eniacWordInput.current.value = '';
+      this.eniacWordInput.current.placeholder = '';
+      this.props.updatePuzzleBoxCount(count);
+    });
   }
 
   async updateEniacWords() {
@@ -83,32 +68,21 @@ class PuzzleSettings extends React.Component {
         return alert("ERROR : 글자개수가 박스개수보다 더 많습니다");
       }
 
-      try {
-        let response = await axios({
-          method: 'POST',
-          url: '/admin/puzzle-settings/eniac-words',
-          data: {
-            originalEniacWords: val,
-            randomEniacWords: json
-          }
-        });
-
-        if ( response.status == 201 ) {
-          if ( response.data.error ) {
-            console.error( response.data.error );
-            return alert( response.data.error );
-          }
-          this.props.updateEniacWords(val);
-          alert("성공");
-          this.eniacWordInput.current.value = '';
-          this.eniacWordInput.current.placeholder = val;
-        } else {
-          alert( constants.ERROR.unknown );
+      const config = {
+        method: 'POST',
+        url: '/admin/puzzle-settings/eniac-words',
+        data: {
+          originalEniacWords: val,
+          randomEniacWords: json
         }
-      } catch(e) {
-        console.error(e);
-        alert( constants.ERROR.unknown );
-      }
+      };
+
+      utils.simpleAxios(axios, config, (response) => {
+        this.props.updateEniacWords(val);
+        alert("성공");
+        this.eniacWordInput.current.value = '';
+        this.eniacWordInput.current.placeholder = val;
+      });
     }
   }
 
@@ -119,85 +93,54 @@ class PuzzleSettings extends React.Component {
       return;
     }
 
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/puzzle-settings/lastbox-google-drive-url',
-        data: {
-          lastBoxGoogleDriveUrl: encodeURI(url)
-        }
-      });
-
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        this.props.updateLastBoxGoogleDriveUrl(url);
-        alert("성공");
-        this.lastBoxGoogleDriveUrlInput.current.value = '';
-        this.lastBoxGoogleDriveUrlInput.current.placeholder = val;
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/puzzle-settings/lastbox-google-drive-url',
+      data: {
+        lastBoxGoogleDriveUrl: encodeURI(url)
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+
+    utils.simpleAxios(axios, config, (response) => {
+      this.props.updateLastBoxGoogleDriveUrl(url);
+      alert("성공");
+      this.lastBoxGoogleDriveUrlInput.current.value = '';
+      this.lastBoxGoogleDriveUrlInput.current.placeholder = val;
+    });
     
   }
 
   async updateLastBoxState(e) {
     let val = parseInt(e.currentTarget.value);
 
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/puzzle-settings/lastbox-state',
-        data: {
-          lastBoxState: val
-        }
-      });
-
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        this.props.updateLastBoxState(val);
-        alert("성공");
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/puzzle-settings/lastbox-state',
+      data: {
+        lastBoxState: val
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+
+    utils.simpleAxios(axios, config, (response) => {
+      this.props.updateLastBoxState(val);
+      alert("성공");
+    });
   }
 
   async updateEniacState(e) {
     let val = parseInt(e.currentTarget.value);
 
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/puzzle-settings/eniac-state',
-        data: {
-          eniacState: val
-        }
-      });
-
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        this.props.updateEniacState(val);
-        alert("성공");
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/puzzle-settings/eniac-state',
+      data: {
+        eniacState: val
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      this.props.updateEniacState(val);
+      alert("성공");
+    });
   }
 
   renderPuzzleBoxCountDropdownMenuItems() {

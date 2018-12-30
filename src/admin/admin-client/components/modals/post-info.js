@@ -49,30 +49,17 @@ class PostInfoRow extends React.Component {
   }
 
   async handleRemoveBtnClick(e) {
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/post-info/remove',
-        data: {
-          post: this.state.post
-        }
-      });
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          console.error( response.data.error );
-          return alert( response.data.error );
-        }
-
-        this.props.onRemove(this.state.post);
-        alert("성공");
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/post-info/remove',
+      data: {
+        post: this.state.post
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
-    
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      this.props.onRemove(this.state.post);
+      alert("성공");
+    });
   }
 
   async handleApplyBtnClick(e) {
@@ -113,45 +100,34 @@ class PostInfoRow extends React.Component {
       googleDriveURL
     }
 
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/post-info/update-or-insert',
-        data: {
-          postInfo
-        }
-      });
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          console.error( response.data.error );
-          return alert( response.data.error );
-        }
-        if ( this.state.isNew ) {
-          this.props.onAdd(postInfo);
-        } else {
-          this.props.onUpdate(postInfo);
-        }
-        
-        this.setState({
-          isEditing: false,
-          isNew: false,
-          post,
-          mission,
-          googleDriveURL
-        });
-
-        this.missionInput.current.value = null;
-        this.googleDriveURLInput.current.value = null;
-
-        alert("성공");
-
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/post-info/update-or-insert',
+      data: {
+        postInfo
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+
+    utils.simpleAxios(axios, config, (response) => {
+      if ( this.state.isNew ) {
+        this.props.onAdd(postInfo);
+      } else {
+        this.props.onUpdate(postInfo);
+      }
+      
+      this.setState({
+        isEditing: false,
+        isNew: false,
+        post,
+        mission,
+        googleDriveURL
+      });
+
+      this.missionInput.current.value = null;
+      this.googleDriveURLInput.current.value = null;
+
+      alert("성공");
+    });
   }
 
   render() {

@@ -45,33 +45,22 @@ class PointPart extends React.Component {
       [this.props.mapping_key]: parseInt(point)
     }
 
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/mapping-points/',
-        data: {
-          mapping_point
-        }
-      });
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          console.error( response.data.error );
-          return alert( response.data.error );
-        }
-        alert("성공");
-        this.setState({
-          isEditing: false,
-          point: point
-        });
-        this.props.onPointUpdate( mapping_point );
-        this.pointInput.current.value = null;
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/mapping-points/',
+      data: {
+        mapping_point
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      alert("성공");
+      this.setState({
+        isEditing: false,
+        point: point
+      });
+      this.props.onPointUpdate( mapping_point );
+      this.pointInput.current.value = null;
+    });
   }
 
   render() {

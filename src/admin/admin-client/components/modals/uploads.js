@@ -30,28 +30,18 @@ class Uploads extends React.Component {
     const filename = 'companyImage-' + ranNum + '.' + fileExtension;
     fd.append('companyImage', companyImage, filename);
 
-    try {
-      const response = await axios({
-        method: 'POST',
-        url: '/admin/upload',
-        data: fd
-      });
-      
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        this.props.uploadImageFile({
-          companyImage: filename
-        })
-        alert("성공");
-      } else {
-        alert( constants.ERROR.unknown );
-      }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    const config = {
+      method: 'POST',
+      url: '/admin/upload',
+      data: fd
+    };
+
+    utils.simpleAxios(axios, config, (response) => {
+      this.props.uploadImageFile({
+        companyImage: filename
+      })
+      alert("성공");
+    });
   }
   async mapFileSelectHandler(e) {
     const map = e.target.files[0];
@@ -61,28 +51,18 @@ class Uploads extends React.Component {
     const filename = 'map-' + ranNum + '.' + fileExtension;
     fd.append('map', map, filename);
 
-    try {
-      const response = await axios({
-        method: 'POST',
-        url: '/admin/upload',
-        data: fd
+    const config = {
+      method: 'POST',
+      url: '/admin/upload',
+      data: fd
+    };
+
+    utils.simpleAxios(axios, config, (response) => {
+      this.props.uploadImageFile({
+        map: filename
       });
-      
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        this.props.uploadImageFile({
-          map: filename
-        });
-        alert("성공");
-      } else {
-        alert( constants.ERROR.unknown );
-      }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+      alert("성공");
+    });
   }
 
   render() {

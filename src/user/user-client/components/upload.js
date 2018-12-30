@@ -48,29 +48,22 @@ class Upload extends Component {
     });
   }
 
-  async uploadFile(e) {
-    var result = await this.timerCheck(this.props.ourTeam, this.props.laptime);
-    console.log( 'timer check result : ', result );
-
-    if ( ! result.success ) {
-      return alert(result.error);
-    }
-
-    const file = this.fileUploadInput.current.files[0];
-    if ( ! file ) {
-      alert( "ERROR : 업로드할 파일이 없습니다" );
-    }
-
-    // 이제 여기서 업로드 함.
-    const fd = new FormData();
-    // 이거를 먼저 써주는게 중요하다. 왜냐하면 서버입장에서는 userFile을 다 받기 전에는 team을 못읽을 수 가 있거든. 
-    // http body부분이 엄청 길거 아니냐 ! 근데 team정보가 맨 마지막에 있으면 좀 곤란하지 !
-    fd.append('team', this.props.ourTeam);
-    fd.append('userFile', file, file.name);
-    fd.append('point', this.props.mappingPoints.upload);
-
-    try {
-      const response = await axios({
+  uploadFile(e) {
+    // timer check first
+    this.timerCheck(this.props.ourTeam, this.props.laptime, (response) => {
+      const file = this.fileUploadInput.current.files[0];
+      if ( ! file ) {
+        alert( "ERROR : 업로드할 파일이 없습니다" );
+      }
+      // 이제 여기서 업로드 함.
+      const fd = new FormData();
+      // 이거를 먼저 써주는게 중요하다. 왜냐하면 서버입장에서는 userFile을 다 받기 전에는 team을 못읽을 수 가 있거든. 
+      // http body부분이 엄청 길거 아니냐 ! 근데 team정보가 맨 마지막에 있으면 좀 곤란하지 !
+      fd.append('team', this.props.ourTeam);
+      fd.append('userFile', file, file.name);
+      fd.append('point', this.props.mappingPoints.upload);
+  
+      const config = {
         method: 'POST',
         url: '/user/upload',
         data: fd,
@@ -79,51 +72,31 @@ class Upload extends Component {
           console.log( 'val : ', val );
           this.props.updateProgressVal(val);
         }
-      });
-      
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
+      };
+  
+      utils.simpleAxios(axios, config, (response) => {
         alert(`성공 : 시간내에 본부에 도착하면, ${this.props.mappingPoints.upload}점이 지급됩니다`);
-      } else {
-        alert( response.data.error );
-      }
-    } catch ( error ) {
-      console.error( error );
-    }
-
-    this.reset();
+        this.reset();
+      });
+    });
   }
 
   async cancelPreview(e) {
     this.reset();
   }
 
-  async timerCheck(team, laptime) {
-    try {
-      // check timer before upload
-      let response = await axios({
-        method: "POST",
-        url: "/user/timer-check",
-        data: {
-          team,
-          laptime
-        }
-      });
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          alert( response.data.error );
-          return { success: false, error: response.data.error };
-        }
-        return { success: true, error: null };
-      } else {
-        return { success: false, error: constants.ERROR.unknown };
+  async timerCheck(team, laptime, callback) {
+    const config = {
+      method: "POST",
+      url: "/user/timer-check",
+      data: {
+        team,
+        laptime
       }
-    } catch(e) {
-      console.error(e);
-      return { success: false, error: constants.ERROR.unknown };
-    }
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      callback(response);  
+    });
   }
 
   reset() {

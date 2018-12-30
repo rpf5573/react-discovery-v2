@@ -30,63 +30,42 @@ class TimerModal extends React.Component {
     let newState = state ? constants.OFF : constants.ON;
     let actionWord = newState ? constants.START : constants.STOP;
 
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/timer/team-timers',
-        data: {
-          newState, 
-          team,
-          mappingPoints: {
-            timer_plus: this.props.mappingPoints.timer_plus,
-            timer_minus: this.props.mappingPoints.timer_minus,
-          },
-          laptime: this.props.laptime
-        }
-      });
-
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        let newTeamTimers = response.data;
-        this.props.updateTeamTimerState(newTeamTimers);
-        alert( team+'팀의 타이머를 '+actionWord+'하였습니다' );
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/timer/team-timers',
+      data: {
+        newState, 
+        team,
+        mappingPoints: {
+          timer_plus: this.props.mappingPoints.timer_plus,
+          timer_minus: this.props.mappingPoints.timer_minus,
+        },
+        laptime: this.props.laptime
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      let newTeamTimers = response.data;
+      this.props.updateTeamTimerState(newTeamTimers);
+      alert( team+'팀의 타이머를 '+actionWord+'하였습니다' );
+    });
   }
 
   async allTimerStart(e) {
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/timer/team-timers',
-        data: {
-          team: 0,
-          newState: constants.ON,
-          isAll: true
-        }
-      });
-
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        let newTeamTimers = response.data;
-        this.props.updateTeamTimerState(newTeamTimers);
-        alert("전체 타이머를 시작하였습니다");
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/timer/team-timers',
+      data: {
+        team: 0,
+        newState: constants.ON,
+        isAll: true
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+
+    utils.simpleAxios(axios, config, (response) => {
+      let newTeamTimers = response.data;
+      this.props.updateTeamTimerState(newTeamTimers);
+      alert("전체 타이머를 시작하였습니다");
+    });
   }
 
   async updateLapTime(e) {
@@ -98,30 +77,20 @@ class TimerModal extends React.Component {
       return;
     }
 
-    try {
-      let response = await axios({
-        method: 'POST',
-        url: '/admin/timer/laptime',
-        data: {
-          laptime: laptime
-        }
-      });
-
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        this.lapTimeInput.value = '';
-        this.lapTimeInput.placeholder = utils.secondToMinute(laptime);
-        this.props.updateLapTime(laptime);
-        alert( "성공" );
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      method: 'POST',
+      url: '/admin/timer/laptime',
+      data: {
+        laptime: laptime
       }
-    } catch(e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+
+    utils.simpleAxios(axios, config, (response) => {
+      this.lapTimeInput.value = '';
+      this.lapTimeInput.placeholder = utils.secondToMinute(laptime);
+      this.props.updateLapTime(laptime);
+      alert( "성공" );
+    });
   }
 
   renderTimerManageBtns(count) {

@@ -156,28 +156,18 @@ class Puzzle extends Component {
     const a = this.state.eniacSentance.replace(/\s/g, "");
     const b = this.props.originalEniacWords.replace(/\s/g, "");
     if ( a === b ) {
-      try {
-        let response = await axios({
-          url: '/user/eniac',
-          method: 'POST',
-          data: {
-            team: this.props.ourTeam,
-            point: this.props.mappingPoints.eniac
-          }
-        });
-        if ( response.status == 201 ) {
-          if ( response.data.error ) {
-            return alert( response.data.error );
-          }
-          alert("성공 : " + response.data.point + '점을 획득하셨습니다');
-          this.setState({ isModalOpen: false });
-        } else {
-          alert( constants.ERROR.unknown );
+      const config = {
+        url: '/user/eniac',
+        method: 'POST',
+        data: {
+          team: this.props.ourTeam,
+          point: this.props.mappingPoints.eniac
         }
-      } catch(e) {
-        console.error(e);
-        alert( constants.ERROR.unknown );
-      } 
+      };
+      utils.simpleAxios(axios, config, (response) => {
+        alert("성공 : " + response.data.point + '점을 획득하셨습니다');
+        this.setState({ isModalOpen: false });
+      });
     } else {
       alert("다시 확인해 주시기 바랍니다");
     }
@@ -195,69 +185,36 @@ class Puzzle extends Component {
     if ( hasWord == 'true' ) {
       point = this.props.mappingPoints.boxOpenGetWord;
     }
-    try {
-      let response = await axios({
-        url: '/user/openBox',
-        method: 'POST',
-        data: {
-          team: this.props.ourTeam,
-          boxNumber,
-          point,
-          boxOpenUse: this.props.mappingPoints.boxOpenUse
-        }
-      });
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        alert( "성공" );
-        this.socket.emit('open_puzzle_box', response.data);
-      } else {
-        alert( constants.ERROR.unknown );
+    const config = {
+      url: '/user/openBox',
+      method: 'POST',
+      data: {
+        team: this.props.ourTeam,
+        boxNumber,
+        point,
+        boxOpenUse: this.props.mappingPoints.boxOpenUse
       }
-    } catch (e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      alert( "성공" );
+      this.socket.emit('open_puzzle_box', response.data);
+    });
   }
 
   async openLastBox(e) {
-    try {
-      let response = await axios('/user/open-lastbox');
-      console.log( 'response : ', response );
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        if ( ! this.props.lastBoxGoogleDriveUrl ) {
-          return alert( "현재 영상이 설정되어있지 않습니다. 새로고침 하거나, 관리자에게 문의 해주시기 바랍니다" );
-        } else {
-          this.hiddenAnchorForNewTab.current.click();
-        }
+    utils.simpleAxios(axios, '/user/open-lastbox', (response) => {
+      if ( ! this.props.lastBoxGoogleDriveUrl ) {
+        return alert( "현재 영상이 설정되어있지 않습니다. 새로고침 하거나, 관리자에게 문의 해주시기 바랍니다" );
       } else {
-        alert( constants.ERROR.unknown );
+        this.hiddenAnchorForNewTab.current.click();
       }
-    } catch (e) {
-      console.error(e);
-      alert( constants.ERROR.unknown );
-    }
+    });
   }
 
   async componentDidMount() {
-    try {
-      let response = await axios('/user/get-puzzle-colon-info');
-      if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          return alert( response.data.error );
-        }
-        this.props.updatePuzzleColonInfo(response.data);
-      } else {
-        alert( constants.ERROR.unknown );
-      }
-    } catch(e) {
-      console.error( e );
-      alert( constants.ERROR.unknown );
-    }
+    utils.simpleAxios(axios, '/user/get-puzzle-colon-info', (response) => {
+      this.props.updatePuzzleColonInfo(response.data);
+    });
   }
 
   componentWillUnmount() {
