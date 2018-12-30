@@ -1,5 +1,5 @@
-require('./constants');
-require('./file-extensions');
+const constants = require('./constants');
+const fileExtensions = require('./file-extensions');
 
 function getCurrentTimeInSeconds() {
   let date = new Date();
@@ -60,13 +60,13 @@ function fileTypeCheck(filename){
   const extension = getFileExtension(filename);
   for ( var i = 0; i < fileExtensions.image.length; i++ ) {
     if ( extension == fileExtensions.image[i] ) {
-      return IMAGE;
+      return constants.IMAGE;
     }
   }
 
   for ( var i = 0; i < fileExtensions.video.length; i++ ) {
     if ( extension == fileExtensions.video[i] ) {
-      return VIDEO;
+      return constants.VIDEO;
     }
   }
 

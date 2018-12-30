@@ -123,8 +123,8 @@ class PostInfoRow extends React.Component {
         googleDriveURL
       });
 
-      this.missionInput.current.value = null;
-      this.googleDriveURLInput.current.value = null;
+      this.missionInput.current.value = '';
+      this.googleDriveURLInput.current.value = '';
 
       alert("성공");
     });

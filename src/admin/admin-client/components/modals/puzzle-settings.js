@@ -48,7 +48,6 @@ class PuzzleSettings extends React.Component {
     utils.simpleAxios(axios, config, (response) => {
       alert( "성공" );
       this.eniacWordInput.current.value = '';
-      this.eniacWordInput.current.placeholder = '';
       this.props.updatePuzzleBoxCount(count);
     });
   }
@@ -81,7 +80,6 @@ class PuzzleSettings extends React.Component {
         this.props.updateEniacWords(val);
         alert("성공");
         this.eniacWordInput.current.value = '';
-        this.eniacWordInput.current.placeholder = val;
       });
     }
   }
@@ -105,13 +103,12 @@ class PuzzleSettings extends React.Component {
       this.props.updateLastBoxGoogleDriveUrl(url);
       alert("성공");
       this.lastBoxGoogleDriveUrlInput.current.value = '';
-      this.lastBoxGoogleDriveUrlInput.current.placeholder = val;
     });
     
   }
 
   async updateLastBoxState(e) {
-    let val = parseInt(e.currentTarget.value);
+    const val = parseInt(e.currentTarget.value);
 
     const config = {
       method: 'POST',

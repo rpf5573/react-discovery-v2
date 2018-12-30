@@ -15,7 +15,7 @@ class Result extends Component {
   }
 
   async componentDidMount() {
-    utils.simpleAxios('/user/get-updated-points', config, (response) => {
+    utils.simpleAxios(axios, '/user/get-updated-points', (response) => {
       this.props.updatePoints(response.data);
       this.setState({
         chartSize: {

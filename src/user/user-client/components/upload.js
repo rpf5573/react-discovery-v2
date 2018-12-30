@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import * as utils from '../../../utils/client';
-import * as constants from '../../../../utils/constants';
+import * as constants from '../../../utils/constants';
 import cn from 'classnames';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -15,6 +15,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 class Upload extends Component {
 
   constructor(props) {
+    console.log( 'upload component constructor', ' is called' );
     super(props);
 
     this.state = {
@@ -32,7 +33,7 @@ class Upload extends Component {
   async fileSelectHandler(e) {
     const file = e.target.files[0];
 
-    var fileType = fileTypeCheck(file.name);
+    var fileType = utils.fileTypeCheck(file.name);
     if ( fileType == null ) {
       return alert("지원되지 않는 파일 형식입니다");
     }
@@ -53,7 +54,7 @@ class Upload extends Component {
     this.timerCheck(this.props.ourTeam, this.props.laptime, (response) => {
       const file = this.fileUploadInput.current.files[0];
       if ( ! file ) {
-        alert( "ERROR : 업로드할 파일이 없습니다" );
+        return alert( "ERROR : 업로드할 파일이 없습니다" );
       }
       // 이제 여기서 업로드 함.
       const fd = new FormData();
@@ -102,6 +103,10 @@ class Upload extends Component {
   reset() {
     if ( this.fileUploadInput.current ) {
       this.fileUploadInput.current.value = null;
+    }
+
+    if ( this.props.fileInfo.src ) {
+      URL.revokeObjectURL(this.props.fileInfo.src);
     }
 
     this.props.updateFileInfo({
@@ -156,6 +161,13 @@ class Upload extends Component {
         </div>
       </div>
     );
+  }
+
+  componentWillUnmount() {
+    // 만약에 업로드 중이 아니라면, reset시켜버리자
+    if ( ! this.props.progressVal ) {
+      this.reset();
+    }
   }
 }
 
