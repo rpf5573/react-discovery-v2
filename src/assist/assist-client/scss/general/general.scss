@@ -38,3 +38,10 @@ html, body, #app, #app > .container {
 .d-none {
   display: none !important;
 }
+.title {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}

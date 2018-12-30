@@ -1,12 +1,25 @@
 .point-page {
-  .title {
-    text-align: center;
-  }
-  display: flex;
-  flex-direction: column;
-  .chart-wrapper {
-    flex-grow: 1;
+  .point-page-inner {
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    .l-top {
+      flex: 1;
+    }
+    .l-bottom {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      margin-bottom: 20px;
+      input {
+        text-align: center;
+      }
+      ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #80808036;
+      }
+    }
   }
 }

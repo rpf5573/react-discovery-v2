@@ -7,8 +7,10 @@ import BottomNavigation from './bottom-navigation';
 import Map from './map';
 import Point from './point';
 import Result from './result';
+import PostInfo from './post-info';
 
 // css
+import 'bootstrap/dist/css/bootstrap.css';
 import '../scss/style.scss';
 
 class App extends Component {
@@ -22,6 +24,7 @@ class App extends Component {
               <Route path={"/assist/page/map"} component={Map} />
               <Route path="/assist/page/point" render={(props) => <Point {...props} chartData={[]}></Point>} />
               <Route path="/assist/page/result" component={Result} />
+              <Route path="/assist/page/post-info" component={PostInfo} />
             </Switch>
           </div>
           <div className="l-bottom">

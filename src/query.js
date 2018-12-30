@@ -49,6 +49,20 @@ class DCQuery {
           puzzleColonInfo,
           postInfos
         };
+
+      case 'assist':
+        var metas = await this.meta.get(['map']);
+        var teamCount = await this.teamPasswords.getTeamCount();
+        var useablePoints = await this.points.get('useable');
+        var stackPoints = await this.points.get('stack');
+        var postInfos = await this.postInfo.getAll();
+        return {
+          ...metas,
+          teamCount,
+          useablePoints,
+          stackPoints,
+          postInfos
+        };
         
       default:
         return {};

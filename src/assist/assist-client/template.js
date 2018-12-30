@@ -1,4 +1,4 @@
-module.exports = function (message = false){
+module.exports = function (initialState = {}, srcPath = { style: 'style.css', js: 'main.js' }, message = false){
   let page = `<!DOCTYPE html>
               <html lang="en">
               <head>
@@ -6,21 +6,22 @@ module.exports = function (message = false){
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="X-UA-Compatible" content="ie=edge">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+                <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
                 <title> Discovery </title>
-                <link href="assist/style.css" rel="stylesheet">
+                <link href="${srcPath.style}" rel="stylesheet">
               </head>
               <body>
                 <div id="app">
                 </div>
 
                 <script>
-                  var message = '${message}';
-                  console.log(message);
-                  if ( message != 'false' ) {
-                    alert(message);
+                  window.__PRELOADED_STATE__ = ${JSON.stringify(initialState)};
+                  var message = ${message};
+                  if ( message ) {
+                    alert(${message});
                   }
                 </script>
-                <script src="assist/main.js"></script>
+                <script src="${srcPath.js}"></script>
               </body>
               `;
 

@@ -9,7 +9,7 @@ module.exports = {
   output: {
     filename: "main.js",
     path: distPath,
-    publicPath: '/entrance',
+    publicPath: '/assist',
   },
   module: {
     rules: [

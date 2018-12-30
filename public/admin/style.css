@@ -7538,9 +7538,15 @@ body {
   display: flex; }
   .page .sidebar {
     width: 250px;
-    height: 100%; }
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0; }
   .page .main {
-    flex: 1; }
+    width: 100%;
+    margin-left: 250px;
+    padding: 30px; }
 
 .main-container {
   max-width: 1600px; }
@@ -7710,6 +7716,27 @@ input.form-control::placeholder {
   align-items: center;
   font-size: 30px;
   cursor: pointer; }
+
+.file-item {
+  box-sizing: border-box;
+  position: relative;
+  margin-bottom: 20px; }
+  .file-item .l-top {
+    margin-bottom: 10px; }
+  .file-item .team {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    font-size: 32px;
+    background-color: white;
+    border: 1px solid black; }
+  .file-item img {
+    width: 100%; }
 
 /*  Layout
 /* --------------------------------------------------- */

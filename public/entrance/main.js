@@ -77,7 +77,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/entrance";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
@@ -197,7 +197,7 @@ function (_Component) {
 
                 if (response.status == 201 && !response.data.error) {
                   alert('성공');
-                  window.location.href = '/' + response.data.role + (response.data.role == 'user' ? '/page/map' : '');
+                  window.location.href = '/' + response.data.role + (response.data.role == 'user' || response.data.role == 'assist' ? '/page/map' : '');
                 } else {
                   alert(response.data.error);
                 }
@@ -225,7 +225,6 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      console.log('render', ' is called');
       return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "page"
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -260,8 +259,6 @@ function (_Component) {
       var _componentDidMount = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee2() {
-        var _this2 = this;
-
         var response, result;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
@@ -277,20 +274,14 @@ function (_Component) {
                   result = response.data;
 
                   if (result.companyImage) {
-                    console.log('result.companyImage : ', result.companyImage);
                     this.setState({
-                      companyImageURL: '/admin/uploads/' + result.companyImage
+                      companyImageURL: '/admin/uploads/' + result.companyImage,
+                      show: true
                     });
                   }
                 }
 
-                setTimeout(function () {
-                  _this2.setState({
-                    show: true
-                  });
-                }, 500);
-
-              case 5:
+              case 4:
               case "end":
                 return _context2.stop();
             }

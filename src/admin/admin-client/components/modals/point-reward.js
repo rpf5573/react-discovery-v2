@@ -32,24 +32,23 @@ class PointReward extends React.Component {
     e.preventDefault();
     this.pointInputFields = [...document.getElementsByClassName("point-input")]; // HTMLCollection to Array
     if ( this.pointInputFields.length > 0 ) {
-      // validation
-      let result = this.validate(this.pointInputFields);
-      switch(result) {
-        case 401:
-          alert('ERROR : 점수를 입력해 주시기 바랍니다');
-          return;
-      }
 
+      var allEmpty = true;
       // 이제 값 추출
       var points = [];
       for( var i = 0; i < this.pointInputFields.length; i++ ) {
         let val = parseInt(this.pointInputFields[i].value);
         if ( !isNaN(val) && val > 0 ) { // 0이 들어와도 되기는 한다
+          allEmpty = false;
           points.push({
             team: (i+1),
             useable: val
           });
         }
+      }
+
+      if ( allEmpty ) {
+        return alert("포인트를 입력해 주시기 바랍니다");
       }
 
       try {
