@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import * as utils from '../../../utils';
+import * as constants from '../../../../utils/constants';
 import cn from 'classnames';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -80,7 +81,10 @@ class Upload extends Component {
         }
       });
       
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         alert(`성공 : 시간내에 본부에 도착하면, ${this.props.mappingPoints.upload}점이 지급됩니다`);
       } else {
         alert( response.data.error );
@@ -107,14 +111,18 @@ class Upload extends Component {
           laptime
         }
       });
-      if ( response.status == 201 && ! response.data.error ) {
-        return { success: true, error: response.data.error };
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          alert( response.data.error );
+          return { success: false, error: response.data.error };
+        }
+        return { success: true, error: null };
       } else {
-        return { success: false, error: response.data.error };
+        return { success: false, error: constants.ERROR.unknown };
       }
     } catch(e) {
       console.error(e);
-      return { success: false, error: "알수없는 에러가 발생하였습니다" };
+      return { success: false, error: constants.ERROR.unknown };
     }
   }
 

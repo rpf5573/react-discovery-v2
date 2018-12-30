@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import * as constants from '../../../../utils/constants';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, Table, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal } from '../../actions';
@@ -73,15 +74,19 @@ class ResultModal extends React.Component {
   async getResultData() {
     try {
       let response = await axios('/admin/result');
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         this.setState({
           rows: response.data
         });
       } else {
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
-    } catch(error) {
-      console.error(error);
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
 

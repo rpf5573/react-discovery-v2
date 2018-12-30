@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import _ from 'lodash';
 import * as utils from '../../../../utils';
+import * as constants from '../../../../utils/constants';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label } from 'reactstrap';
 import { closeModal, uploadImageFile } from '../../actions';
 import axios from 'axios';
@@ -36,16 +37,20 @@ class Uploads extends React.Component {
         data: fd
       });
       
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         this.props.uploadImageFile({
           companyImage: filename
         })
         alert("성공");
       } else {
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
-    } catch ( error ) {
-      console.error( error );
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
   async mapFileSelectHandler(e) {
@@ -63,16 +68,20 @@ class Uploads extends React.Component {
         data: fd
       });
       
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         this.props.uploadImageFile({
           map: filename
         });
         alert("성공");
       } else {
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
-    } catch ( error ) {
-      console.error( error );
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
 

@@ -165,15 +165,18 @@ class Puzzle extends Component {
             point: this.props.mappingPoints.eniac
           }
         });
-        if ( response.status == 201 && !response.data.error ) {
+        if ( response.status == 201 ) {
+          if ( response.data.error ) {
+            return alert( response.data.error );
+          }
           alert("성공 : " + response.data.point + '점을 획득하셨습니다');
           this.setState({ isModalOpen: false });
         } else {
-          alert( response.data.error );
+          alert( constants.ERROR.unknown );
         }
       } catch(e) {
-        alert('알수없는 에러가 발생했습니다');
         console.error(e);
+        alert( constants.ERROR.unknown );
       } 
     } else {
       alert("다시 확인해 주시기 바랍니다");
@@ -203,16 +206,18 @@ class Puzzle extends Component {
           boxOpenUse: this.props.mappingPoints.boxOpenUse
         }
       });
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         alert( "성공" );
         this.socket.emit('open_puzzle_box', response.data);
-      } 
-      else if ( response.data.error ) {
-        alert( response.data.error );
+      } else {
+        alert( constants.ERROR.unknown );
       }
-    } catch (err) {
-      alert("알수없는 에러가 발생하였습니다");
-      console.error(err);
+    } catch (e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
 
@@ -220,14 +225,17 @@ class Puzzle extends Component {
     try {
       let response = await axios('/user/open-lastbox');
       console.log( 'response : ', response );
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         if ( ! this.props.lastBoxGoogleDriveUrl ) {
           return alert( "현재 영상이 설정되어있지 않습니다. 새로고침 하거나, 관리자에게 문의 해주시기 바랍니다" );
         } else {
           this.hiddenAnchorForNewTab.current.click();
         }
       } else {
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
     } catch (e) {
       console.error(e);
@@ -238,14 +246,17 @@ class Puzzle extends Component {
   async componentDidMount() {
     try {
       let response = await axios('/user/get-puzzle-colon-info');
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         this.props.updatePuzzleColonInfo(response.data);
       } else {
-        console.log( 'error in /user/get-puzzle-colon-info : ', response.data.error );
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
     } catch(e) {
-      console.log( 'error : ', e );
+      console.error( e );
+      alert( constants.ERROR.unknown );
     }
   }
 

@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import * as constants from '../../../../utils/constants';
 import { connect } from 'react-redux';
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell} from 'recharts';
 import axios from 'axios';
@@ -16,13 +17,17 @@ class Point extends Component {
   async componentDidMount() {
     try {
       let response = await axios('/user/get-updated-points');
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         this.props.updatePoints(response.data);
       } else {
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
-    } catch(error) {
-      console.error(error);
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
     
     this.setState({

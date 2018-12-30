@@ -1,4 +1,5 @@
 import * as utils from '../../../../utils';
+import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup, Table } from 'reactstrap';
@@ -56,14 +57,20 @@ class PostInfoRow extends React.Component {
           post: this.state.post
         }
       });
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          console.error( response.data.error );
+          return alert( response.data.error );
+        }
+
         this.props.onRemove(this.state.post);
         alert("성공");
       } else {
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
-    } catch(error) {
-      console.error(error);
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
     
   }
@@ -114,7 +121,11 @@ class PostInfoRow extends React.Component {
           postInfo
         }
       });
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          console.error( response.data.error );
+          return alert( response.data.error );
+        }
         if ( this.state.isNew ) {
           this.props.onAdd(postInfo);
         } else {
@@ -135,10 +146,11 @@ class PostInfoRow extends React.Component {
         alert("성공");
 
       } else {
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
-    } catch(error) {
-      console.error(error);
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
 

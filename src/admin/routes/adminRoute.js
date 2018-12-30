@@ -118,14 +118,17 @@ module.exports = (app, DCQuery, upload) => {
 
   // puzzle settings
   app.post('/admin/puzzle-settings/puzzlebox-count', async (req, res) => {
-    let result = await DCQuery.meta.update('puzzlebox_count', req.body.puzzleBoxCount);
-    if ( result.err ) {
+    try {
+      await DCQuery.meta.update('puzzlebox_count', req.body.puzzleBoxCount);
+      // reset eniac words
+      await DCQuery.meta.update('original_eniac_words', null);
+      await DCQuery.meta.update('random_eniac_words', null);
+      return res.sendStatus(201);
+    } catch (e) {
       return res.status(201).json({
-        error: result.err
+        error: e
       });
     }
-    res.sendStatus(201);
-    return;
   });
   app.post('/admin/puzzle-settings/eniac-words', async (req, res) => {
     var result = await DCQuery.meta.update('original_eniac_words', req.body.originalEniacWords);

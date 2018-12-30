@@ -39,3 +39,52 @@ app.post('/admin/point-reward/point', async (req, res) => {
     });
   }
 });
+
+// 요게 정석
+async rewardPoint(team, point, filename) {
+  try {
+    let response = await axios({
+      method: 'POST',
+      url: '/admin/point-reward/upload',
+      data: {
+        team,
+        point,
+        filename
+      }
+    });
+    if ( response.status == 201 ) {
+      if ( response.data.error ) {
+        return alert( response.data.error );
+      }
+    }
+  } catch(e) {
+    console.error(e);
+    alert( constants.ERROR.unknown );
+  }
+}
+
+// 요게 진짜 정석
+async loadUploadInfos(e) {
+  if ( ! this.props.teamCount ) {
+    return alert("아직 파일을 불러올 수 없습니다.먼저 팀설정을 해주시기 바랍니다");
+  }
+  try {
+    let response = await axios({
+      method: 'POST',
+      url: '/admin/load-upload-infos',
+      data: {
+        teamCount: this.props.teamCount
+      }
+    });
+    if ( response.status == 201 ) {
+      if ( response.data.error ) {
+        return alert( response.data.error );
+      }
+    } else {
+      alert( constants.ERROR.unknown );
+    }
+  } catch(e) {
+    console.error(e);
+    alert( constants.ERROR.unknown );
+  }
+}

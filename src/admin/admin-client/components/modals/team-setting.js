@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import * as constants from '../../../../utils/constants';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal, updateTeamPasswords, updateTeamCount } from '../../actions';
@@ -153,7 +154,10 @@ class TeamSetting extends React.Component {
           }
         });
 
-        if ( response.status == 201 && !response.data.error ) {
+        if ( response.status == 201 ) {
+          if ( response.data.error ) {
+            return alert( response.data.error );
+          }
           let newTeamPasswords = response.data;
           
           for ( var i = 0; i < teamPasswords.length; i++ ) {
@@ -177,10 +181,11 @@ class TeamSetting extends React.Component {
           alert( "성공" );
           return;
         } else {
-          alert( response.data.error );
+          alert( constants.ERROR.unknown );
         }
-      } catch(error) {
-        console.error(error);
+      } catch(e) {
+        console.error(e);
+        alert( constants.ERROR.unknown );
       }
     }
   }

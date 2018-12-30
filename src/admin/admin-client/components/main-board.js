@@ -73,20 +73,22 @@ class MainBoard extends Component {
       });
       if ( response.status == 201 ) {
         if ( response.data.error ) {
-          alert( response.data.error );
-        } else {
-          let newUploadInfos = [...this.state.uploadInfos];
-          for ( var i = 0; i < newUploadInfos.length; i++ ) {
-            if ( newUploadInfos[i].team == team && Array.isArray(newUploadInfos[i].files) ) {
-              newUploadInfos[i].files = newUploadInfos[i].files.filter( val => val !== filename );
-              break;
-            }
-          }
-          alert( `성공 : ${team}팀에게 ${point}점을 지급하였습니다` );
-          this.setState({
-            uploadInfos: newUploadInfos
-          });
+          return alert( response.data.error );
         }
+
+        let newUploadInfos = [...this.state.uploadInfos];
+        for ( var i = 0; i < newUploadInfos.length; i++ ) {
+          if ( newUploadInfos[i].team == team && Array.isArray(newUploadInfos[i].files) ) {
+            newUploadInfos[i].files = newUploadInfos[i].files.filter( val => val !== filename );
+            break;
+          }
+        }
+        alert( `성공 : ${team}팀에게 ${point}점을 지급하였습니다` );
+        this.setState({
+          uploadInfos: newUploadInfos
+        });
+      } else {
+        alert( constants.ERROR.unknown );
       }
     } catch(e) {
       console.error(e);
@@ -109,21 +111,22 @@ class MainBoard extends Component {
       if ( response.status == 201 ) {
         if ( response.data.error ) {
           return alert( response.data.error );
-        } else {
-          shuffle(response.data.uploadInfos); // 한번 섞어줘야 공평하게 위에서 부터 뜨지 !
-          for ( var i = 0; i < response.data.uploadInfos.length; i++ ) {
-            let parsed = JSON.parse(response.data.uploadInfos[i].files);
-            response.data.uploadInfos[i].files = parsed;
-          }
-          this.setState({
-            uploadInfos: response.data.uploadInfos
-          });
         }
+
+        shuffle(response.data.uploadInfos); // 한번 섞어줘야 공평하게 위에서 부터 뜨지 !
+        for ( var i = 0; i < response.data.uploadInfos.length; i++ ) {
+          let parsed = JSON.parse(response.data.uploadInfos[i].files);
+          response.data.uploadInfos[i].files = parsed;
+        }
+        this.setState({
+          uploadInfos: response.data.uploadInfos
+        });
       } else {
         alert( constants.ERROR.unknown );
       }
     } catch(e) {
       console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
 

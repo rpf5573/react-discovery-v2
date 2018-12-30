@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import * as constants from '../../../../utils/constants';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal } from '../../actions';
@@ -60,7 +61,12 @@ class PointReward extends React.Component {
           }
         });
 
-        if ( response.status == 201 && !response.data.error ) {
+        if ( response.status == 201 ) {
+          if ( response.data.error ) {
+            console.error( response.data.error );
+            return alert( response.data.error );
+          }
+
           for( var i = 0; i < this.pointInputFields.length; i++ ) {
             let input = this.pointInputFields[i];
             let val = parseInt(input.value);
@@ -70,13 +76,12 @@ class PointReward extends React.Component {
             }
           }
           alert( "성공" );
-          return;
         } else {
-          alert( response.data.error );
-          return;
+          alert( constants.ERROR.unknown );
         }
-      } catch(error) {
-        console.error(error);
+      } catch(e) {
+        console.error(e);
+        alert( constants.ERROR.unknown );
       }
     }
   }

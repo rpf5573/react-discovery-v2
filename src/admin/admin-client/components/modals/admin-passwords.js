@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import * as constants from '../../../../utils/constants';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal, updateAdminPasswords } from '../../actions';
@@ -65,10 +66,11 @@ class AdminPasswordModal extends React.Component {
           this.assistInput.current.value = '';
         }
       } else {
-        alert(  );
+        alert( constants.ERROR.unknown );
       }
-    } catch(error) {
-      console.error(error);
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
 

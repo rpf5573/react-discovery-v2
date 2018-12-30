@@ -1,5 +1,6 @@
 // utils
 import axios from 'axios';
+import * as constants from '../../../../utils/constants';
 
 // react & redux
 import React, { Component } from 'react';
@@ -32,18 +33,26 @@ class App extends Component {
 
   async handleLoginBtnClick(e) {
     if ( this.state.password ) {
-      let response = await axios({
-        method: 'POST',
-        url: '/entrance/login',
-        data: {
-          password: this.state.password
+      try {
+        let response = await axios({
+          method: 'POST',
+          url: '/entrance/login',
+          data: {
+            password: this.state.password
+          }
+        });
+        if ( response.status == 201 ) {
+          if ( response.data.error ) {
+            return alert( response.data.error );
+          }
+          alert('성공');
+          window.location.href = '/' + response.data.role + ( (response.data.role == 'user' || response.data.role == 'assist') ? '/page/map' : '' );
+        } else {
+          alert( constants.ERROR.unknown );
         }
-      });
-      if ( response.status == 201 && !response.data.error ) {
-        alert('성공');
-        window.location.href = '/' + response.data.role + ( (response.data.role == 'user' || response.data.role == 'assist') ? '/page/map' : '' );
-      } else {
-        alert( response.data.error );
+      } catch (e) {
+        console.error(e);
+        alert( constants.ERROR.unknown );
       }
     } else {
       alert('비밀번호를 입력해 주세요');
@@ -74,15 +83,25 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    let response = await axios('/entrance/companyImage');
-    if ( response.status == 201 ) {
-      let result = response.data;
-      if ( result.companyImage ) {
-        this.setState({
-          companyImageURL: '/admin/uploads/' + result.companyImage,
-          show: true
-        });
+    try {
+      let response = await axios('/entrance/companyImage');
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
+        let result = response.data;
+        if ( result.companyImage ) {
+          this.setState({
+            companyImageURL: '/admin/uploads/' + result.companyImage,
+            show: true
+          });
+        }
+      } else {
+        alert( constants.ERROR.unknown );
       }
+    } catch (e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
 

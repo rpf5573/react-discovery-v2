@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import * as constants from '../../../../utils/constants';
 import { connect } from 'react-redux';
 import { Button, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import axios from 'axios';
@@ -45,7 +46,10 @@ class Point extends Component {
           }
         });
 
-        if ( response.status == 201 && !response.data.error ) {
+        if ( response.status == 201 ) {
+          if ( response.data.error ) {
+            return alert( response.data.error );
+          }
           for( var i = 0; i < this.pointInputFields.length; i++ ) {
             let input = this.pointInputFields[i];
             let val = parseInt(input.value);
@@ -55,13 +59,12 @@ class Point extends Component {
             }
           }
           alert( "성공" );
-          return;
         } else {
-          alert( response.data.error );
-          return;
+          alert( constants.ERROR.unknown );
         }
-      } catch(error) {
-        console.error(error);
+      } catch(e) {
+        console.error(e);
+        alert( constants.ERROR.unknown );
       }
     }
   }

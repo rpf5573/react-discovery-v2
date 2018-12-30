@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import * as constants from '../../../../utils/constants';
 import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, Label, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal } from '../../actions';
@@ -47,14 +48,18 @@ class ResetModal extends React.Component {
             reset_password: 'discovery_reset'
           }
         });
-        if ( response.status == 201 && !response.data.error ) {
+        if ( response.status == 201 ) {
+          if ( response.data.error ) {
+            return alert( response.data.error );
+          }
           alert( "성공 !" );
           window.location.reload(); // refresh
         } else {
-          alert( response.data.error );
+          alert( constants.ERROR.unknown );
         }
-      } catch(error) {
-        console.error(error);
+      } catch(e) {
+        console.error(e);
+        alert( constants.ERROR.unknown );
       }
     } else {
       alert( "ERROR : 다시 확인해 주세요" );

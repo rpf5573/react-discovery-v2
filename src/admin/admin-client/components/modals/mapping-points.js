@@ -1,4 +1,5 @@
 import * as utils from '../../../../utils';
+import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, Table, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup } from 'reactstrap';
@@ -52,20 +53,24 @@ class PointPart extends React.Component {
           mapping_point
         }
       });
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          console.error( response.data.error );
+          return alert( response.data.error );
+        }
+        alert("성공");
         this.setState({
           isEditing: false,
           point: point
         });
         this.props.onPointUpdate( mapping_point );
         this.pointInput.current.value = null;
-        alert("성공");
-
       } else {
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
-    } catch(error) {
-      console.error(error);
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
 

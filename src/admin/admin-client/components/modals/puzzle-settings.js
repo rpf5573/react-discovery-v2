@@ -24,7 +24,6 @@ class PuzzleSettings extends React.Component {
     this.renderPuzzleBoxCountDropdownMenuItems = this.renderPuzzleBoxCountDropdownMenuItems.bind(this);
     this.updateEniacWords = this.updateEniacWords.bind(this);
     this.eniacWordInput = React.createRef();
-    this.resetEniacWords = this.resetEniacWords.bind(this);
 
     this.lastBoxGoogleDriveUrlInput = React.createRef();
     this.updateLastBoxGoogleDriveUrl = this.updateLastBoxGoogleDriveUrl.bind(this);
@@ -39,21 +38,32 @@ class PuzzleSettings extends React.Component {
 
   async updatePuzzleBoxCount(e) {
     const count = parseInt(e.currentTarget.getAttribute('data-count'));
-    let response1 = await axios({
-      method: 'POST',
-      url: '/admin/puzzle-settings/puzzlebox-count',
-      data: {
-        puzzleBoxCount: count
+
+    try {
+      let response = await axios({
+        method: 'POST',
+        url: '/admin/puzzle-settings/puzzlebox-count',
+        data: {
+          puzzleBoxCount: count
+        }
+      });
+
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          console.error( response.data.error );
+          return alert( response.data.error );
+        }
+
+        alert( "성공" );
+
+        this.eniacWordInput.current.value = '';
+        this.eniacWordInput.current.placeholder = '';
+        this.props.updatePuzzleBoxCount(count);
+      } else {
+        alert( constants.ERROR.unknown );
       }
-    });
-
-    // reset
-    let response2 = await this.resetEniacWords();
-
-    if ( response1.status == 201 && response2.status == 201 ) {
-      this.props.updatePuzzleBoxCount(count);
-      alert( "성공" );
-    } else {
+    } catch(e) {
+      console.error(e);
       alert( constants.ERROR.unknown );
     }
   }
@@ -83,33 +93,23 @@ class PuzzleSettings extends React.Component {
           }
         });
 
-        if ( response.status == 201 && !response.data.error ) {
+        if ( response.status == 201 ) {
+          if ( response.data.error ) {
+            console.error( response.data.error );
+            return alert( response.data.error );
+          }
           this.props.updateEniacWords(val);
           alert("성공");
           this.eniacWordInput.current.value = '';
           this.eniacWordInput.current.placeholder = val;
         } else {
-          alert( response.data.error );
+          alert( constants.ERROR.unknown );
         }
-      } catch(error) {
-        console.error(error);
+      } catch(e) {
+        console.error(e);
+        alert( constants.ERROR.unknown );
       }
     }
-  }
-
-  async resetEniacWords() {
-    // reset eniac words
-    let response = await axios({
-      method: 'POST',
-      url: '/admin/puzzle-settings/eniac-words',
-      data: {
-        originalEniacWords: null,
-        randomEniacWords: null
-      }
-    });
-    this.eniacWordInput.current.value = '';
-    this.eniacWordInput.current.placeholder = '';
-    return response;
   }
 
   async updateLastBoxGoogleDriveUrl() {
@@ -128,16 +128,20 @@ class PuzzleSettings extends React.Component {
         }
       });
 
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         this.props.updateLastBoxGoogleDriveUrl(url);
         alert("성공");
         this.lastBoxGoogleDriveUrlInput.current.value = '';
         this.lastBoxGoogleDriveUrlInput.current.placeholder = val;
       } else {
-        alert(constants.ERROR.unknown);
+        alert( constants.ERROR.unknown );
       }
-    } catch(error) {
-      console.error(error);
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
     
   }
@@ -154,14 +158,18 @@ class PuzzleSettings extends React.Component {
         }
       });
 
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         this.props.updateLastBoxState(val);
         alert("성공");
       } else {
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
-    } catch(error) {
-      console.error(error);
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
 
@@ -177,14 +185,18 @@ class PuzzleSettings extends React.Component {
         }
       });
 
-      if ( response.status == 201 && !response.data.error ) {
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          return alert( response.data.error );
+        }
         this.props.updateEniacState(val);
         alert("성공");
       } else {
-        alert( response.data.error );
+        alert( constants.ERROR.unknown );
       }
-    } catch(error) {
-      console.error(error);
+    } catch(e) {
+      console.error(e);
+      alert( constants.ERROR.unknown );
     }
   }
 
