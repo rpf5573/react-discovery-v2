@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import _ from 'lodash';
-import { getFileExtension } from '../../../../utils/client';
+import * as utils from '../../../../utils';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label } from 'reactstrap';
 import { closeModal, uploadImageFile } from '../../actions';
 import axios from 'axios';
@@ -24,8 +24,9 @@ class Uploads extends React.Component {
   async companyImageFileSelectHandler(e) {
     const companyImage = e.target.files[0];
     const fd = new FormData();
-    let fileExtension = getFileExtension(companyImage.name);
-    const filename = 'companyImage.' + fileExtension;
+    let fileExtension = utils.getFileExtension(companyImage.name);
+    const ranNum = utils.getRandomInteger(1, 100);
+    const filename = 'companyImage-' + ranNum + '.' + fileExtension;
     fd.append('companyImage', companyImage, filename);
 
     try {
@@ -50,8 +51,9 @@ class Uploads extends React.Component {
   async mapFileSelectHandler(e) {
     const map = e.target.files[0];
     const fd = new FormData();
-    let fileExtension = getFileExtension(map.name);
-    const filename = 'map.' + fileExtension;
+    let fileExtension = utils.getFileExtension(map.name);
+    const ranNum = utils.getRandomInteger(1, 100);
+    const filename = 'map-' + ranNum + '.' + fileExtension;
     fd.append('map', map, filename);
 
     try {

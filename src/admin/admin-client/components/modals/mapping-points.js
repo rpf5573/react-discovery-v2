@@ -1,4 +1,4 @@
-import { ON, OFF, START, STOP, getCurrentTimeInSeconds, secondToMinute } from '../../../../utils/client';
+import * as utils from '../../../../utils';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, Table, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup } from 'reactstrap';

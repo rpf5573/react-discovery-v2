@@ -48,9 +48,13 @@ class AdminPasswordModal extends React.Component {
         }
       });
 
-      if ( response.status == 201 && !response.data.error ) {
-        alert( '성공' );
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          console.error( response.data.error );
+          return alert( response.data.error );
+        }
 
+        alert( '성공' );
         if ( this.adminInput.current.value ) {
           this.adminInput.current.placeholder = this.adminInput.current.value;
           this.adminInput.current.value = '';
@@ -61,7 +65,7 @@ class AdminPasswordModal extends React.Component {
           this.assistInput.current.value = '';
         }
       } else {
-        alert( response.data.error );
+        alert(  );
       }
     } catch(error) {
       console.error(error);

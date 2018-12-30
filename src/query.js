@@ -1,4 +1,4 @@
-const utils = new(require('./utils/server'))();
+const utils = require('./utils');
 
 class DCQuery {
   constructor(mysql) {
@@ -23,8 +23,8 @@ class DCQuery {
   async getInitialState(role) {
     switch( role ) {
       case 'admin':
-        var teamPasswords = await this.teamPasswords.getAll();
         var teamCount = await this.teamPasswords.getTeamCount();
+        var teamPasswords = await this.teamPasswords.getAll();
         var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'eniac_state', 'lastbox_state', 'admin_passwords', 'mapping_points']);
         var teamTimers = await this.timer.getAll();
         var postInfos = await this.postInfo.getAll();
@@ -183,8 +183,11 @@ class TeamPasswords {
     this.table = table;
     this.mysql = mysql;
   }
-  async getAll() {
-    const sql = `SELECT * FROM ${this.table} ORDER BY team`;
+  async getAll(until = false) {
+    let sql = `SELECT * FROM ${this.table} ORDER BY team`;
+    if ( until ) {
+      sql = `SELECT * FROM ${this.table} WHERE team <= ${until} ORDER BY team`;
+    }
     const result = await this.mysql.query(sql);
     return result;
   }
@@ -217,8 +220,11 @@ class Timer {
     this.mysql = mysql;
   }
 
-  async getAll() {
-    const sql = `SELECT * FROM ${this.table} ORDER BY team`;
+  async getAll(until = false) {
+    let sql = `SELECT * FROM ${this.table} ORDER BY team`;
+    if (until) {
+      sql = `SELECT * FROM ${this.table} WHERE team <= ${until} ORDER BY team`;
+    }
     const result = await this.mysql.query(sql);
     return result;
   }
@@ -254,8 +260,11 @@ class Points {
     this.table = table;
     this.mysql = mysql;
   }
-  async getAll() {
-    const sql = `SELECT * FROM ${this.table} ORDER BY team`;
+  async getAll(until = false) {
+    let sql = `SELECT * FROM ${this.table} ORDER BY team`;
+    if ( until ) {
+      sql = `SELECT * FROM ${this.table} WHERE team <= ${until} ORDER BY team`;
+    }
     const result = await this.mysql.query(sql);
     return result;
   }
@@ -317,8 +326,11 @@ class Puzzle {
     this.table = table;
     this.mysql = mysql;
   }
-  async getAll() {
-    const sql = `SELECT * FROM ${this.table} ORDER BY team`;
+  async getAll(until = false) {
+    let sql = `SELECT * FROM ${this.table} ORDER BY team`;
+    if ( until ) {
+      sql = `SELECT * FROM ${this.table} WHERE team <= ${until} ORDER BY team`;
+    }
     const result = await this.mysql.query(sql);
     return result;
   }
@@ -399,8 +411,11 @@ class Uploads {
     return result;
   }
 
-  async getAll(until) {
-    let sql = `SELECT team, files FROM ${this.table} WHERE team <= ${until} ORDER BY team`;
+  async getAll(until = false) {
+    let sql = `SELECT team, files FROM ${this.table} ORDER BY team`;
+    if ( until ) {
+      sql = `SELECT team, files FROM ${this.table} WHERE team <= ${until} ORDER BY team`;
+    }
     let result = await this.mysql.query(sql);
     return result;
   }

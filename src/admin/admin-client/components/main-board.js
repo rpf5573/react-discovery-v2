@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import cn from 'classnames';
-import { shuffle, IMAGE, VIDEO, fileTypeCheck, ERROR } from '../../../utils/client';
+import * as utils from '../../../utils';
+import * as constants from '../../../utils/constants';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -33,8 +34,8 @@ class FileItem extends Component {
         <span className="team">{ this.props.team }</span>
         <div className="l-top">
           { this.props.type == null ? <div className="unsupport-file-type"></div> : '' }
-          { this.props.type == IMAGE ? <div className="image-container"> <img src={this.props.src}></img> </div> : '' }
-          { this.props.type == VIDEO ? <div className="video-container"> <video width="100%" src={this.props.src} controls> Your browser does not support the video tag. </video> </div> : '' }
+          { this.props.type == constants.IMAGE ? <div className="image-container"> <img src={this.props.src}></img> </div> : '' }
+          { this.props.type == constants.VIDEO ? <div className="video-container"> <video width="100%" src={this.props.src} controls> Your browser does not support the video tag. </video> </div> : '' }
         </div>
         <div className="l-bottom">
           <InputGroup>
@@ -89,7 +90,7 @@ class MainBoard extends Component {
       }
     } catch(e) {
       console.error(e);
-      alert( ERROR.unknown );
+      alert( constants.ERROR.unknown );
     }
   }
 
@@ -119,7 +120,7 @@ class MainBoard extends Component {
           });
         }
       } else {
-        alert( ERROR.unknown );
+        alert( constants.ERROR.unknown );
       }
     } catch(e) {
       console.error(e);

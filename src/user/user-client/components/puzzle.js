@@ -2,7 +2,8 @@ import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import socketIOClient from "socket.io-client";
-import { teamColors } from '../../../utils/client';
+import * as utils from '../../../utils';
+import * as constants from '../../../utils/constants';
 import cn from 'classnames';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -40,7 +41,7 @@ class PuzzleBox extends Component {
                   </div>
     } 
     else if ( this.props.owner ) {
-      boxContent = <div className="puzzle-box puzzle-box--normal d-f-center" style={{backgroundColor: this.props.teamColor}}>
+      boxContent = <div className="puzzle-box puzzle-box--normal d-f-center">
                     { this.props.owner ? <span className="team"></span> : '' }
                     { this.props.word ? <span className="word outline">{this.props.word}</span> : <span className="word placeholder">강</span> }
                   </div>
@@ -230,7 +231,7 @@ class Puzzle extends Component {
       }
     } catch (e) {
       console.error(e);
-      alert( "ERROR : 알수없는 에러가 발생했습니다" );
+      alert( constants.ERROR.unknown );
     }
   }
 

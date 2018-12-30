@@ -1,4 +1,5 @@
-import { shuffle, isValidURL, ON, OFF } from '../../../../utils/client';
+import * as utils from '../../../../utils';
+import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -53,7 +54,7 @@ class PuzzleSettings extends React.Component {
       this.props.updatePuzzleBoxCount(count);
       alert( "성공" );
     } else {
-      alert( "ERROR : 알수없는 에러가 발생하였습니다" );
+      alert( constants.ERROR.unknown );
     }
   }
 
@@ -64,7 +65,7 @@ class PuzzleSettings extends React.Component {
 
       let zeroArr = new Array(this.props.puzzleBoxCount - arr.length).fill(0);
       let resultArr = [...zeroArr, ...arr];
-      shuffle(resultArr);
+      utils.shuffle(resultArr);
       let json = JSON.stringify(resultArr);
 
       // 참고로 : puzzleBoxCount가 이미 last box를 고려해서 1개 빼져있는 상태임
@@ -133,7 +134,7 @@ class PuzzleSettings extends React.Component {
         this.lastBoxGoogleDriveUrlInput.current.value = '';
         this.lastBoxGoogleDriveUrlInput.current.placeholder = val;
       } else {
-        alert("ERROR : 알수없는 에러가 발생하였습니다");
+        alert(constants.ERROR.unknown);
       }
     } catch(error) {
       console.error(error);
@@ -255,11 +256,11 @@ class PuzzleSettings extends React.Component {
                   최종 박스 : 
                 </span>
                 <div className="radio abc-radio abc-radio-primary mr-3">
-                  <input type="radio" id="lastBoxStateRadioInput01" onChange={this.updateLastBoxState} checked={ this.props.lastBoxState ? true : false } value={ON}/>
+                  <input type="radio" id="lastBoxStateRadioInput01" onChange={this.updateLastBoxState} checked={ this.props.lastBoxState ? true : false } value={constants.ON}/>
                   <label htmlFor="lastBoxStateRadioInput01">공개</label>
                 </div>
                 <div className="radio abc-radio abc-radio-danger">
-                  <input type="radio" id="lastBoxStateRadioInput02" onChange={this.updateLastBoxState} checked={ this.props.lastBoxState ? false : true } value={OFF}/>
+                  <input type="radio" id="lastBoxStateRadioInput02" onChange={this.updateLastBoxState} checked={ this.props.lastBoxState ? false : true } value={constants.OFF}/>
                   <label htmlFor="lastBoxStateRadioInput02">비공개</label>
                 </div>
               </div>
@@ -270,11 +271,11 @@ class PuzzleSettings extends React.Component {
                   암호해독 : 
                 </span>
                 <div className="radio abc-radio abc-radio-primary mr-3">
-                  <input type="radio" id="eniacStateRadioInput01" onChange={this.updateEniacState} checked={ this.props.eniacState ? true : false } value={ON}/>
+                  <input type="radio" id="eniacStateRadioInput01" onChange={this.updateEniacState} checked={ this.props.eniacState ? true : false } value={constants.ON}/>
                   <label htmlFor="eniacStateRadioInput01">ON</label>
                 </div>
                 <div className="radio abc-radio abc-radio-danger">
-                  <input type="radio" id="eniacStateRadioInput02" onChange={this.updateEniacState} checked={ this.props.eniacState ? false : true } value={OFF}/>
+                  <input type="radio" id="eniacStateRadioInput02" onChange={this.updateEniacState} checked={ this.props.eniacState ? false : true } value={constants.OFF}/>
                   <label htmlFor="eniacStateRadioInput02">OFF</label>
                 </div>
               </div>

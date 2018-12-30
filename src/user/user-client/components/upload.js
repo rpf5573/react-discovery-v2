@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { fileTypeCheck, IMAGE, VIDEO } from '../../../utils/client';
+import * as utils from '../../../utils';
 import cn from 'classnames';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -30,8 +30,6 @@ class Upload extends Component {
 
   async fileSelectHandler(e) {
     const file = e.target.files[0];
-
-    console.log( 'fil : ', file );
 
     var fileType = fileTypeCheck(file.name);
     if ( fileType == null ) {
@@ -141,8 +139,8 @@ class Upload extends Component {
     let previewCN = cn({
       'preview': true,
       'd-none': (this.props.fileInfo.src ? false : true),
-      'preview--image': (this.props.fileInfo.type == IMAGE ? true : false),
-      'preview--video': (this.props.fileInfo.type == VIDEO ? true : false)
+      'preview--image': (this.props.fileInfo.type == constants.IMAGE ? true : false),
+      'preview--video': (this.props.fileInfo.type == constants.VIDEO ? true : false)
     });
     let checkBtnsCN = cn({
       'check-btns': true,

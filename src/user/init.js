@@ -1,4 +1,4 @@
-const utils = new(require('../utils/server'))();
+const utils = require('../utils');
 
 module.exports = (app, path, multer, mysql) => {
   const DCQuery = new (require('../query'))(mysql);

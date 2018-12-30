@@ -1,4 +1,5 @@
-import { ON, OFF, START, STOP, getCurrentTimeInSeconds, secondToMinute } from '../../../../utils/client';
+import * as utils from '../../../../utils';
+import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup } from 'reactstrap';
@@ -26,8 +27,8 @@ class TimerModal extends React.Component {
   async handleTimerBtnClick(e) {
     let team = parseInt(e.currentTarget.getAttribute('data-team'));
     let state = parseInt(e.currentTarget.getAttribute('data-state'));
-    let newState = state ? OFF : ON;
-    let actionWord = newState ? START : STOP;
+    let newState = state ? constants.OFF : constants.ON;
+    let actionWord = newState ? constants.START : constants.STOP;
 
     try {
       let response = await axios({
@@ -63,7 +64,7 @@ class TimerModal extends React.Component {
         url: '/admin/timer/team-timers',
         data: {
           team: 0,
-          newState: ON,
+          newState: constants.ON,
           isAll: true
         }
       });
@@ -100,7 +101,7 @@ class TimerModal extends React.Component {
 
       if ( response.status == 201 && !response.data.error ) {
         this.lapTimeInput.value = '';
-        this.lapTimeInput.placeholder = secondToMinute(laptime);
+        this.lapTimeInput.placeholder = utils.secondToMinute(laptime);
         this.props.updateLapTime(laptime);
         alert( "성공" );
       } else {
@@ -112,7 +113,7 @@ class TimerModal extends React.Component {
   }
 
   renderTimerManageBtns(count) {
-    let currentTime = getCurrentTimeInSeconds();
+    let currentTime = utils.getCurrentTimeInSeconds();
     var btnList = [];
     for ( var i = 1; i <= count; i++ ) {
       let teamTimer = this.props.teamTimers[i-1] // 이게 1팀부터 15팀까지 순서대로 정리되어있으니까,,,그냥 이렇게 찾아도 문제없음
@@ -120,7 +121,7 @@ class TimerModal extends React.Component {
         basic: !teamTimer.state,
         danger: teamTimer.state
       });
-      let text = teamTimer.state ? STOP : START;
+      let text = teamTimer.state ? constants.STOP : constants.START;
       let restTimeBox = '';
       if ( teamTimer.state ) {
         let restTime = this.props.laptime - (currentTime - teamTimer.startTime);
@@ -128,7 +129,7 @@ class TimerModal extends React.Component {
           restTime: true,
           'restTime--minus': (restTime < 0) ? true : false
         });
-        restTimeBox = (<div className={restTimeCN}> { secondToMinute(restTime) } </div>);
+        restTimeBox = (<div className={restTimeCN}> { utils.secondToMinute(restTime) } </div>);
       }
       btnList.push(
         <Col sm="3" key={i}>
@@ -160,7 +161,7 @@ class TimerModal extends React.Component {
           <div className="l-right">
             <Label>랩타임 설정 : </Label>
             <InputGroup>
-              <input type="number" className="form-control" placeholder={secondToMinute(this.props.laptime)} ref={input => this.lapTimeInput = input}/>
+              <input type="number" className="form-control" placeholder={utils.secondToMinute(this.props.laptime)} ref={input => this.lapTimeInput = input}/>
               <InputGroupAddon addonType="append">
                 <Button color="secondary" onClick={this.updateLapTime}>확인</Button>
               </InputGroupAddon>
