@@ -7,7 +7,7 @@ let config = {
   password: 'root',
   database: 'discovery'
 };
-if ( NODE_ENV == 'production' ) {
+if ( process.env.NODE_ENV == 'production' ) {
   config.password = 'thoumas138';
 }
 const pool = mysql.createPool(config);
