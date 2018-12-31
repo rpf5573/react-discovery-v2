@@ -1,31 +1,23 @@
-import * as utils from '../../../../utils/client';
-import * as constants from '../../../../utils/constants';
+import * as utils from '../../../utils/client';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup, Table } from 'reactstrap';
-import { closeModal, updatePostInfo, addPostInfo, removePostInfo } from '../../actions';
-import axios from 'axios';
+import { Button, Row, Col, Table } from 'reactstrap';
+import { updatePostInfo, addPostInfo, removePostInfo } from '../actions';
 import cn from 'classnames';
 import PostInfoRow from './post-info-row';
 
-class PostInfoModal extends React.Component {
+class PostInfoWarehouse extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      backdrop: true,
       emptyRow: false,
       newRows: 0
     }
-    this.close = this.close.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleCancelAdd = this.handleCancelAdd.bind(this);
     this.renderNewRows = this.renderNewRows.bind(this);
     this.validateAdd = this.validateAdd.bind(this);
     this.onAdd = this.onAdd.bind(this);
-  }
-
-  close() {
-    this.props.closeModal();
   }
 
   handleAdd(e) {
@@ -83,12 +75,9 @@ class PostInfoModal extends React.Component {
 
   render() {
     return (
-      <Modal style={{maxWidth: '1100px'}} isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className}>
-        <ModalHeader toggle={this.close}>
-          포스트 정보 동영상 등록
-        </ModalHeader>
-        <ModalBody>
-          <Table>
+      <div className="post-info-warehouse">
+        <h2 className="title">포스트 정보 창고</h2>
+        <Table>
             <thead>
               <tr>
                 <td style={{'width': '10%'}}>
@@ -113,22 +102,21 @@ class PostInfoModal extends React.Component {
               { this.renderNewRows(this.state.newRows) }
             </tbody>
           </Table>
-          <Row>
-            <Col xs="12">
-              <Button color="primary" block onClick={this.handleAdd}>추가</Button>
-            </Col>
-          </Row>
-        </ModalBody>
-      </Modal>
+        <Row>
+          <Col xs="12">
+            <Button color="primary" block onClick={this.handleAdd}>추가</Button>
+          </Col>
+        </Row>
+      </div>
     );
   }
 }
 
 function mapStateToProps(state, ownProps) {
+  console.log( 'state in mapStateToProps : ', state );
   return {
-    activeModalClassName: state.modalControl.activeModalClassName,
     postInfos: state.postInfos
   };
 }
 
-export default connect(mapStateToProps, { closeModal, updatePostInfo, addPostInfo, removePostInfo })(PostInfoModal);
+export default connect(mapStateToProps, { updatePostInfo, addPostInfo, removePostInfo })(PostInfoWarehouse);

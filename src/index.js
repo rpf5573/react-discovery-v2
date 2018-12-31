@@ -44,6 +44,9 @@ require('./user/init')(app, path, multer, pool, io);
 // assist
 require('./assist/init')(app, pool);
 
+// warehouse
+require('./warehouse/init')(app, pool);
+
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 8080;

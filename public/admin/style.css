@@ -7702,7 +7702,7 @@ input.form-control::placeholder {
 .modal-dialog.modal--post-info .post-info-row input, .modal-dialog.modal--post-info .post-info-row .cancel-btn, .modal-dialog.modal--post-info .post-info-row .apply-btn {
   display: none; }
 
-.load-files-btn {
+.load-files-btn, .open-post-info-warehouse {
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -7716,6 +7716,12 @@ input.form-control::placeholder {
   align-items: center;
   font-size: 30px;
   cursor: pointer; }
+
+.open-post-info-warehouse {
+  bottom: 70px;
+  background-color: blue; }
+  .open-post-info-warehouse:hover {
+    color: white; }
 
 .file-item {
   box-sizing: border-box;

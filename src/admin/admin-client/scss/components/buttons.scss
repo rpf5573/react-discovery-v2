@@ -15,3 +15,13 @@
 
   cursor: pointer;
 }
+
+.open-post-info-warehouse {
+  @extend .load-files-btn ;
+
+  bottom: 70px;
+  background-color: blue;
+  &:hover {
+    color: white;
+  }
+}

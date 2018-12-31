@@ -8,6 +8,7 @@ import * as constants from '../../../utils/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button, Input, Row, Col, InputGroup, Card } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
 
 class FileItem extends Component {
   constructor(props) {
@@ -136,6 +137,9 @@ class MainBoard extends Component {
         <button className="load-files-btn" onClick={this.loadUploadInfos}>
           <FontAwesomeIcon icon={faPlus} />
         </button>
+        <a href="/admin/warehouse" target="_blank" className="open-post-info-warehouse">
+          <div className="icon"><FontAwesomeIcon icon={faPlus} /></div>
+        </a>
       </Row>
     );
   }
