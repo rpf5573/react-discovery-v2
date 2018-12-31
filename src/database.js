@@ -1,12 +1,16 @@
 const util = require('util');
 const mysql = require('mysql');
-const pool = mysql.createPool({
+let config = {
   connectionLimit: 10,
   host: 'localhost',
   user: 'root',
   password: 'root',
   database: 'discovery'
-})
+};
+if ( NODE_ENV == 'production' ) {
+  config.password = 'thoumas138';
+}
+const pool = mysql.createPool(config);
 
 // Ping database to check for common exception errors.
 pool.getConnection((err, connection) => {
