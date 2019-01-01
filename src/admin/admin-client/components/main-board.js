@@ -87,6 +87,8 @@ class MainBoard extends Component {
   }
 
   async loadUploadInfos(e) {
+    console.log( 'loadUploadInfos', ' is called' );
+
     if ( ! this.props.teamCount ) {
       return alert("아직 파일을 불러올 수 없습니다.먼저 팀설정을 해주시기 바랍니다");
     }
@@ -97,8 +99,10 @@ class MainBoard extends Component {
         teamCount: this.props.teamCount
       }
     };
+
+
     utils.simpleAxios(axios, config, (response) => {
-      shuffle(response.data.uploadInfos); // 한번 섞어줘야 공평하게 위에서 부터 뜨지 !
+      utils.shuffle(response.data.uploadInfos); // 한번 섞어줘야 공평하게 위에서 부터 뜨지 !
         for ( var i = 0; i < response.data.uploadInfos.length; i++ ) {
           let parsed = JSON.parse(response.data.uploadInfos[i].files);
           response.data.uploadInfos[i].files = parsed;
@@ -116,7 +120,7 @@ class MainBoard extends Component {
       let files = data[i].files;
       if ( files ) {
         for ( var z = 0; z < files.length; z++ ) {
-          var type = fileTypeCheck(files[z]); // null도 일단 받자.
+          var type = utils.fileTypeCheck(files[z]); // null도 일단 받자.
           const filename = files[z];
           list.push(
             <Col xs="4" key={`${team}-${i}-${z}-${filename}`}>
@@ -143,7 +147,6 @@ class MainBoard extends Component {
       </Row>
     );
   }
-
 }
 
 function mapStateToProps(state, ownProps) {

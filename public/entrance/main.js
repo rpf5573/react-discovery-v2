@@ -86,6 +86,186 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "../../utils/client.js":
+/*!*******************************************************************!*\
+  !*** /Users/mac88/Desktop/react-discovery-v2/src/utils/client.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const constants = __webpack_require__(/*! ./constants */ "../../utils/constants.js");
+
+const fileExtensions = __webpack_require__(/*! ./file-extensions */ "../../utils/file-extensions.js");
+
+function getCurrentTimeInSeconds() {
+  let date = new Date();
+  let h = date.getHours();
+  let m = date.getMinutes();
+  let s = date.getSeconds();
+  return h * 60 * 60 + m * 60 + s;
+}
+
+function secondToMinute(second) {
+  if (second > 0) {
+    let m = parseInt(second / 60);
+    let s = parseInt(second % 60);
+    return `${m}분 ${s}초`;
+  } else {
+    let m = parseInt(-second / 60);
+    let s = parseInt(-second % 60);
+    return `-${m}분 ${s}초`;
+  }
+}
+
+function shuffle(array) {
+  var currentIndex = array.length,
+      temporaryValue,
+      randomIndex; // While there remain elements to shuffle...
+
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1; // And swap it with the current element.
+
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+function isValidURL(url) {
+  var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name and extension
+  '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+  '(\\:\\d+)?' + // port
+  '(\\/[-a-z\\d%@_.~+&:]*)*' + // path
+  '(\\?[;&a-z\\d%@_.,~+&:=-]*)?' + // query string
+  '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+
+  return pattern.test(url);
+}
+
+function getFileExtension(filename) {
+  return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+}
+
+function fileTypeCheck(filename) {
+  // file 확장자명 체크
+  const extension = getFileExtension(filename);
+
+  for (var i = 0; i < fileExtensions.image.length; i++) {
+    if (extension == fileExtensions.image[i]) {
+      return constants.IMAGE;
+    }
+  }
+
+  for (var i = 0; i < fileExtensions.video.length; i++) {
+    if (extension == fileExtensions.video[i]) {
+      return constants.VIDEO;
+    }
+  }
+
+  return null;
+}
+
+function getRandomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+async function simpleAxios(axios, config, callback) {
+  try {
+    let response = await axios(config);
+
+    if (response.status == 201) {
+      if (response.data.error) {
+        return alert(response.data.error);
+      }
+
+      callback(response);
+    } else {
+      alert(constants.ERROR.unknown);
+    }
+  } catch (e) {
+    console.error(e);
+    alert(constants.ERROR.unknown);
+  }
+}
+
+module.exports = {
+  getCurrentTimeInSeconds,
+  secondToMinute,
+  shuffle,
+  isValidURL,
+  getFileExtension,
+  fileTypeCheck,
+  getRandomInteger,
+  simpleAxios
+};
+
+/***/ }),
+
+/***/ "../../utils/constants.js":
+/*!**********************************************************************!*\
+  !*** /Users/mac88/Desktop/react-discovery-v2/src/utils/constants.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const teamColors = ['#1B378A', // 1
+'#B6171E', // 2
+'#41B33B', // 3
+'#e162dc', // 4
+'#f76904', // 5
+'#a8f908', // 6
+'#479eef', // 7
+'#F4297D', // 8
+'#1C1A25', // 9
+'#f3f3fd', // 10
+'#9C27B0', // 11
+'#607D8B', // 12
+'#795548', // 13
+'#9E9E9E', // 14
+'#00BCD4' // 15
+]; // 이제 안쓴다 이거는...
+
+const OFF = 0;
+const ON = 1;
+const START = '시작';
+const STOP = '정지';
+const IMAGE = 'image';
+const VIDEO = 'video';
+const ERROR = {
+  unknown: 'ERROR : 알수없는 에러가 발생했습니다'
+};
+module.exports = {
+  teamColors,
+  OFF,
+  ON,
+  START,
+  STOP,
+  IMAGE,
+  VIDEO,
+  ERROR
+};
+
+/***/ }),
+
+/***/ "../../utils/file-extensions.js":
+/*!****************************************************************************!*\
+  !*** /Users/mac88/Desktop/react-discovery-v2/src/utils/file-extensions.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {
+  video: ["3gp", "avi", "mov", "mp4", "mpeg", "ogg", "ogv", "webm", "wmv"],
+  image: ["jpeg", "jpg", "png", "gif"]
+};
+
+/***/ }),
+
 /***/ "./app.js":
 /*!****************!*\
   !*** ./app.js ***!
@@ -97,15 +277,17 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_reveal_text__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-reveal-text */ "./node_modules/react-reveal-text/lib/index.js");
-/* harmony import */ var react_reveal_text__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_reveal_text__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/dist/reactstrap.es.js");
-/* harmony import */ var bootstrap_dist_css_bootstrap_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap.css */ "./node_modules/bootstrap/dist/css/bootstrap.css");
-/* harmony import */ var bootstrap_dist_css_bootstrap_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_css__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _scss_style_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./scss/style.scss */ "./scss/style.scss");
-/* harmony import */ var _scss_style_scss__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_scss_style_scss__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _utils_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/client */ "../../utils/client.js");
+/* harmony import */ var _utils_client__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_client__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_reveal_text__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-reveal-text */ "./node_modules/react-reveal-text/lib/index.js");
+/* harmony import */ var react_reveal_text__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_reveal_text__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/dist/reactstrap.es.js");
+/* harmony import */ var bootstrap_dist_css_bootstrap_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap.css */ "./node_modules/bootstrap/dist/css/bootstrap.css");
+/* harmony import */ var bootstrap_dist_css_bootstrap_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_css__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _scss_style_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./scss/style.scss */ "./scss/style.scss");
+/* harmony import */ var _scss_style_scss__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_scss_style_scss__WEBPACK_IMPORTED_MODULE_6__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -129,6 +311,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 // utils
+
  // react & redux
 
 
@@ -173,42 +356,28 @@ function (_Component) {
       var _handleLoginBtnClick = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee(e) {
-        var response;
+        var config;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!this.state.password) {
-                  _context.next = 7;
-                  break;
-                }
-
-                _context.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_0___default()({
-                  method: 'POST',
-                  url: '/entrance/login',
-                  data: {
-                    password: this.state.password
-                  }
-                });
-
-              case 3:
-                response = _context.sent;
-
-                if (response.status == 201 && !response.data.error) {
-                  alert('성공');
-                  window.location.href = '/' + response.data.role + (response.data.role == 'user' || response.data.role == 'assist' ? '/page/map' : '');
+                if (this.state.password) {
+                  config = {
+                    method: 'POST',
+                    url: '/entrance/login',
+                    data: {
+                      password: this.state.password
+                    }
+                  };
+                  _utils_client__WEBPACK_IMPORTED_MODULE_1__["simpleAxios"](axios__WEBPACK_IMPORTED_MODULE_0___default.a, config, function (response) {
+                    alert('성공');
+                    window.location.href = '/' + response.data.role + (response.data.role == 'user' || response.data.role == 'assist' ? '/page/map' : '');
+                  });
                 } else {
-                  alert(response.data.error);
+                  alert('비밀번호를 입력해 주세요');
                 }
 
-                _context.next = 8;
-                break;
-
-              case 7:
-                alert('비밀번호를 입력해 주세요');
-
-              case 8:
+              case 1:
               case "end":
                 return _context.stop();
             }
@@ -225,29 +394,29 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
         className: "page"
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
         className: "bg-img",
         style: {
           backgroundImage: "url(".concat(this.state.companyImageURL, ")")
         }
-      }, " "), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, " "), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
         className: "page-inner"
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
         className: "l-top"
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
         className: "text-container"
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_reveal_text__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_reveal_text__WEBPACK_IMPORTED_MODULE_3___default.a, {
         show: this.state.show
-      }, "DISCOVERY"))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, "DISCOVERY"))), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
         className: "l-bottom"
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
         className: "login-container"
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Input"], {
+      }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Input"], {
         placeholder: "\uBE44\uBC00\uBC88\uD638",
         onChange: this.handlePasswordInput
-      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_3__["Button"], {
+      }), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], {
         color: "primary",
         block: true,
         onClick: this.handleLoginBtnClick
@@ -259,29 +428,24 @@ function (_Component) {
       var _componentDidMount = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee2() {
-        var response, result;
+        var _this2 = this;
+
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_0___default()('/entrance/companyImage');
-
-              case 2:
-                response = _context2.sent;
-
-                if (response.status == 201) {
-                  result = response.data;
+                _utils_client__WEBPACK_IMPORTED_MODULE_1__["simpleAxios"](axios__WEBPACK_IMPORTED_MODULE_0___default.a, '/entrance/companyImage', function (response) {
+                  var result = response.data;
 
                   if (result.companyImage) {
-                    this.setState({
+                    _this2.setState({
                       companyImageURL: '/admin/uploads/' + result.companyImage,
                       show: true
                     });
                   }
-                }
+                });
 
-              case 4:
+              case 1:
               case "end":
                 return _context2.stop();
             }
@@ -298,7 +462,7 @@ function (_Component) {
   }]);
 
   return App;
-}(react__WEBPACK_IMPORTED_MODULE_1__["Component"]);
+}(react__WEBPACK_IMPORTED_MODULE_2__["Component"]);
 
 /* harmony default export */ __webpack_exports__["default"] = (App);
 

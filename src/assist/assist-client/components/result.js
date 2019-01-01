@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import * as constants from '../../../../utils/constants';
+import * as utils from '../../../utils/client';
 import { connect } from 'react-redux';
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell} from 'recharts';
 import axios from 'axios';

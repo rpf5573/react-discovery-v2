@@ -1,6 +1,6 @@
 // utils
 import axios from 'axios';
-import * as constants from '../../../../utils/constants';
+import * as utils from '../../utils/client';
 
 // react & redux
 import React, { Component } from 'react';
