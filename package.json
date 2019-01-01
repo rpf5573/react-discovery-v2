@@ -23,6 +23,12 @@
   },
   "scripts": {
     "start-dev": "NODE_ENV=dev nodemon src/index.js",
-    "start-pro": "NODE_ENV=production pm2 start src/index.js"
+    "build-admin": "cd ./src/admin/admin-client && yarn build",
+    "build-assist": "cd ./src/assist/assist-client && yarn build",
+    "build-entrance": "cd ./src/entrance/entrance-client && yarn build",
+    "build-user": "cd ./src/user/user-client && yarn build",
+    "build-warehouse": "cd ./src/warehouse/warehouse-client && yarn build",
+    "build-clients": "yarn build-admin && yarn build-assist && yarn build-entrance && yarn build-user && yarn build-warehouse",
+    "start-pro": "yarn build-clients && NODE_ENV=production pm2 start src/index.js"
   }
 }
