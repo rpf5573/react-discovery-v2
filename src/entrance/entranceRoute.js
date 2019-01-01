@@ -30,6 +30,7 @@ module.exports = (app, DCQuery) => {
         }
       })(adminPasswords);
 
+      
       if ( json ) {
         if ( req.body.password == json.admin ) {
           result.role = 'admin';
