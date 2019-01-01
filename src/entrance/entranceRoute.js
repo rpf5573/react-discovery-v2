@@ -14,6 +14,7 @@ module.exports = (app, DCQuery) => {
     });
   });
 
+  
   app.post('/entrance/login', async (req, res) => {
     var result = {
       role: null,
