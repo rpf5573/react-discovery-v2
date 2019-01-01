@@ -7,6 +7,7 @@ module.exports = (app, DCQuery) => {
     return res.set('Content-Type', 'text/html').end(document);
   });
 
+  
   app.get('/entrance/companyImage', async (req, res) => {
     let companyImage = await DCQuery.meta.get('company_image');
     res.status(201).json({
