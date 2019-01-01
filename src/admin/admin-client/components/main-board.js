@@ -112,6 +112,7 @@ class MainBoard extends Component {
         });
     });
   }
+  
 
   renderUploadInfos(data) {
     var list = [];
