@@ -9,7 +9,6 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session');
 
-
 // mysql
 const pool = require('./database');
 const sessionStore = new MySQLStore({
