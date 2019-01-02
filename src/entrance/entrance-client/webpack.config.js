@@ -3,8 +3,7 @@ const join = require("path").join;
 const distPath = join(__dirname, "../../../public/entrance/");
 
 module.exports = {
-  mode: 'development',
-  entry: ["@babel/polyfill", join(__dirname, "/index.js")],
+  entry: [join(__dirname, "/index.js")],
   devtool: 'source-map',
   output: {
     filename: "main.js",

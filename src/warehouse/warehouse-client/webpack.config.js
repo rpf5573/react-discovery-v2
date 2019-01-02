@@ -3,7 +3,6 @@ const join = require('path').join;
 const distPath = join(__dirname, '../../../public/admin/warehouse/');
 
 module.exports = {
-  mode: 'development',
   name: 'warehouse',
   entry: ["@babel/polyfill", join(__dirname, '/index.js')],
   devtool: 'source-map',
