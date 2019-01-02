@@ -25,10 +25,10 @@
   },
   "scripts": {
     "start-dev": "NODE_ENV=dev nodemon src/index.js",
-    "build-admin": "cd ./src/admin/admin-client && yarn install && yarn build-pro",
+    "build-admin": "cd ./src/admin/admin-client && yarn install && yarn build-pro && cd ../../../public/admin && mkdir -p uploads",
     "build-assist": "cd ./src/assist/assist-client && yarn install && yarn build-pro",
     "build-entrance": "cd ./src/entrance/entrance-client && yarn install && yarn build-pro",
-    "build-user": "cd ./src/user/user-client && yarn install && yarn build-pro",
+    "build-user": "cd ./src/user/user-client && yarn install && yarn build-pro && cd ../../../public/user && mkdir -p uploads && cd uploads && mkdir -p 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
     "build-warehouse": "cd ./src/warehouse/warehouse-client && yarn install && yarn build-pro",
     "build-clients": "yarn build-admin && yarn build-assist && yarn build-entrance && yarn build-user && yarn build-warehouse",
     "start-pro": "yarn build-clients && NODE_ENV=production pm2 start src/index.js",
