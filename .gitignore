@@ -1,6 +1,6 @@
 node_modules
 package-lock.json
 .DS_Store
-public/*
+public/admin/*
 nodemon.json
 yarn.lock
