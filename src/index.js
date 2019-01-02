@@ -9,7 +9,6 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session');
 
-
 // mysql
 const pool = require('./database');
 const sessionStore = new MySQLStore({
@@ -52,7 +51,7 @@ app.use(express.static('public'));
 
 console.log( 'process.env.PORT : ', process.env.PORT );
 
-const PORT = process.env.PORT || 80;
+const PORT = ( process.env.NODE_ENV == 'production' ? 80 : 8080 );
 server.listen(PORT);
 
 
