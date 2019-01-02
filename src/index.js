@@ -51,7 +51,7 @@ app.use(express.static('public'));
 
 console.log( 'process.env.PORT : ', process.env.PORT );
 
-const PORT = ( process.env.NODE_ENV == 'production' ? 8080 : 8080 );
+const PORT = ( process.env.NODE_ENV == 'production' ? 80 : 8080 );
 server.listen(PORT);
 
 
