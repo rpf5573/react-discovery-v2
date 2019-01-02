@@ -55,7 +55,6 @@ console.log( 'process.env.PORT : ', process.env.PORT );
 const PORT = process.env.PORT || 80;
 server.listen(PORT);
 
-
 // for real time puzzle update
 io.on('connection', function(socket) {
   console.log( 'socket is connected !' );
