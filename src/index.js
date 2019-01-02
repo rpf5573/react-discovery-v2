@@ -50,7 +50,7 @@ require('./warehouse/init')(app, pool);
 
 app.use(express.static('public'));
 
-console.log( 'process.env.PORT : ', process.env.PORT );
+// console.log( 'process.env.PORT : ', process.env.PORT );
 
 const PORT = process.env.PORT || 80;
 server.listen(PORT);
