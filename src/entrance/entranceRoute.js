@@ -3,6 +3,8 @@ const template = require('./entrance-client/template');
 
 module.exports = (app, DCQuery) => {
   app.get('/', (req, res) => {
+    console.log( 'HERE IS ' + process.env.NODE_PORT );
+
     let document = template(req.query.message);
     return res.set('Content-Type', 'text/html').end(document);
   });
