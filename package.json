@@ -33,10 +33,10 @@
     "build-warehouse": "cd ./src/warehouse/warehouse-client && yarn install && yarn build-pro",
     "build-all": "yarn build-admin && yarn build-assist && yarn build-entrance && yarn build-user && yarn build-warehouse",
 
-    "start-v1": "NODE_ENV=production NODE_PORT=8081 pm2 start src/index.js",
-    "start-v2": "NODE_ENV=production NODE_PORT=8082 pm2 start src/index.js",
-    "start-v3": "NODE_ENV=production NODE_PORT=8083 pm2 start src/index.js",
-    "start-v4": "NODE_ENV=production NODE_PORT=8084 pm2 start src/index.js",
+    "start-v1": "NODE_ENV=production NODE_PORT=8081 pm2 start src/index.js --name v1",
+    "start-v2": "NODE_ENV=production NODE_PORT=8082 pm2 start src/index.js --name v2",
+    "start-v3": "NODE_ENV=production NODE_PORT=8083 pm2 start src/index.js --name v3",
+    "start-v4": "NODE_ENV=production NODE_PORT=8084 pm2 start src/index.js --name v4",
     "start-all": "yarn start-v1 && yarn start-v2 && yarn start-v3 && yarn start-v4"
   }
 }
