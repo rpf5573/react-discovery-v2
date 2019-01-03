@@ -18,7 +18,7 @@ module.exports = (app, DCQuery, upload) => {
     // 먼저 관리자로 로그인이 되어있는지 부터 확인해야지
     if ( req.session.loginData && req.session.loginData.role == 'admin' ) {
       let initialSettings = await DCQuery.getInitialState('admin');
-      let document = template(initialSettings, srcPath);
+      let document = template(initialSettings, srcPath, process.env.DCV);
       return res.set('Content-Type', 'text/html').end(document);
     } else {
       return res.redirect('/?message=' + encodeURIComponent('접근 권한이 없습니다'));

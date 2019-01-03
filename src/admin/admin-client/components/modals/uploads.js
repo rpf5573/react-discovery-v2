@@ -82,7 +82,7 @@ class Uploads extends React.Component {
                   <input style={{display:'none'}} className="form-control" type="file" onChange={this.companyImageFileSelectHandler} ref={fileInput => this.companyImageFileInput = fileInput}/>
                   <Button className={"align-self-center"} color="success" onClick={() => this.companyImageFileInput.click()}>파일 선택</Button>
                   <div>
-                    <img src={"/admin/uploads/"+this.props.companyImage} width="100px" height="auto"></img>
+                    <img src={`/admin/uploads/${window.__dcv__}/${this.props.companyImage}`} width="100px" height="auto"></img>
                   </div>
                 </div>
               </Col>
@@ -98,7 +98,7 @@ class Uploads extends React.Component {
                   <input style={{display:'none'}} className="form-control" type="file" onChange={this.mapFileSelectHandler} ref={fileInput => this.mapFileInput = fileInput}/>
                   <Button className={"align-self-center"} color="success" onClick={() => this.mapFileInput.click()}>파일 선택</Button>
                   <div>
-                    <img src={"admin/uploads/"+this.props.map} width="100px" height="auto"></img>
+                    <img src={`/admin/uploads/${window.__dcv__}/${this.props.map}`} width="100px" height="auto"></img>
                   </div>
                 </div>
               </Col>

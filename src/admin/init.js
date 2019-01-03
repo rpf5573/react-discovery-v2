@@ -4,10 +4,7 @@ module.exports = (app, path, multer, mysql) => {
   const DCQuery = new (require('../query'))(mysql);
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      let uploadPath = 'public/admin/uploads/';
-      if ( process.env.NODE_ENV == 'production' && process.env.DCV ) {
-        uploadPath += process.env.DCV + '/';
-      }
+      let uploadPath = `public/admin/uploads/${process.env.DCV}/`;
       fs.ensureDirSync(uploadPath);
       cb(null, uploadPath);
     },

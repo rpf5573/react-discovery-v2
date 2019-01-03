@@ -1,3 +1,7 @@
+if ( ! process.env.DCV ) {
+  process.env.DCV = 'v1';
+}
+
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');

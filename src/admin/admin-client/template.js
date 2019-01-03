@@ -1,4 +1,4 @@
-module.exports = function (initialState = {}, srcPath = { style: 'style.css', js: 'main.js' }, message = false){
+module.exports = function (initialState = {}, srcPath = { style: 'style.css', js: 'main.js' }, message = false, dcv = 'v1'){
   let page = `<!DOCTYPE html>
               <html lang="en">
               <head>
@@ -15,6 +15,7 @@ module.exports = function (initialState = {}, srcPath = { style: 'style.css', js
 
                 <script>
                   window.__PRELOADED_STATE__ = ${JSON.stringify(initialState)};
+                  window.__dcv__ = ${dcv};
                   var message = ${message};
                   if ( message ) {
                     alert(${message});

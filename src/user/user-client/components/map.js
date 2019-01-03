@@ -9,7 +9,7 @@ class Map extends Component {
     return (
       <div className="map-page full-container">
         <div className="wrapper">
-          <img src={"/admin/uploads/"+this.props.map}></img>
+          <img src={`/admin/uploads/${window.__dcv__}/${this.props.map}`}></img>
         </div>
       </div>
     );

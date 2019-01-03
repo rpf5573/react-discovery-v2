@@ -77,7 +77,7 @@ class App extends Component {
       let result = response.data;
       if ( result.companyImage ) {
         this.setState({
-          companyImageURL: '/admin/uploads/' + result.companyImage,
+          companyImageURL: '/admin/uploads/' + window.__dcv__ + '/' + result.companyImage,
           show: true
         });
       }
