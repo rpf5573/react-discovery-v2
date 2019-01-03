@@ -1,7 +1,7 @@
 const util = require('util');
 const mysql = require('mysql');
 let config = {
-  connectionLimit: 10,
+  connectionLimit: 30,
   host: 'localhost',
   user: 'root',
   password: 'root',
