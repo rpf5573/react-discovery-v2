@@ -10,15 +10,8 @@ module.exports = (app, path, multer, mysql) => {
       if ( process.env.NODE_ENV == 'production' && process.env.DCV ) {
         uploadPath += process.env.DCV + '/' + req.body.team;
       }
-
-      fs.ensureDir(uploadPath, err => {
-        if ( err ) {
-          console.log( 'err making dir: ', err );
-        } else {
-          cb(null, uploadPath);
-        }
-      });
-
+      fs.ensureDirSync(uploadPath);
+      cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
       let date = utils.getYYYYMMDDHHMMSS();
