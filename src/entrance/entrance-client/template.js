@@ -14,10 +14,9 @@ module.exports = function (message = false, dcv = 'v1'){
                 </div>
 
                 <script>
-                  window.__dcv__ = ${dcv};
+                  window.__dcv__ = '${dcv}';
                   var message = '${message}';
-                  console.log(message);
-                  if ( message != 'false' ) {
+                  if ( message !== 'false' ) {
                     alert(message);
                   }
                 </script>

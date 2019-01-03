@@ -15,9 +15,9 @@ module.exports = function (initialState = {}, srcPath = { style: 'style.css', js
 
                 <script>
                   window.__PRELOADED_STATE__ = ${JSON.stringify(initialState)};
-                  window.__dcv__ = ${dcv};
-                  var message = ${message};
-                  if ( message ) {
+                  window.__dcv__ = '${dcv}';
+                  var message = '${message}';
+                  if ( message !== 'false' ) {
                     alert(${message});
                   }
                 </script>
