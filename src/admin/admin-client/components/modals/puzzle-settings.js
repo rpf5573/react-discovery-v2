@@ -177,14 +177,14 @@ class PuzzleSettings extends React.Component {
                   </DropdownMenu>
                 </Dropdown>
               </div>
-              <div className="l-right d-flex w-75 justify-content-end">
-                <div className="l-left d-flex col-xs-2 align-self-center">
-                  <span className="pr-2">숨겨진 글자 : </span>
+              <div className="l-right d-flex w-75 align-items-center">
+                <div className="l-left no-wrap-text mr-2">
+                  숨겨진 글자 :
                 </div>
-                <div className="l-right d-flex flex-grow-1 justify-content-end">
+                <InputGroup className="l-right">
                   <input className={"form-control"} placeholder={this.props.eniacWords} ref={this.eniacWordInput}></input>
                   <Button className="ml-2" color="primary" onClick={this.updateEniacWords}>확인</Button>
-                </div>
+                </InputGroup>
               </div>
             </Col>
           </Row>

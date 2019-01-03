@@ -53,7 +53,7 @@ require('./warehouse/init')(app, pool);
 
 app.use(express.static('public'));
 
-const PORT = process.env.NODE_PORT || 8081;
+let PORT = process.env.NODE_PORT || 8081;
 server.listen(PORT, 'localhost');
 
 // for real time puzzle update

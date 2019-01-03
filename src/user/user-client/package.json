@@ -42,6 +42,6 @@
   "scripts": {
     "build-dev": "webpack --mode=development",
     "build-pro": "webpack --mode=production",
-    "start": "webpack-dev-server --open"
+    "start": "webpack-dev-server --mode=development --open"
   }
 }
