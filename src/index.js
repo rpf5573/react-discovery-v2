@@ -49,7 +49,6 @@ require('./warehouse/init')(app, pool);
 
 app.use(express.static('public'));
 
-console.log( 'process.env.NODE_ENV : ', process.env.NODE_ENV );
 console.log( 'process.env.NODE_PORT : ', process.env.NODE_PORT );
 
 const PORT = process.env.NODE_PORT || 8081;
