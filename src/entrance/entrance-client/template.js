@@ -1,4 +1,4 @@
-module.exports = function (message = false, dcv = 'v1'){
+module.exports = function (dcv = 'v1', message = false){
   let page = `<!DOCTYPE html>
               <html lang="en">
               <head>
@@ -16,7 +16,7 @@ module.exports = function (message = false, dcv = 'v1'){
                 <script>
                   window.__dcv__ = '${dcv}';
                   var message = '${message}';
-                  if ( message !== 'false' ) {
+                  if ( message ) {
                     alert(message);
                   }
                 </script>

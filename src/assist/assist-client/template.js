@@ -1,4 +1,4 @@
-module.exports = function (initialState = {}, srcPath = { style: 'style.css', js: 'main.js' }, message = false){
+module.exports = function (initialState = {}, srcPath = { style: 'style.css', js: 'main.js' }, dcv='v1', message = false){
   let page = `<!DOCTYPE html>
               <html lang="en">
               <head>
@@ -16,9 +16,10 @@ module.exports = function (initialState = {}, srcPath = { style: 'style.css', js
 
                 <script>
                   window.__PRELOADED_STATE__ = ${JSON.stringify(initialState)};
+                  windoe.__dcv__ = '${dcv}';
                   var message = '${message}';
-                  if ( message !== 'false' ) {
-                    alert(${message});
+                  if ( message ) {
+                    alert(message);
                   }
                 </script>
                 <script src="${srcPath.js}"></script>
