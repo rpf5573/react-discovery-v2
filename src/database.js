@@ -5,7 +5,7 @@ let config = {
   host: 'localhost',
   user: 'root',
   password: 'root',
-  database: 'discovery'
+  database: `discovery_${process.env.DCV}`
 };
 if ( process.env.NODE_ENV == 'production' ) {
   config.password = 'thoumas138';
