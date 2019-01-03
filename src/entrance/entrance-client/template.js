@@ -1,4 +1,4 @@
-module.exports = function (dcv = 'v1', message = false){
+module.exports = function (dcv = 'v1', message = ''){
   let page = `<!DOCTYPE html>
               <html lang="en">
               <head>

@@ -1,4 +1,4 @@
-module.exports = function (initialState = {}, srcPath = { style: 'style.css', js: 'main.js' }, message = false){
+module.exports = function (initialState = {}, srcPath = { style: 'style.css', js: 'main.js' }, message = ''){
   let page = `<!DOCTYPE html>
               <html lang="en">
               <head>
