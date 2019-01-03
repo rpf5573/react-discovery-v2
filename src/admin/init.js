@@ -1,12 +1,19 @@
-var mkdirp = require('mkdirp');
+const fs = require('fs-extra');
 
 module.exports = (app, path, multer, mysql) => {
   const DCQuery = new (require('../query'))(mysql);
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      mkdirp('public/admin/uploads/', function (err) {
-        if (err) console.error(err)
-        else cb(null, 'public/admin/uploads/');
+      let uploadPath = 'public/admin/uploads/';
+      if ( process.env.NODE_ENV == 'production' && process.env.DCV ) {
+        uploadPath += process.env.DCV + '/';
+      }
+      fs.ensureDir(uploadPath, err => {
+        if ( err ) {
+          console.log( 'err making dir: ', err );
+        } else {
+          cb(null, uploadPath);
+        }
       });
     },
     filename: (req, file, cb) => {

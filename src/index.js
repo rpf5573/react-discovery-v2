@@ -1,5 +1,3 @@
-console.log( 'process.env.DCV : ', process.env.DCV );
-
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
