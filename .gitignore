@@ -5,3 +5,4 @@ public/*
 uploads
 nodemon.json
 yarn.lock
+*.log
