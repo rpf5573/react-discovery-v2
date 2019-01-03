@@ -1,8 +1,13 @@
+var mkdirp = require('mkdirp');
+
 module.exports = (app, path, multer, mysql) => {
   const DCQuery = new (require('../query'))(mysql);
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, 'public/admin/uploads/');
+      mkdirp('public/admin/uploads/', function (err) {
+        if (err) console.error(err)
+        else cb(null, 'public/admin/uploads/');
+      });
     },
     filename: (req, file, cb) => {
       cb(null, file.originalname);
@@ -23,5 +28,5 @@ module.exports = (app, path, multer, mysql) => {
       }
     }
   }).fields([{name: 'companyImage', maxCount: 1}, {name: 'map', maxCount: 1}]);
-  require('./routes/adminRoute')(app, DCQuery, upload);
+  require('./adminRoute')(app, DCQuery, upload);
 }

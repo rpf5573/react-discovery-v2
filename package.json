@@ -12,6 +12,7 @@
     "express": "^4.16.4",
     "express-mysql-session": "^2.0.1",
     "express-session": "^1.15.6",
+    "mkdir": "^0.0.2",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "mysql": "^2.16.0",
@@ -25,18 +26,16 @@
   },
   "scripts": {
     "start-dev": "NODE_ENV=dev nodemon src/index.js",
-
     "build-admin": "cd ./src/admin/admin-client && yarn install && yarn build-pro && cd ../../../public/admin && mkdir -p uploads",
     "build-assist": "cd ./src/assist/assist-client && yarn install && yarn build-pro",
     "build-entrance": "cd ./src/entrance/entrance-client && yarn install && yarn build-pro",
     "build-user": "cd ./src/user/user-client && yarn install && yarn build-pro && cd ../../../public/user && mkdir -p uploads && cd uploads && mkdir -p 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
     "build-warehouse": "cd ./src/warehouse/warehouse-client && yarn install && yarn build-pro",
     "build-all": "yarn build-admin && yarn build-assist && yarn build-entrance && yarn build-user && yarn build-warehouse",
-
-    "start-v1": "NODE_ENV=production NODE_PORT=8081 pm2 start src/index.js --name v1",
-    "start-v2": "NODE_ENV=production NODE_PORT=8082 pm2 start src/index.js --name v2",
-    "start-v3": "NODE_ENV=production NODE_PORT=8083 pm2 start src/index.js --name v3",
-    "start-v4": "NODE_ENV=production NODE_PORT=8084 pm2 start src/index.js --name v4",
+    "start-v1": "NODE_ENV=production NODE_PORT=8081 DCV=v1 pm2 start src/index.js --name v1",
+    "start-v2": "NODE_ENV=production NODE_PORT=8082 DCV=v2 pm2 start src/index.js --name v2",
+    "start-v3": "NODE_ENV=production NODE_PORT=8083 DCV=v3 pm2 start src/index.js --name v3",
+    "start-v4": "NODE_ENV=production NODE_PORT=8084 DCV=v4 pm2 start src/index.js --name v4",
     "start-all": "yarn start-v1 && yarn start-v2 && yarn start-v3 && yarn start-v4"
   }
 }
