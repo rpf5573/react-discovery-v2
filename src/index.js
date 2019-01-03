@@ -53,7 +53,7 @@ console.log( 'process.env.PORT : ', process.env.PORT );
 
 // const PORT = ( process.env.NODE_ENV == 'production' ? 8080 : 8080 );
 const PORT = 8080;
-server.listen(PORT, '10.25.96.4');
+server.listen(PORT, '167.179.89.68');
 
 
 // for real time puzzle update
