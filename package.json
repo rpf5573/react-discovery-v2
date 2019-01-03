@@ -36,6 +36,6 @@
     "start-v2": "NODE_ENV=production NODE_PORT=8082 DCV=v2 pm2 start src/index.js --name v2",
     "start-v3": "NODE_ENV=production NODE_PORT=8083 DCV=v3 pm2 start src/index.js --name v3",
     "start-v4": "NODE_ENV=production NODE_PORT=8084 DCV=v4 pm2 start src/index.js --name v4",
-    "start-all": "pm2 delete all && yarn start-v1 && yarn start-v2 && yarn start-v3 && yarn start-v4"
+    "start-all": "yarn start-v1 && yarn start-v2 && yarn start-v3 && yarn start-v4"
   }
 }
