@@ -52,9 +52,10 @@ app.use(express.static('public'));
 console.log( 'process.env.PORT : ', process.env.PORT );
 
 // const PORT = ( process.env.NODE_ENV == 'production' ? 8080 : 8080 );
-const PORT = 8080;
+const PORT = 8081;
 server.listen(PORT, 'localhost');
 
+console.log( 'process.argv : ', process.argv );
 
 // for real time puzzle update
 io.on('connection', function(socket) {
