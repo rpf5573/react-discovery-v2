@@ -51,10 +51,8 @@ app.use(express.static('public'));
 
 console.log( 'process.env.NODE_ENV : ', process.env.NODE_ENV );
 console.log( 'process.env.NODE_PORT : ', process.env.NODE_PORT );
-console.log( 'process.argv : ', process.argv );
 
-// const PORT = ( process.env.NODE_ENV == 'production' ? 8080 : 8080 );
-const PORT = 8081;
+const PORT = process.env.NODE_PORT || 8081;
 server.listen(PORT, 'localhost');
 
 // for real time puzzle update
