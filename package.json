@@ -31,7 +31,7 @@
     "build-entrance": "cd ./src/entrance/entrance-client && yarn install && yarn build-pro",
     "build-user": "cd ./src/user/user-client && yarn install && yarn build-pro && cd ../../../public/user && mkdir -p uploads && cd uploads && mkdir -p 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
     "build-warehouse": "cd ./src/warehouse/warehouse-client && yarn install && yarn build-pro",
-    "build-clients": "yarn build-admin && yarn build-assist && yarn build-entrance && yarn build-user && yarn build-warehouse",
+    "build-all": "yarn build-admin && yarn build-assist && yarn build-entrance && yarn build-user && yarn build-warehouse",
 
     "start-v1": "NODE_ENV=production NODE_PORT=8081 pm2 start src/index.js",
     "start-v2": "NODE_ENV=production NODE_PORT=8082 pm2 start src/index.js",
