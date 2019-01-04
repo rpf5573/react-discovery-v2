@@ -18,9 +18,9 @@ function TableRow(props) {
       <td colSpan="2">{props.obj.puzzle}</td>
       <td colSpan="2">{props.obj.eniac}</td>
 
-      <td colSpan="2">3</td>
-      <td colSpan="2">5</td>
-      <td colSpan="2">20%</td>
+      <td colSpan="2">{props.obj.emptyPuzzleBoxOpenCount}</td>
+      <td colSpan="2">{props.obj.wordPuzzleBoxOpenCount}</td>
+      <td colSpan="2">{props.obj.puzzleBoxOpenRate}</td>
 
       <td colSpan="2">{props.obj.totalPoint}</td>
       <td colSpan="2">{props.obj.rank}</td>

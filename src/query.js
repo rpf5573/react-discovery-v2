@@ -78,8 +78,8 @@ class DCQuery {
     }
   }
   async resultData(teamCount) {
-    let points = await this.points.getAll();
-    let puzzles = await this.puzzle.getAll();
+    let points = await this.points.getAll(teamCount);
+    let puzzles = await this.puzzle.getAll(teamCount);
 
     var rows = [];
 
@@ -101,8 +101,9 @@ class DCQuery {
         timer: points[i].timer,
         eniac: points[i].eniac,
         puzzle: points[i].puzzle,
-        puzzleOpenCount: puzzleNumbers.length,
-        wordPuzzleOpenCount: 10, // temp
+        emptyPuzzleBoxOpenCount: puzzles[i].empty_puzzle_box_open_count,
+        wordPuzzleBoxOpenCount: puzzles[i].word_puzzle_box_open_count,
+        puzzleBoxOpenRate: 20,
         totalPoint: points[i].useable + points[i].timer + points[i].eniac + points[i].puzzle,
         rank: teamCount
       }
@@ -350,10 +351,12 @@ class Points {
 }
 
 class Puzzle {
+
   constructor(table, mysql) {
     this.table = table;
     this.mysql = mysql;
   }
+
   async getAll(until = false) {
     let sql = `SELECT * FROM ${this.table} ORDER BY team`;
     if ( until ) {
@@ -362,12 +365,14 @@ class Puzzle {
     const result = await this.mysql.query(sql);
     return result;
   }
+
   async get(team) {
     const sql = `SELECT * FROM ${this.table} WHERE team=${team}`;
     const result = await this.mysql.query(sql);
 
     return result;
   }
+
   async update(team, boxNumber, type) {
     let puzzleColonInfo = await this.get(team);
     let puzzleNumbers = (function(raw) {
@@ -386,16 +391,17 @@ class Puzzle {
     const emptyBox = ( type == constants.EMPTY ? 1 : 0 );
     const wordBox = ( type == constants.WORD ? 1 : 0 );
     
-    const sql = `UPDATE ${this.table} SET numbers='${JSON.stringify(puzzleNumbers)}', empty_box_open_count = empty_box_open_count + ${emptyBox}, word_box_open_count = word_box_open_count + ${wordBox} WHERE team=${team}`;
+    const sql = `UPDATE ${this.table} SET numbers='${JSON.stringify(puzzleNumbers)}', empty_puzzle_box_open_count = empty_puzzle_box_open_count + ${emptyBox}, word_puzzle_box_open_count = word_puzzle_box_open_count + ${wordBox} WHERE team=${team}`;
     const result = await this.mysql.query(sql);
     return result;
   }
 
   async reset() {
-    let sql = `UPDATE ${this.table} SET numbers = NULL, empty_box_open_count = 0, word_box_open_count = 0`;
+    let sql = `UPDATE ${this.table} SET numbers = NULL, empty_puzzle_box_open_count = 0, word_puzzle_box_open_count = 0`;
     let result = await this.mysql.query(sql);
     return result;
   }
+
 }
 
 class PostInfo {
