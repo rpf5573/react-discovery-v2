@@ -182,6 +182,7 @@ class Puzzle extends Component {
     let boxNumber = parseInt(e.currentTarget.getAttribute('data-number'));
     let hasWord = e.currentTarget.getAttribute('data-hasword');
     let point = this.props.mappingPoints.boxOpenGetEmpty;
+
     if ( hasWord == 'true' ) {
       point = this.props.mappingPoints.boxOpenGetWord;
     }

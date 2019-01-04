@@ -235,7 +235,7 @@ module.exports = (app, DCQuery, upload) => {
   // result data
   app.post('/admin/result', async (req, res) => {
     try {
-      let rows = await DCQuery.resultData(req.body.teamCount);
+      let rows = await DCQuery.resultData(req.body.teamCount, req.body.puzzleBoxCount);
       return res.status(201).json(rows);
     } catch (e) {
       console.log( 'e : ', e );

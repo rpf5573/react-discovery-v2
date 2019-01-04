@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import * as utils from '../../../../utils/client';
 import * as constants from '../../../../utils/constants';
-import { Modal, ModalHeader, ModalBody, Table } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Table, Alert } from 'reactstrap';
 import { closeModal } from '../../actions';
 import axios from 'axios';
 import { runInThisContext } from 'vm';
@@ -20,7 +20,7 @@ function TableRow(props) {
 
       <td colSpan="2">{props.obj.emptyPuzzleBoxOpenCount}</td>
       <td colSpan="2">{props.obj.wordPuzzleBoxOpenCount}</td>
-      <td colSpan="2">{props.obj.puzzleBoxOpenRate}</td>
+      <td colSpan="2">{props.obj.puzzleBoxOpenRate}%</td>
 
       <td colSpan="2">{props.obj.totalPoint}</td>
       <td colSpan="2">{props.obj.rank}</td>
@@ -34,7 +34,8 @@ class ResultModal extends React.Component {
     this.pointInputFields = [];
     this.state = {
       backdrop: true,
-      rows: []
+      rows: [],
+      error: false
     };
     this.close = this.close.bind(this);
     this.onOpened = this.onOpened.bind(this);
@@ -75,6 +76,7 @@ class ResultModal extends React.Component {
               { this.state.rows.map((row, i) => <TableRow obj={row} key={i}></TableRow>) }
             </tbody>
           </Table>
+          { this.state.error ? <Alert color="warning">{this.state.error}</Alert> : '' }
         </ModalBody>
       </Modal>
     );
@@ -85,20 +87,25 @@ class ResultModal extends React.Component {
   }
   
   async getResultData() {
-    if ( this.props.teamCount > 0 ) {
+    if ( this.props.teamCount > 0 && this.props.puzzleBoxCount > 0 ) {
       const config = {
         method: 'POST',
         url: '/admin/result',
         data: {
-          teamCount: this.props.teamCount
+          teamCount: this.props.teamCount,
+          puzzleBoxCount: this.props.puzzleBoxCount
         }
       }
-
       utils.simpleAxios(axios, config, (response) => {
         console.log( 'response : ', response );
         this.setState({
+          error: false,
           rows: response.data
         });
+      });
+    } else {
+      this.setState({
+        error: '팀설정과 박스설정을 먼저 완료해 주시기 바랍니다'
       });
     }
   }
@@ -112,6 +119,7 @@ function mapStateToProps(state, ownProps) {
   return {
     activeModalClassName: state.modalControl.activeModalClassName,
     teamCount: state.teamSettings.teamCount,
+    puzzleBoxCount: state.puzzleSettings.puzzleBoxCount,
   };
 }
 

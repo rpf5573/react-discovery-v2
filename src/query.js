@@ -77,23 +77,26 @@ class DCQuery {
         return {};
     }
   }
-  async resultData(teamCount) {
+  async resultData(teamCount, puzzleBoxCount) {
     let points = await this.points.getAll(teamCount);
     let puzzles = await this.puzzle.getAll(teamCount);
 
     var rows = [];
 
     for( var i = 0; i < teamCount; i++ ) {
+
       const puzzleNumbers = (function(raw) {
+        if ( raw == null ) {
+          return [];
+        }
         try {
-          if ( raw == null ) {
-            return [];
-          }
           return JSON.parse(raw);
         } catch (err) {
             return [];
         }
       })(puzzles[i].numbers);
+
+      const puzzleBoxOpenRate =  Math.floor( ( puzzleNumbers.length / puzzleBoxCount ) * 100 );
 
       let row = {
         team: i+1,
@@ -103,7 +106,7 @@ class DCQuery {
         puzzle: points[i].puzzle,
         emptyPuzzleBoxOpenCount: puzzles[i].empty_puzzle_box_open_count,
         wordPuzzleBoxOpenCount: puzzles[i].word_puzzle_box_open_count,
-        puzzleBoxOpenRate: 20,
+        puzzleBoxOpenRate,
         totalPoint: points[i].useable + points[i].timer + points[i].eniac + points[i].puzzle,
         rank: teamCount
       }
