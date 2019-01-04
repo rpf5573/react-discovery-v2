@@ -3,7 +3,6 @@ import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, Alert, Row, Col, InputGroup, Label, Dropdown, DropdownToggle, DropdownItem, DropdownMenu, Table } from 'reactstrap';
 import { closeModal, updatePuzzleBoxCount, updateEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState } from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -54,6 +53,10 @@ class PuzzleSettings extends React.Component {
   }
 
   async updateEniacWords() {
+    if ( ! this.props.puzzleBoxCount ) {
+      return alert( 'ERROR : 박스 개수를 먼저 설정해 주세요' );
+    }
+
     const val = this.eniacWordInput.current.value;
     if ( val.length > 0 ) {
       var arr = val.replace(/\s/g, "").split('');
@@ -146,7 +149,7 @@ class PuzzleSettings extends React.Component {
         <ModalBody>
           <Row>
             <Col xs="12">
-              <Label>박스 설정</Label>
+              <Label>박스 개수 설정</Label>
             </Col>
             <Col xs="12" className={"d-flex justify-content-between"}>
               <div className="l-left">

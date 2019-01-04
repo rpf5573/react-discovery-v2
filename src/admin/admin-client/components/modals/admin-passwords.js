@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import * as utils from '../../../../utils/client';
 import * as constants from '../../../../utils/constants';
-import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal, updateAdminPasswords } from '../../actions';
 import axios from 'axios';

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 import cn from 'classnames';
 import { openModal, toggleMenuBtns } from '../actions/modal-control-actions';
 

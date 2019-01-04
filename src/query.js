@@ -76,16 +76,13 @@ class DCQuery {
         return {};
     }
   }
-  async resultData() {
-    let meta = await this.meta.get(['mapping_points', 'total_team_count']);
-    let total_team_count = meta.total_team_count;
-
+  async resultData(teamCount) {
     let points = await this.points.getAll();
     let puzzles = await this.puzzle.getAll();
 
     var rows = [];
 
-    for( var i = 0; i < total_team_count; i++ ) {
+    for( var i = 0; i < teamCount; i++ ) {
       const puzzleNumbers = (function(raw) {
         try {
           if ( raw == null ) {
@@ -106,7 +103,7 @@ class DCQuery {
         puzzleOpenCount: puzzleNumbers.length,
         wordPuzzle: 10, // temp
         totalPoint: points[i].useable + points[i].timer + points[i].eniac + points[i].puzzle,
-        rank: total_team_count
+        rank: teamCount
       }
       rows.push(row);
     }

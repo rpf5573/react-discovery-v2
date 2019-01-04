@@ -233,9 +233,9 @@ module.exports = (app, DCQuery, upload) => {
   });
 
   // result data
-  app.get('/admin/result', async (req, res) => {
+  app.post('/admin/result', async (req, res) => {
     try {
-      let rows = await DCQuery.resultData();
+      let rows = await DCQuery.resultData(req.body.teamCount);
       return res.status(201).json(rows);
     } catch (e) {
       console.log( 'e : ', e );

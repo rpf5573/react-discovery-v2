@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import * as utils from '../../../../utils/client';
-import _ from 'lodash';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal } from '../../actions';
 import axios from 'axios';
@@ -101,9 +100,6 @@ class PointReward extends React.Component {
             <span>본부 점수 제공</span>
           </ModalHeader>
           <ModalBody>
-            <Alert color="danger">
-              주의 : 본부에서 점수를 제공해도 바로 지급되지 않습니다. 타이머가 종료되는 순간 지급됩니다.
-            </Alert>
             <Row>
               { this.renderPointInputs(this.props.teamCount) }
             </Row>

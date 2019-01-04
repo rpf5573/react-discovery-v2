@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import * as utils from '../../../../utils/client';
 import * as constants from '../../../../utils/constants';
-import _ from 'lodash';
-import { Button, Modal, ModalHeader, ModalBody, Table, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Table } from 'reactstrap';
 import { closeModal } from '../../actions';
 import axios from 'axios';
 import { runInThisContext } from 'vm';
@@ -41,12 +40,11 @@ class ResultModal extends React.Component {
             <thead>
               <tr>
                 <th rowSpan="2" colSpan="1">TEAM</th>
+                <th rowSpan="2" colSpan="2">가용점수</th>
                 <th colSpan="10">평가점수</th>
                 <th colSpan="4">결과</th>
               </tr>
               <tr> 
-                <th colSpan="2">가용점수</th>
-
                 <th colSpan="2">이동시간</th>
                 <th colSpan="2">퍼즐 Open Point</th>
                 <th colSpan="2">퍼즐 Open 개수</th>
@@ -71,11 +69,22 @@ class ResultModal extends React.Component {
   }
   
   async getResultData() {
-    utils.simpleAxios(axios, '/admin/result', (response) => {
-      this.setState({
-        rows: response.data
+    if ( this.props.teamCount > 0 ) {
+      const config = {
+        method: 'POST',
+        url: '/admin/result',
+        data: {
+          teamCount: this.props.teamCount
+        }
+      }
+
+      utils.simpleAxios(axios, config, (response) => {
+        console.log( 'response : ', response );
+        this.setState({
+          rows: response.data
+        });
       });
-    });
+    }
   }
 
   async componentDidMount() {
@@ -102,7 +111,7 @@ function TableRow(props) {
 function mapStateToProps(state, ownProps) {
   return {
     activeModalClassName: state.modalControl.activeModalClassName,
-    teamCount: state.teamSettings.teamCount
+    teamCount: state.teamSettings.teamCount,
   };
 }
 

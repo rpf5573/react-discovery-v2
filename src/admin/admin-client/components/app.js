@@ -1,6 +1,5 @@
 // utils
 import axios from 'axios';
-import _ from 'lodash';
 
 // react & redux
 import React, { Component } from 'react';
