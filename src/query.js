@@ -58,13 +58,11 @@ class DCQuery {
         var metas = await this.meta.get(['map']);
         var teamCount = await this.teamPasswords.getTeamCount();
         var useablePoints = await this.points.get('useable');
-        var stackPoints = await this.points.get('stack');
         var postInfos = await this.postInfo.getAll();
         return {
           ...metas,
           teamCount,
           useablePoints,
-          stackPoints,
           postInfos
         };
       
@@ -102,7 +100,6 @@ class DCQuery {
       let row = {
         team: i+1,
         useable: points[i].useable,
-        stack: points[i].stack,
         timer: points[i].timer,
         eniac: points[i].eniac,
         puzzle: points[i].puzzle,
@@ -132,6 +129,7 @@ class DCQuery {
     this.teamPasswords.reset();
     this.timer.reset();
     this.postInfo.reset();
+    this.uploads.reset();
   }
 }
 
@@ -324,13 +322,12 @@ class Points {
   async updateOneRow(obj) {
     let team = obj.team;
     let useable = obj.hasOwnProperty('useable') ? obj.useable : 0;
-    let stack = useable > 0 ? useable : 0; // 왜냐면 얻는 점수만 쌓는거거든 !
     let timer = obj.hasOwnProperty('timer') ? obj.timer : 0;
     let eniac = obj.hasOwnProperty('eniac') ? obj.eniac : 0;
     let puzzle = obj.hasOwnProperty('puzzle') ? obj.puzzle : 0;
     let temp = obj.hasOwnProperty('temp') ? obj.temp : 0;
 
-    let sql = `UPDATE ${this.table} SET useable = useable + ${useable}, stack = stack + ${stack}, timer = timer + ${timer}, eniac = eniac + ${eniac}, puzzle = puzzle + ${puzzle}, temp = temp + ${temp} WHERE team = ${team}`;
+    let sql = `UPDATE ${this.table} SET useable = useable + ${useable}, timer = timer + ${timer}, eniac = eniac + ${eniac}, puzzle = puzzle + ${puzzle}, temp = temp + ${temp} WHERE team = ${team}`;
     let result = await this.mysql.query(sql);
     return result;
   }
@@ -345,7 +342,7 @@ class Points {
     return result;
   }
   async reset(col = null, team = null) {
-    let sql = `UPDATE ${this.table} SET useable = 0, stack = 0, timer = 0, eniac = 0, puzzle = 0, temp = 0`;
+    let sql = `UPDATE ${this.table} SET useable = 0, timer = 0, eniac = 0, puzzle = 0, temp = 0`;
     if ( col && team ) {
       sql = `UPDATE ${this.table} SET ${col} = 0 WHERE team = ${team}`;
     }
@@ -495,7 +492,7 @@ class Uploads {
 
   async reset(col = null, team = null) {
     let sql = `UPDATE ${this.table} SET files = NULL, temp = NULL`;
-    if ( col ) {
+    if ( col && team ) {
       sql = `UPDATE ${this.table} SET ${col} = NULL WHERE team = ${team}`;
     }
     let result = this.mysql.query(sql);

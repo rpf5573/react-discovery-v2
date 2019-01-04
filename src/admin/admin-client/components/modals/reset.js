@@ -63,9 +63,6 @@ class ResetModal extends React.Component {
           <span>초기화</span>
         </ModalHeader>
         <ModalBody>
-          <Alert color="warning">
-            점수 배정표와 관리자 비밀번호는 초기화 되지 않습니다
-          </Alert>
           <Row>
             <Col>
               <Label>

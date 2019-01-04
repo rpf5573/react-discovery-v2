@@ -1,4 +1,4 @@
-import { UPDATE_PUZZLE_BOX_COUNT, UPDATE_ENIAC_WORDS, UPDATE_LASTBOX_GOOGLEDRIVE_URL, UPDATE_LASTBOX_STATE, UPDATE_ENIAC_STATE } from '../actions/types';
+import { UPDATE_PUZZLE_BOX_COUNT, UPDATE_ENIAC_WORDS, UPDATE_LASTBOX_GOOGLEDRIVE_URL, UPDATE_LASTBOX_STATE } from '../actions/types';
 
 export const updatePuzzleBoxCount = (puzzleBoxCount) => dispatch => {
   dispatch({
@@ -24,13 +24,6 @@ export const updateLastBoxGoogleDriveUrl = (url) => dispatch => {
 export const updateLastBoxState = (state) => dispatch => {
   dispatch({
     type: UPDATE_LASTBOX_STATE,
-    payload: state
-  });
-}
-
-export const updateEniacState = (state) => dispatch => {
-  dispatch({
-    type: UPDATE_ENIAC_STATE,
     payload: state
   });
 }

@@ -1,6 +1,7 @@
 const path = require('path');
 const template = require('./admin-client/template');
 const utils = require('../utils/server');
+const fs = require('fs-extra');
 
 module.exports = (app, DCQuery, upload) => {
 
@@ -115,6 +116,15 @@ module.exports = (app, DCQuery, upload) => {
       return res.sendStatus(401);
     }
   });
+  app.post('/admin/timer/eniac-state', async (req, res) => {
+    try {
+      await DCQuery.meta.update('eniac_state', req.body.eniacState);
+      return res.sendStatus(201);
+    } catch (e) {
+      console.log( 'error : ', e );
+      return res.sendStatus(404);
+    }
+  });
 
   // puzzle settings
   app.post('/admin/puzzle-settings/puzzlebox-count', async (req, res) => {
@@ -165,15 +175,6 @@ module.exports = (app, DCQuery, upload) => {
     }
     res.sendStatus(201);
     return;
-  });
-  app.post('/admin/puzzle-settings/eniac-state', async (req, res) => {
-    try {
-      await DCQuery.meta.update('eniac_state', req.body.eniacState);
-      return res.sendStatus(201);
-    } catch (e) {
-      console.log( 'error : ', e );
-      return res.sendStatus(404);
-    }
   });
 
   // points
@@ -247,12 +248,15 @@ module.exports = (app, DCQuery, upload) => {
     let pw = req.body.reset_password;
     if ( pw && pw == 'discovery_reset' ) {
       try {
-        await DCQuery.reset();
+        await DCQuery.reset(); // DB reset
+        await fs.remove( path.resolve( __dirname, `../../public/admin/uploads/${process.env.DCV}`) ); // admin uploads reset
+        await fs.remove( path.resolve( __dirname, `../../public/user/uploads/${process.env.DCV}`) ); // user uploads reset
         return res.sendStatus(201);
       } catch(e) {
         return res.sendStatus(401);
       }
     }
+
     return res.status(201).json({
       error: '잘못된 접근입니다'
     });

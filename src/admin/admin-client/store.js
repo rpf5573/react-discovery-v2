@@ -25,7 +25,8 @@ export default function configureStore(initialSettings) {
     },
     timer: {
       laptime: parseInt(initialSettings.laptime),
-      teamTimers: initialSettings.teamTimers
+      teamTimers: initialSettings.teamTimers,
+      eniacState: parseInt(initialSettings.eniac_state),
     },
     uploads: {
       companyImage: initialSettings.company_image,
@@ -34,7 +35,6 @@ export default function configureStore(initialSettings) {
     puzzleSettings: {
       puzzleBoxCount: parseInt(initialSettings.puzzlebox_count),
       eniacWords: initialSettings.original_eniac_words,
-      eniacState: parseInt(initialSettings.eniac_state),
       lastBoxGoogleDriveUrl: decodeURI(initialSettings.lastbox_google_drive_url),
       lastBoxState: parseInt(initialSettings.lastbox_state)
     },

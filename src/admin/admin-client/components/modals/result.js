@@ -41,15 +41,13 @@ class ResultModal extends React.Component {
             <thead>
               <tr>
                 <th rowSpan="2" colSpan="1">TEAM</th>
-                <th colSpan="6">활동점수</th>
-                <th colSpan="8">평가점수</th>
+                <th colSpan="10">평가점수</th>
                 <th colSpan="4">결과</th>
               </tr>
               <tr> 
                 <th colSpan="2">가용점수</th>
-                <th colSpan="2">누적점수</th>
-                <th colSpan="2">이동시간</th>
 
+                <th colSpan="2">이동시간</th>
                 <th colSpan="2">퍼즐 Open Point</th>
                 <th colSpan="2">퍼즐 Open 개수</th>
                 <th colSpan="2">보너스 퍼즐 Open</th>
@@ -90,7 +88,6 @@ function TableRow(props) {
     <tr>
       <td colSpan="1">{props.obj.team}</td>
       <td colSpan="2">{props.obj.useable}</td>
-      <td colSpan="2">{props.obj.stack}</td>
       <td colSpan="2">{props.obj.timer}</td>
       <td colSpan="2">{props.obj.puzzle}</td>
       <td colSpan="2">{props.obj.puzzleOpenCount}</td>

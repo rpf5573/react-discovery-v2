@@ -4,8 +4,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import _ from 'lodash';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, Dropdown, DropdownToggle, DropdownItem, DropdownMenu, Table } from 'reactstrap';
-import { closeModal, updatePuzzleBoxCount, updateEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState, updateEniacState } from '../../actions';
+import { Button, Modal, ModalHeader, ModalBody, Alert, Row, Col, InputGroup, Label, Dropdown, DropdownToggle, DropdownItem, DropdownMenu, Table } from 'reactstrap';
+import { closeModal, updatePuzzleBoxCount, updateEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState } from '../../actions';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import 'awesome-bootstrap-checkbox';
 
@@ -28,7 +30,6 @@ class PuzzleSettings extends React.Component {
     this.lastBoxGoogleDriveUrlInput = React.createRef();
     this.updateLastBoxGoogleDriveUrl = this.updateLastBoxGoogleDriveUrl.bind(this);
 
-    this.updateEniacState = this.updateEniacState.bind(this);
     this.updateLastBoxState = this.updateLastBoxState.bind(this);
   }
 
@@ -124,22 +125,6 @@ class PuzzleSettings extends React.Component {
     });
   }
 
-  async updateEniacState(e) {
-    let val = parseInt(e.currentTarget.value);
-
-    const config = {
-      method: 'POST',
-      url: '/admin/puzzle-settings/eniac-state',
-      data: {
-        eniacState: val
-      }
-    };
-    utils.simpleAxios(axios, config, (response) => {
-      this.props.updateEniacState(val);
-      alert("성공");
-    });
-  }
-
   renderPuzzleBoxCountDropdownMenuItems() {
     let counts = [20, 24, 30, 35, 40, 48];
     var list = [];
@@ -156,15 +141,12 @@ class PuzzleSettings extends React.Component {
     return (
       <Modal isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} size="lg">
         <ModalHeader toggle={this.close}>
-          <span>퍼즐 설정</span>
+          <span>박스 설정</span>
         </ModalHeader>
         <ModalBody>
-          <Alert color="danger">
-            주의 : 퍼즐박스개수 변경시 숨겨진 글자도 초기화 됩니다.
-          </Alert>
           <Row>
             <Col xs="12">
-              <Label>퍼즐 박스 설정</Label>
+              <Label>박스 설정</Label>
             </Col>
             <Col xs="12" className={"d-flex justify-content-between"}>
               <div className="l-left">
@@ -179,7 +161,7 @@ class PuzzleSettings extends React.Component {
               </div>
               <div className="l-right d-flex w-75 align-items-center">
                 <div className="l-left no-wrap-text mr-2">
-                  숨겨진 글자 :
+                  박스 메세지 :
                 </div>
                 <InputGroup className="l-right">
                   <input className={"form-control"} placeholder={this.props.eniacWords} ref={this.eniacWordInput}></input>
@@ -205,7 +187,7 @@ class PuzzleSettings extends React.Component {
             <Col xs="6">
               <div className="d-flex">
                 <span className="mr-3">
-                  최종 박스 : 
+                <FontAwesomeIcon icon={faQuestionCircle} /> 박스 :  
                 </span>
                 <div className="radio abc-radio abc-radio-primary mr-3">
                   <input type="radio" id="lastBoxStateRadioInput01" onChange={this.updateLastBoxState} checked={ this.props.lastBoxState ? true : false } value={constants.ON}/>
@@ -218,19 +200,6 @@ class PuzzleSettings extends React.Component {
               </div>
             </Col>
             <Col xs="6">
-              <div className="d-flex">
-                <span className="mr-3">
-                  암호해독 : 
-                </span>
-                <div className="radio abc-radio abc-radio-primary mr-3">
-                  <input type="radio" id="eniacStateRadioInput01" onChange={this.updateEniacState} checked={ this.props.eniacState ? true : false } value={constants.ON}/>
-                  <label htmlFor="eniacStateRadioInput01">ON</label>
-                </div>
-                <div className="radio abc-radio abc-radio-danger">
-                  <input type="radio" id="eniacStateRadioInput02" onChange={this.updateEniacState} checked={ this.props.eniacState ? false : true } value={constants.OFF}/>
-                  <label htmlFor="eniacStateRadioInput02">OFF</label>
-                </div>
-              </div>
             </Col>
           </Row>
         </ModalBody>
@@ -250,4 +219,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { closeModal, updatePuzzleBoxCount, updateEniacWords, updateEniacState, updateLastBoxGoogleDriveUrl, updateLastBoxState })(PuzzleSettings);
+export default connect(mapStateToProps, { closeModal, updatePuzzleBoxCount, updateEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState })(PuzzleSettings);

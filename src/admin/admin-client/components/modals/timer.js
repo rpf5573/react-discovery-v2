@@ -2,8 +2,8 @@ import * as utils from '../../../../utils/client';
 import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup } from 'reactstrap';
-import { closeModal, updateTeamTimerState, updateLapTime } from '../../actions';
+import { Button, Modal, ModalHeader, ModalBody, Row, Col, InputGroup, InputGroupAddon, InputGroupText, Label } from 'reactstrap';
+import { closeModal, updateTeamTimerState, updateLapTime, updateEniacState } from '../../actions';
 import axios from 'axios';
 import cn from 'classnames';
 
@@ -18,6 +18,7 @@ class TimerModal extends React.Component {
     this.updateLapTime = this.updateLapTime.bind(this);
     this.handleTimerBtnClick = this.handleTimerBtnClick.bind(this);
     this.allTimerStart = this.allTimerStart.bind(this);
+    this.updateEniacState = this.updateEniacState.bind(this);
   }
 
   close() {
@@ -94,6 +95,22 @@ class TimerModal extends React.Component {
     });
   }
 
+  async updateEniacState(e) {
+    let val = parseInt(e.currentTarget.value);
+
+    const config = {
+      method: 'POST',
+      url: '/admin/timer/eniac-state',
+      data: {
+        eniacState: val
+      }
+    };
+    utils.simpleAxios(axios, config, (response) => {
+      this.props.updateEniacState(val);
+      alert("성공");
+    });
+  }
+
   renderTimerManageBtns(count) {
     let currentTime = utils.getCurrentTimeInSeconds();
     var btnList = [];
@@ -129,9 +146,9 @@ class TimerModal extends React.Component {
             </Button>
             <InputGroupAddon addonType="append" className={timerAppendBoxCN}>
               <InputGroupText>
-                <div class="rotate-clock">
-                  <div class="hour"></div>
-                  <div class="minute"></div>
+                <div className="rotate-clock">
+                  <div className="hour"></div>
+                  <div className="minute"></div>
                 </div>
               </InputGroupText>
             </InputGroupAddon>
@@ -152,13 +169,28 @@ class TimerModal extends React.Component {
             타이머
           </div>
           <div className="l-right">
-            <Label>랩타임 설정 : </Label>
-            <InputGroup>
-              <input type="number" className="form-control" placeholder={utils.secondToMinute(this.props.laptime)} ref={input => this.lapTimeInput = input}/>
-              <InputGroupAddon addonType="append">
-                <Button color="secondary" onClick={this.updateLapTime}>확인</Button>
-              </InputGroupAddon>
-            </InputGroup>
+            <div className="l-left d-flex">
+              <span className="mr-3">
+                암호해독 : 
+              </span>
+              <div className="radio abc-radio abc-radio-primary mr-3">
+                <input type="radio" id="eniacStateRadioInput01" onChange={this.updateEniacState} checked={ this.props.eniacState ? true : false } value={constants.ON}/>
+                <label htmlFor="eniacStateRadioInput01">ON</label>
+              </div>
+              <div className="radio abc-radio abc-radio-danger">
+                <input type="radio" id="eniacStateRadioInput02" onChange={this.updateEniacState} checked={ this.props.eniacState ? false : true } value={constants.OFF}/>
+                <label htmlFor="eniacStateRadioInput02">OFF</label>
+              </div>
+            </div>
+            <div className="l-right d-flex align-items-center justify-content-end">
+              <Label>랩타임 설정 : </Label>
+              <InputGroup>
+                <input type="number" className="form-control" placeholder={utils.secondToMinute(this.props.laptime)} ref={input => this.lapTimeInput = input}/>
+                <InputGroupAddon addonType="append">
+                  <Button color="secondary" onClick={this.updateLapTime}>확인</Button>
+                </InputGroupAddon>
+              </InputGroup>
+            </div>
           </div>
         </ModalHeader>
         <ModalBody>
@@ -183,8 +215,9 @@ function mapStateToProps(state, ownProps) {
     laptime: state.timer.laptime,
     teamCount: state.teamSettings.teamCount,
     teamTimers: state.timer.teamTimers,
-    mappingPoints: state.mappingPoints
+    mappingPoints: state.mappingPoints,
+    eniacState: state.timer.eniacState,
   };
 }
 
-export default connect(mapStateToProps, { closeModal, updateTeamTimerState, updateLapTime })(TimerModal);
+export default connect(mapStateToProps, { closeModal, updateTeamTimerState, updateLapTime, updateEniacState })(TimerModal);

@@ -124,7 +124,7 @@ class MainBoard extends Component {
           const filename = files[z];
           list.push(
             <Col xs="4" key={`${team}-${i}-${z}-${filename}`}>
-              <FileItem team={team} src={`/user/uploads/${window__dcv__}/${team}/${filename}`} filename={filename} type={type} onRewardPoint={this.rewardPoint} ></FileItem>
+              <FileItem team={team} src={`/user/uploads/${window.__dcv__}/${team}/${filename}`} filename={filename} type={type} onRewardPoint={this.rewardPoint} ></FileItem>
             </Col>
           );
         }
