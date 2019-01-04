@@ -144,7 +144,7 @@ class Puzzle extends Component {
   async handleEniacSubmit(e) {
     e.preventDefault();
     if ( ! this.state.eniacSentance ) {
-      alert( '암호해독을 입력해주세요' );
+      alert( '문장해독을 입력해주세요' );
       return;
     }
 
@@ -237,7 +237,7 @@ class Puzzle extends Component {
           { this.renderPuzzleBoxes(this.props.teamCount, this.props.count, this.props.puzzleColonInfo, this.props.randomEniacWords) }
         </div>
         <Button variant="contained" color="secondary" className={eniacBtnCN} onClick={this.handleModalOpen}>
-          암호해독
+          문장해독
         </Button>
         <Modal
           aria-labelledby="simple-modal-title"

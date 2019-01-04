@@ -25,16 +25,9 @@ class ResultModal extends React.Component {
     this.props.closeModal();
   }
 
-  getRows( teamCount ) {
-    
-  }
-
   render() {
     return (
       <Modal style={{maxWidth: '1200px'}} isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} onOpened={this.onOpened}>
-        <ModalHeader toggle={this.close}>
-          <span>본부 점수 제공</span>
-        </ModalHeader>
         <ModalBody>
           <Table bordered={true}>
             <thead>
@@ -46,10 +39,10 @@ class ResultModal extends React.Component {
               </tr>
               <tr> 
                 <th colSpan="2">이동시간</th>
-                <th colSpan="2">퍼즐 Open Point</th>
-                <th colSpan="2">퍼즐 Open 개수</th>
-                <th colSpan="2">보너스 퍼즐 Open</th>
-                <th colSpan="2">암호해독</th>
+                <th colSpan="2">구역점유</th>
+                <th colSpan="2">구역점유 개수</th>
+                <th colSpan="2">글자구역점유 개수</th>
+                <th colSpan="2">문장해독</th>
 
                 <th colSpan="2">최종점수</th>
                 <th colSpan="2">기여도순위</th>
@@ -100,7 +93,7 @@ function TableRow(props) {
       <td colSpan="2">{props.obj.timer}</td>
       <td colSpan="2">{props.obj.puzzle}</td>
       <td colSpan="2">{props.obj.puzzleOpenCount}</td>
-      <td colSpan="2">{props.obj.wordPuzzle}</td>
+      <td colSpan="2">{props.obj.wordPuzzleOpenCount}</td>
       <td colSpan="2">{props.obj.eniac}</td>
       <td colSpan="2">{props.obj.totalPoint}</td>
       <td colSpan="2">{props.obj.rank}</td>

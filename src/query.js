@@ -101,7 +101,7 @@ class DCQuery {
         eniac: points[i].eniac,
         puzzle: points[i].puzzle,
         puzzleOpenCount: puzzleNumbers.length,
-        wordPuzzle: 10, // temp
+        wordPuzzleOpenCount: 10, // temp
         totalPoint: points[i].useable + points[i].timer + points[i].eniac + points[i].puzzle,
         rank: teamCount
       }

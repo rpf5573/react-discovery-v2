@@ -76,7 +76,7 @@ module.exports = (app, DCQuery, upload) => {
       var result = await DCQuery.meta.get('eniac_state');
       result = parseInt(result);
       if ( isNaN(result) || !result ) {
-        return res.status(201).json({ error: '현재 암호해독이 불가능한 상태입니다' });
+        return res.status(201).json({ error: '현재 문장해독이 불가능한 상태입니다' });
       }
 
       var result = await DCQuery.meta.get('eniac_success_teams');

@@ -171,7 +171,7 @@ class TimerModal extends React.Component {
           <div className="l-right">
             <div className="l-left d-flex">
               <span className="mr-3">
-                암호해독 : 
+                문장해독 : 
               </span>
               <div className="radio abc-radio abc-radio-primary mr-3">
                 <input type="radio" id="eniacStateRadioInput01" onChange={this.updateEniacState} checked={ this.props.eniacState ? true : false } value={constants.ON}/>
