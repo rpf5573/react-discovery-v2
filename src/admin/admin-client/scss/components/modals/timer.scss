@@ -4,46 +4,117 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
+
     label {
       font-size: 18px;
       margin-bottom: 0;
     }
+
     .l-right {
       display: flex;
       align-items: center;
       justify-content: flex-end;
+
       label {
         margin-right: 10px;
       }
+
       .input-group {
         width: 60%;
+
         input {
           text-align: center;
         }
       }
     }
   }
+
   .modal-body {
     .input-group {
       margin-top: 20px;
+
       .input-group-prepend {
         width: 20%;
         padding: 0;
         text-align: center;
+
         .input-group-text {
           padding: 0;
           width: 100%;
           justify-content: center;
         }
       }
+
       .btn {
         flex: 1;
       }
+
+      .input-group-append > .input-group-text {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
     }
+
     .restTime {
       text-align: right;
+
       &--minus {
         color: red;
+      }
+    }
+
+    .rotate-clock {
+      width: 24px;
+      height: 24px;
+      position: relative;
+      border-radius: 50%;
+      border: 2px solid black;
+
+      .hand {
+        width: 0;
+        height: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background-color: black;
+        transform-origin: 50% 100%;
+
+        margin-left: -1px;
+        margin-right: -1px;
+        padding-left: 1px;
+        padding-right: 1px;
+      }
+
+      .minute {
+        @extend .hand;
+        margin-top: -9px;
+        padding-top: 9px;
+
+        animation: rotates 2s infinite linear;
+      }
+
+      .hour {
+        @extend .hand;
+        margin-top: -7px;
+        padding-top: 7px;
+
+        animation: rotates 6s infinite linear;
+      }
+
+
+
+      @keyframes rotates {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        50% {
+          transform: rotate(180deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
       }
     }
   }

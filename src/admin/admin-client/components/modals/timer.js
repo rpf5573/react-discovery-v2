@@ -87,9 +87,10 @@ class TimerModal extends React.Component {
 
     utils.simpleAxios(axios, config, (response) => {
       this.lapTimeInput.value = '';
-      this.lapTimeInput.placeholder = utils.secondToMinute(laptime);
+      const time = utils.secondToMinute(laptime);
+      this.lapTimeInput.placeholder = time;
       this.props.updateLapTime(laptime);
-      alert( "성공" );
+      alert( "성공 : 랩타임이 " + time + "로 설정되었습니다" );
     });
   }
 
@@ -103,15 +104,18 @@ class TimerModal extends React.Component {
         danger: teamTimer.state
       });
       let text = teamTimer.state ? constants.STOP : constants.START;
-      let restTimeBox = '';
+      let restTimeBox = false;
       if ( teamTimer.state ) {
         let restTime = this.props.laptime - (currentTime - teamTimer.startTime);
         let restTimeCN = cn({
           restTime: true,
           'restTime--minus': (restTime < 0) ? true : false
         });
-        restTimeBox = (<div className={restTimeCN}> { utils.secondToMinute(restTime) } </div>);
+        restTimeBox = (<div className={restTimeCN}> 남은시간 : { utils.secondToMinute(restTime) } </div>);
       }
+      let timerAppendBoxCN = cn({
+        'd-none': !teamTimer.state
+      });
       btnList.push(
         <Col sm="3" key={i}>
           <InputGroup>
@@ -123,6 +127,14 @@ class TimerModal extends React.Component {
             <Button color={color} data-team={i} data-state={teamTimer.state} onClick={this.handleTimerBtnClick}>
               {text}
             </Button>
+            <InputGroupAddon addonType="append" className={timerAppendBoxCN}>
+              <InputGroupText>
+                <div class="rotate-clock">
+                  <div class="hour"></div>
+                  <div class="minute"></div>
+                </div>
+              </InputGroupText>
+            </InputGroupAddon>
           </InputGroup>
           {restTimeBox}
         </Col>

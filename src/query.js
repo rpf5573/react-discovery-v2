@@ -178,12 +178,35 @@ class Meta {
   async reset() {
     var sql = `UPDATE ${this.table} SET meta_value = 0 WHERE meta_key IN ('total_team_count', 'game_state', 'posts_count', 'eniac_state', 'lastbox_state', 'laptime', 'puzzlebox_count')`;
     var result = await this.mysql.query(sql);
-    if ( result.err ) {
-      return result;
-    }
 
     sql = `UPDATE ${this.table} SET meta_value = NULL WHERE meta_key IN ('company_image', 'map', 'original_eniac_words', 'eniac_success_teams', 'random_eniac_words', 'lastbox_google_drive_url')`;
-    var result = await this.mysql.query(sql);
+    result = await this.mysql.query(sql);
+
+    // mapping point
+    const mappingPoints = {
+      timer_plus: 100,
+      timer_minus: 100,
+      upload: 1000,
+      boxOpenGetEmpty: 6000,
+      boxOpenGetWord: 9000,
+      boxOpenUse: 3000,
+      eniac: 20000
+    }
+    sql = `UPDATE ${this.table} SET meta_value='${JSON.stringify(mappingPoints)}' WHERE meta_key='mapping_points'`;
+    result = await this.mysql.query(sql);
+
+    // admin passwords
+    const adminPasswords = {
+      admin: '1234',
+      assist: '4321'
+    }
+    sql = `UPDATE ${this.table} SET meta_value='${JSON.stringify(adminPasswords)}' WHERE meta_key='admin_passwords'`;
+    result = await this.mysql.query(sql);
+
+    // laptime
+    sql = `UPDATE ${this.table} SET meta_value=480 WHERE meta_key='laptime'`;
+    result = await this.mysql.query(sql);
+
     return result;
   }
 }
