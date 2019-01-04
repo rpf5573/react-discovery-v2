@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import * as utils from '../../../../utils/client';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal } from '../../actions';
 import axios from 'axios';
 
@@ -103,6 +103,7 @@ class PointReward extends React.Component {
             <Row>
               { this.renderPointInputs(this.props.teamCount) }
             </Row>
+            { ! this.props.teamCount ? <Alert color="warning"> 팀설정을 먼저 해주시기 바랍니다 </Alert> : '' }
           </ModalBody>
           <ModalFooter>
             <Button color="primary" type="submit">적용</Button>

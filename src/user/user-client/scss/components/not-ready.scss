@@ -1,0 +1,11 @@
+.not-ready {
+  background-color: #ffa000 !important;
+  .message {
+    display: flex;
+    align-items: center;
+    .icon {
+      font-size: 18px;
+      margin-right: 4px;
+    }
+  }
+}

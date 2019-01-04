@@ -212,9 +212,6 @@ class TeamSetting extends React.Component {
             <span>팀설정</span>
           </ModalHeader>
           <ModalBody>
-            <Alert color="danger">
-              주의 : 디스커버리 1을 사용한다면 비밀번호 앞자리가 1로 시작되어야 하며, 2를 사용한다면 2로 시작되어야 합니다
-            </Alert>
             <Nav tabs>
               <NavItem>
                 <NavLink 

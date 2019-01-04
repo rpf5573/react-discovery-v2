@@ -11,6 +11,7 @@ import { updatePuzzleColonInfo } from '../actions';
 import Modal from '@material-ui/core/Modal';
 import TextField from '@material-ui/core/TextField';
 import HelpOutline from '@material-ui/icons/HelpOutline';
+import NotReady from './not-ready';
 
 class PuzzleBox extends Component {
   constructor(props) {
@@ -86,7 +87,6 @@ class Puzzle extends Component {
   }
 
   renderPuzzleBoxes(teamCount, boxCount, puzzleColonInfo, randomEniacWords) {
-
     this.boxes = [];
 
     // 20( 4 x 5 ), 24( 4 x 6 ), 30( 5 x 6 ), 35( 5 x 7 ), 40( 5 x 8 ), 48( 6 x 8 )
@@ -165,7 +165,7 @@ class Puzzle extends Component {
         }
       };
       utils.simpleAxios(axios, config, (response) => {
-        alert("성공 : " + response.data.point + '점을 획득하셨습니다');
+        alert(`성공 : ${response.data.rank}등으로 맞춰, ${response.data.point} 점을 획득하셨습니다 !`);
         this.setState({ isModalOpen: false });
       });
     } else {
@@ -214,7 +214,14 @@ class Puzzle extends Component {
   }
 
   async componentDidMount() {
-    utils.simpleAxios(axios, '/user/get-puzzle-colon-info', (response) => {
+    const config = {
+      method: 'POST',
+      url: '/user/get-puzzle-colon-info',
+      data: {
+        teamCount: this.props.teamCount
+      }
+    }
+    utils.simpleAxios(axios, config, (response) => {
       this.props.updatePuzzleColonInfo(response.data);
     });
   }
@@ -224,6 +231,10 @@ class Puzzle extends Component {
   }
 
   render() {
+    if ( !this.props.count) {
+      return ( <NotReady></NotReady> );
+    }
+
     let eniacBtnCN = cn({
       'open-eniac-modal-btn': true,
       'd-none': (this.props.originalEniacWords ? false : true)
@@ -231,7 +242,8 @@ class Puzzle extends Component {
     let eniacModal = cn({
       'eniac-modal': true,
       'd-none': (this.props.originalEniacWords ? false : true)
-    })
+    });
+
     return (
       <div className="puzzle-page full-container">
         <a className="d-none" href={this.props.lastBoxGoogleDriveUrl} target="_blank" rel="noopener noreferrer" ref={this.hiddenAnchorForNewTab}></a>
@@ -271,19 +283,22 @@ class Puzzle extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  let puzzleColonInfo = [];
-  for ( var i = 0; i < state.teamCount; i++ ) {
-    const parsed = JSON.parse(state.puzzleColonInfo[i].numbers);
-    puzzleColonInfo.push({
-      team: state.puzzleColonInfo[i].team,
-      numbers: (parsed ? parsed : [] )
-    });
+  let puzzleColonInfo = false;
+  if ( Array.isArray(state.puzzleColonInfo) ) {
+    puzzleColonInfo = [];
+    for ( var i = 0; i < state.puzzleColonInfo.length; i++ ) {
+      const parsed = JSON.parse(state.puzzleColonInfo[i].numbers);
+      puzzleColonInfo.push({
+        team: state.puzzleColonInfo[i].team,
+        numbers: (parsed ? parsed : [] )
+      });
+    }
   }
 
   return {
-    teamCount: state.teamCount,
+    teamCount: parseInt(state.teamCount), // 이게 없을때는 DB에서 string 0를 가져온다
     ourTeam: state.loginData.team,
-    count: state.puzzlebox_count,
+    count: parseInt(state.puzzlebox_count), // 이게 없을때는 DB에서 string 0를 가져온다
     puzzleColonInfo,
     mappingPoints: state.mapping_points,
     endPoint: state.rootPath,

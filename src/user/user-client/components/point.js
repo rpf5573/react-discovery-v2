@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import * as utils from '../../../utils/client';
 import { connect } from 'react-redux';
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell} from 'recharts';
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, Cell} from 'recharts';
 import axios from 'axios';
 import { updatePoints } from '../actions';
 
@@ -51,15 +51,16 @@ class Point extends Component {
     let chart;
     if ( this.state.chartSize ) {
       if (this.props.chartData.length < 6) {
-        chart = <BarChart width={this.state.chartSize.horizontal.width} height={this.state.chartSize.horizontal.height} data={this.props.chartData} margin={this.state.chartSize.horizontal.margin} barSize={this.state.chartSize.horizontal.barSize}>
+        chart = <BarChart width={this.state.chartSize.horizontal.width} height={this.state.chartSize.horizontal.height} data={this.props.chartData} margin={this.state.chartSize.horizontal.margin} barSize={this.state.chartSize.horizontal.barSize} stackOffset="silhouette" reverseStackOrder={true}>
                   <CartesianGrid strokeDasharray="3 3"/>
                   <XAxis type="category" dataKey="teamText"/>
                   <YAxis type="number" dataKey="point"/>
-                  <Tooltip/>
+                  <Tooltip active/>
                   <Bar dataKey="point">
+                    <LabelList dataKey="point" position="top"/>
                     {
                       this.props.chartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={ (entry.team == this.props.ourTeam ) ? '#daa520' : '#8884d8' }/>
+                        <Cell key={`cell-${index}`} fill={ (entry.team == this.props.ourTeam) ? '#daa520' : '#8884d8' }/>
                       ))
                     }
                   </Bar>
@@ -69,8 +70,8 @@ class Point extends Component {
                   <CartesianGrid strokeDasharray="3 3"/>
                   <XAxis type="number" dataKey="point"/>
                   <YAxis type="category" dataKey="teamText"/>
-                  <Tooltip/>
-                  <Bar dataKey="point">
+                  <Tooltip active/>
+                  <Bar dataKey="point" label={{ fill: 'white', fontSize: 18 }}>
                     {
                       this.props.chartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={ (entry.team == this.props.ourTeam) ? '#daa520' : '#8884d8' }/>

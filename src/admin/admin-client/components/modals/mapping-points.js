@@ -2,7 +2,7 @@ import * as utils from '../../../../utils/client';
 import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, Table, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, Table, Alert } from 'reactstrap';
 import { closeModal, updateMappingPoints } from '../../actions';
 import axios from 'axios';
 import cn from 'classnames';
@@ -170,6 +170,7 @@ class MappingPointModal extends React.Component {
               </tr>
             </tbody>
           </Table>
+          <Alert color="info"> 문장해독 점수는 늦게 맞출수록 기본점수에서 10% 감소된 점수가 지급되고, 5등부터는 같은 점수가 지급됩니다. <br></br> EX) 1등: 20000(기본점수), 2등: 16000, 3등: 12000, 4등: 8000, 5등: 4000, 6등: 4000, 7등: 4000... </Alert>
         </ModalBody>
       </Modal>
     );

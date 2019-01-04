@@ -30,7 +30,7 @@ class DCQuery {
       case 'admin':
         var teamCount = await this.teamPasswords.getTeamCount();
         var teamPasswords = await this.teamPasswords.getAll();
-        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'lastbox_google_drive_url', 'eniac_state', 'lastbox_state', 'admin_passwords', 'mapping_points']);
+        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'random_eniac_words', 'lastbox_google_drive_url', 'eniac_state', 'lastbox_state', 'admin_passwords', 'mapping_points']);
         var teamTimers = await this.timer.getAll();
         var postInfos = await this.postInfo.getAll();
         return {

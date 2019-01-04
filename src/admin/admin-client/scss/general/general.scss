@@ -51,3 +51,23 @@ input.form-control::placeholder {
 .no-wrap-text {
   white-space: nowrap;
 }
+.full-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+.d-f-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.outline {
+  color: black;
+  text-shadow: white  .02em   0     0,
+               white  0       .02em 0,
+               white -.02em   0     0,
+               white  0      -.02em 0;
+}

@@ -41,8 +41,8 @@ module.exports = (app, DCQuery, upload) => {
     return res.status(201).json(result);
   });
 
-  app.get('/user/get-puzzle-colon-info', async (req, res) => {
-    let result = await DCQuery.puzzle.getAll();
+  app.post('/user/get-puzzle-colon-info', async (req, res) => {
+    let result = await DCQuery.puzzle.getAll(req.body.teamCount);
     return res.status(201).json(result);
   });
 
@@ -85,6 +85,8 @@ module.exports = (app, DCQuery, upload) => {
         result = [];
       }
       var point = req.body.point; // 기본은 1등
+      const rank = result.length + 1;
+
       if ( result.length > 0 ) {
         // 먼저 이미 맞춘 이력이 있는지 체크
         for ( var i = 0; i < result.length; i++ ) {
@@ -93,21 +95,24 @@ module.exports = (app, DCQuery, upload) => {
           }
         }
 
-        switch( result.length ) {
-          case 1:
-            point = Math.floor( (point * 0.9) * 0.01 ) * 100;
-            break;
+        // 등수에 맞게 포인트 지급
+        switch( rank ) {
           case 2:
-            point = Math.floor( (point * 0.8) * 0.01 ) * 100;
+            point = Math.floor( (point * 0.9) );
             break;
           case 3:
-            point = Math.floor( (point * 0.7) * 0.01 ) * 100;
+            point = Math.floor( (point * 0.8) );
             break;
           case 4:
-            point = Math.floor( (point * 0.6) * 0.01 ) * 100;
+            point = Math.floor( (point * 0.7) );
             break;
           case 5:
-            point = Math.floor( (point * 0.5) * 0.01 ) * 100;
+            point = Math.floor( (point * 0.6) );
+            break;
+            
+          // 6등부터는 같은 점수
+          default:
+            point = Math.floor( (point * 0.5) );
             break;
         }
       }
@@ -118,7 +123,8 @@ module.exports = (app, DCQuery, upload) => {
       await DCQuery.meta.update('eniac_success_teams', JSON.stringify(result));
 
       res.status(201).json({
-        point
+        point,
+        rank
       });
 
     } catch (err) {

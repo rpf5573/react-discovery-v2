@@ -68,7 +68,7 @@ class ResultModal extends React.Component {
                 <th colSpan="2">글자박스</th>
                 <th colSpan="2">점유율</th>
 
-                <th colSpan="2">최종점수</th>
+                <th colSpan="2">평가점수 합산</th>
                 <th colSpan="2">기여도순위</th>
               </tr>
             </thead>

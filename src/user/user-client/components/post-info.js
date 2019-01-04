@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
+import NotReady from './not-ready';
 
 class PostInfo extends Component {
   constructor(props) {
@@ -34,6 +35,10 @@ class PostInfo extends Component {
   }
  
   render() {
+    if ( !this.props.postInfos.length) {
+      return ( <NotReady></NotReady> );
+    }
+
     return (
       <div className="post-info-page full-container">
         <h2 className="title">포스트 동영상 정보</h2>

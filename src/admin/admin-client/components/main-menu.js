@@ -14,6 +14,7 @@ export default class MainMenu extends Component {
       {label: "타이머", className: "timer"},
       {label: "이미지설정", className: "uploads"},
       {label: "박스설정", className: "puzzle-settings"},
+      {label: "박스점유현황", className: "puzzle-status"},
       {label: "본부 점수 제공", className: "point-reward"},
       {label: "최종결과", className: "result"},
       {label: "점수배정표", className: "mapping-points"},

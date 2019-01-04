@@ -7,7 +7,7 @@ import cn from 'classnames';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { updateFileInfo, updateProgressVal } from '../actions';
-import NoteAdd from '@material-ui/icons/NoteAddOutlined';
+import Camera from '@material-ui/icons/CameraAltOutlined';
 import Done from '@material-ui/icons/Done';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -76,7 +76,7 @@ class Upload extends Component {
       };
   
       utils.simpleAxios(axios, config, (response) => {
-        alert(`성공 : 시간내에 본부에 도착하면, ${this.props.mappingPoints.upload}점이 지급됩니다`);
+        alert(`성공 !`);
         this.reset();
       });
     });
@@ -137,10 +137,10 @@ class Upload extends Component {
       <div className="upload-page full-container">
         <button className={uploadBoxCN} onClick={() => this.fileUploadInput.current.click()}>
           <div className="l-top">
-            <NoteAdd className={"note-add-icon"}></NoteAdd>
+            <Camera className={"note-add-icon"}></Camera>
           </div>
           <div className="l-bottom">
-            여기를 눌러 업로드 해주세요
+            여기를 눌러 촬영 및 업로드 해주세요
           </div>
         </button>
         <input style={{display: 'none'}} type="file" onChange={this.fileSelectHandler} ref={this.fileUploadInput}></input>
@@ -152,9 +152,11 @@ class Upload extends Component {
           <div className={checkBtnsCN}>
             <button className="cancel" onClick={this.cancelPreview}>
               <DeleteForever></DeleteForever>
+              <span>취소</span>
             </button>
             <button className="ok" onClick={this.uploadFile}>
               <Done></Done>
+              <span>업로드</span>
             </button>
           </div>
           { this.props.progressVal > 0 ? <LinearProgress className="progress-bar" variant="determinate" value={this.props.progressVal} /> : '' }

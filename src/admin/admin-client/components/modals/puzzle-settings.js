@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { Button, Modal, ModalHeader, ModalBody, Alert, Row, Col, InputGroup, Label, Dropdown, DropdownToggle, DropdownItem, DropdownMenu, Table } from 'reactstrap';
-import { closeModal, updatePuzzleBoxCount, updateEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState } from '../../actions';
+import { closeModal, updatePuzzleBoxCount, updateEniacWords, updateRandomEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState } from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
@@ -82,6 +82,7 @@ class PuzzleSettings extends React.Component {
 
       utils.simpleAxios(axios, config, (response) => {
         this.props.updateEniacWords(val);
+        this.props.updateRandomEniacWords(resultArr);
         alert("성공");
         this.eniacWordInput.current.value = '';
       });

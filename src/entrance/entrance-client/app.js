@@ -5,7 +5,7 @@ import * as utils from '../../utils/client';
 // react & redux
 import React, { Component } from 'react';
 import ReactRevealText from 'react-reveal-text';
-import { Button, Modal, ModalHeader, ModalBody, Table, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup } from 'reactstrap';
+import { Button, Input } from 'reactstrap';
 
 // css
 import 'bootstrap/dist/css/bootstrap.css';
@@ -56,7 +56,7 @@ class App extends Component {
         <div className="page-inner">
           <div className="l-top">
             <div className="text-container">
-              <ReactRevealText show={this.state.show}>
+              <ReactRevealText transitionTime={2000} show={this.state.show}>
                 DISCOVERY
               </ReactRevealText>
             </div>
@@ -78,6 +78,12 @@ class App extends Component {
       if ( result.companyImage ) {
         this.setState({
           companyImageURL: '/admin/uploads/' + window.__dcv__ + '/' + result.companyImage,
+          show: true
+        });
+      } 
+      // 못다운 받아도, 글자는 애니메이션 해야징 !
+      else {
+        this.setState({
           show: true
         });
       }
