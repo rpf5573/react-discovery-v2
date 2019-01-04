@@ -191,8 +191,9 @@ class Puzzle extends Component {
       data: {
         team: this.props.ourTeam,
         boxNumber,
+        type: (hasWord == 'true' ? constants.WORD : constants.EMPTY),
         point,
-        boxOpenUse: this.props.mappingPoints.boxOpenUse
+        boxOpenUse: this.props.mappingPoints.boxOpenUse,
       }
     };
     utils.simpleAxios(axios, config, (response) => {

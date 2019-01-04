@@ -57,7 +57,7 @@ module.exports = (app, DCQuery, upload) => {
 
       await DCQuery.points.updateOneRow({ team: req.body.team, useable: -(req.body.boxOpenUse) });
       await DCQuery.points.updateOneRow({ team: req.body.team, puzzle: req.body.point });
-      await DCQuery.puzzle.update( req.body.team, req.body.boxNumber );
+      await DCQuery.puzzle.update( req.body.team, req.body.boxNumber, req.body.type );
       res.status(201).json({
         team: req.body.team,
         boxNumber: req.body.boxNumber

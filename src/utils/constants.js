@@ -21,6 +21,8 @@ const START = '시작';
 const STOP = '종료';
 const IMAGE = 'image';
 const VIDEO = 'video';
+const EMPTY = 'empty';
+const WORD = 'word';
 const ERROR = {
   unknown: 'ERROR : 알수없는 에러가 발생했습니다'
 }
@@ -33,5 +35,7 @@ module.exports = {
   STOP,
   IMAGE,
   VIDEO,
+  EMPTY,
+  WORD,
   ERROR
 }

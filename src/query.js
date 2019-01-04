@@ -1,4 +1,5 @@
 const utils = require('./utils/server');
+const constants = require('./utils/constants');
 
 class DCQuery {
   constructor(mysql) {
@@ -367,9 +368,8 @@ class Puzzle {
 
     return result;
   }
-  async update(team, boxNumber) {
+  async update(team, boxNumber, type) {
     let puzzleColonInfo = await this.get(team);
-
     let puzzleNumbers = (function(raw) {
       try {
         if ( raw == null ) {
@@ -382,13 +382,17 @@ class Puzzle {
     })(puzzleColonInfo[0].numbers);
 
     puzzleNumbers.push(boxNumber);
+
+    const emptyBox = ( type == constants.EMPTY ? 1 : 0 );
+    const wordBox = ( type == constants.WORD ? 1 : 0 );
     
-    const sql = `UPDATE ${this.table} SET numbers='${JSON.stringify(puzzleNumbers)}' WHERE team=${team}`;
+    const sql = `UPDATE ${this.table} SET numbers='${JSON.stringify(puzzleNumbers)}', empty_box_open_count = empty_box_open_count + ${emptyBox}, word_box_open_count = word_box_open_count + ${wordBox} WHERE team=${team}`;
     const result = await this.mysql.query(sql);
     return result;
   }
+
   async reset() {
-    let sql = `UPDATE ${this.table} SET numbers = NULL`;
+    let sql = `UPDATE ${this.table} SET numbers = NULL, empty_box_open_count = 0, word_box_open_count = 0`;
     let result = await this.mysql.query(sql);
     return result;
   }
