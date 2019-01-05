@@ -7,6 +7,7 @@ export default (state = {}, action) => {
         points: action.payload
       });
     
+      
     case UPDATE_PUZZLE_COLON_INFO:
       return Object.assign({}, state, {
         puzzleColonInfo: action.payload
