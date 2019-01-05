@@ -1,6 +1,20 @@
 .post-info-page {
-  .no-infos {
-    text-align: center;
-    color: blue;
+  .post-info-list {
+    display: flex;
+    flex-direction: column;
+    .post-info-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: black;
+      padding-top: 24px;
+      padding-bottom: 24px;
+      padding-left: 15px;
+      padding-right: 15px;
+      border-bottom: 1px solid #d1cccc87;
+
+      text-decoration: none;
+      font-size: 18px;
+    }
   }
 }

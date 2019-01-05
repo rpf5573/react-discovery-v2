@@ -5,7 +5,6 @@ import * as utils from '../../utils/client';
 // react & redux
 import React, { Component } from 'react';
 import ReactRevealText from 'react-reveal-text';
-import { Button, Input } from 'reactstrap';
 
 // css
 import 'bootstrap/dist/css/bootstrap.css';
@@ -63,8 +62,8 @@ class App extends Component {
           </div>
           <div className="l-bottom">
             <div className="login-container">
-              <Input placeholder="비밀번호" onChange={this.handlePasswordInput}></Input>
-              <Button color="primary" block onClick={this.handleLoginBtnClick}>로그인</Button>
+              <input className="form-control" placeholder="비밀번호" onChange={this.handlePasswordInput}></input>
+              <button className="btn btn-primary btn-block" onClick={this.handleLoginBtnClick}>로그인</button>
             </div>
           </div>
         </div>

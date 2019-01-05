@@ -1,12 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
-import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlayCircle } from '@fortawesome/free-solid-svg-icons'
+
 import NotReady from './not-ready';
 
 class PostInfo extends Component {
@@ -21,12 +18,11 @@ class PostInfo extends Component {
     for ( var i = 0; i < this.props.postInfos.length; i++ ) {
       const row = this.props.postInfos[i];
       listItems.push(
-        <ListItem key={`${i}-post-info`} button component="a" className="post-info-list-item" href={row.googleDriveURL} target="_blank" rel="noopener noreferrer">
-          <ListItemText primary={`${row.post}포스트 - ${row.mission}`} />
-          <IconButton aria-label="PlayCircleOutline">
-            <PlayCircleOutline />
-          </IconButton>
-        </ListItem> );
+        <a key={`${i}-post-info`} className="post-info-list-item" href={row.googleDriveURL} target="_blank" rel="noopener noreferrer">
+          <span> { `${row.post}포스트 - ${row.mission}` } </span>
+          <FontAwesomeIcon icon={faPlayCircle} className="icon">
+          </FontAwesomeIcon>
+        </a>);
     }
     return listItems;
   }
@@ -39,9 +35,9 @@ class PostInfo extends Component {
     return (
       <div className="post-info-page full-container">
         <h2 className="title">포스트 동영상 정보</h2>
-        <List component="nav" className="post-info-list">
+        <div className="post-info-list">
           { this.renderPostInfoListItems() }
-        </List>
+        </div>
       </div>
     );
   }
