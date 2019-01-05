@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import * as utils from '../../../utils/client';
 import cn from 'classnames';
-import * as utils from '../../../../utils/client';
-import * as constants from '../../../../utils/constants';
-import { Modal, ModalHeader, ModalBody, Alert } from 'reactstrap';
-import { closeModal } from '../../actions';
 import axios from 'axios';
+import { updatePuzzleColonInfo } from '../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import NotReady from './not-ready';
 
 class PuzzleBox extends Component {
   constructor(props) {
@@ -52,22 +51,20 @@ class PuzzleBox extends Component {
   }
 }
 
-class PuzzlePage extends Component {
+class Puzzle extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isModalOpen: false,
+    };
 
     this.renderPuzzleBoxes = this.renderPuzzleBoxes.bind(this);
+    
     this.openLastBox = this.openLastBox.bind(this);
     this.hiddenAnchorForNewTab = React.createRef();
   }
 
-  renderPuzzleBoxes(teamCount = 0, boxCount, puzzleColonInfo, randomEniacWords) {
-
-    // 박스가 있어야 그리던가 말던가 하지 !
-    if ( ! boxCount ) {
-      return (<div>박스 설정을 먼저 해주세요</div>);
-    }
-
+  renderPuzzleBoxes(teamCount, boxCount, puzzleColonInfo, randomEniacWords) {
     this.boxes = [];
 
     // 20( 4 x 5 ), 24( 4 x 6 ), 30( 5 x 6 ), 35( 5 x 7 ), 40( 5 x 8 ), 48( 6 x 8 )
@@ -86,9 +83,6 @@ class PuzzlePage extends Component {
       var boxNumber = i+1;
       const word = ( randomEniacWords ? (randomEniacWords[i] ? randomEniacWords[i] : false) : false );
       var team = false;
-
-      // 아래의 componeneDidMout에서 teamCount가 없는 경우에는 안가져 왔는데,
-      // 여기서도 puzzleColonInfo가 어차피 teamCount안에서 루프를 도는거니까, 안전함
       for ( var z = 0; z < teamCount; z++ ) {
         for ( var m = 0; m < puzzleColonInfo[z].numbers.length; m++ ) {
           if ( boxNumber == puzzleColonInfo[z].numbers[m] ) {
@@ -127,58 +121,7 @@ class PuzzlePage extends Component {
     });
   }
 
-  render() {
-    return (
-      <div className="puzzle-page">
-        <a className="d-none" href={this.props.lastBoxGoogleDriveUrl} target="_blank" rel="noopener noreferrer" ref={this.hiddenAnchorForNewTab}></a>
-        <div className="puzzle-container">
-          { this.renderPuzzleBoxes(this.props.teamCount, this.props.count, this.props.puzzleColonInfo, this.props.randomEniacWords) }
-        </div>
-      </div>
-    );
-  }
-}
-
-class PuzzleStatusModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.pointInputFields = [];
-    this.state = {
-      backdrop: true,
-      puzzleColonInfo: []
-    };
-
-    this.close = this.close.bind(this);
-    this.onOpened = this.onOpened.bind(this);
-    this.getPuzzleColonInfo = this.getPuzzleColonInfo.bind(this);
-  }
-
-  close() {
-    this.props.closeModal();
-  }
-
-  render() {
-    console.log( 'this.state.puzzleColonInfo : ', this.state.puzzleColonInfo );
-
-    return (
-      <Modal isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} onOpened={this.onOpened} size="md">
-        <ModalHeader toggle={this.close}>
-          유저의 박스 점유 현황
-        </ModalHeader>
-        <ModalBody>
-          { (this.props.puzzleBoxCount > 0 && this.state.puzzleColonInfo.length > 0) ? <PuzzlePage lastBoxGoogleDriveUrl={this.props.lastBoxGoogleDriveUrl} teamCount={this.props.teamCount} count={this.props.puzzleBoxCount} puzzleColonInfo={this.state.puzzleColonInfo} randomEniacWords={this.props.randomEniacWords} ></PuzzlePage> : '' }
-          { !this.props.puzzleBoxCount ? <Alert color="warning"> 박스 설정을 해주세요 </Alert> : '' }
-        </ModalBody>
-      </Modal>
-    );
-  }
-
-  async onOpened() {
-    await this.getPuzzleColonInfo();
-  }
-
-  async getPuzzleColonInfo() {
-    // 팀수가 있어야 뭘 가져오던가 하지
+  async componentDidMount() {
     if ( ! this.props.teamCount ) {
       return;
     }
@@ -190,30 +133,46 @@ class PuzzleStatusModal extends React.Component {
       }
     }
     utils.simpleAxios(axios, config, (response) => {
-      let puzzleColonInfo = [];
-      for ( var i = 0; i < response.data.length; i++ ) {
-        const parsed = JSON.parse(response.data[i].numbers);
-        puzzleColonInfo.push({
-          team: response.data[i].team,
-          numbers: (parsed ? parsed : [] )
-        });
-      }
-      
-      this.setState({
-        puzzleColonInfo
-      });
+      this.props.updatePuzzleColonInfo(response.data);
     });
+  }
+
+  render() {
+    if ( !this.props.count) {
+      return ( <NotReady></NotReady> );
+    }
+
+    return (
+      <div className="puzzle-page full-container">
+        <a className="d-none" href={this.props.lastBoxGoogleDriveUrl} target="_blank" rel="noopener noreferrer" ref={this.hiddenAnchorForNewTab}></a>
+        <div className="puzzle-container">
+          { this.renderPuzzleBoxes(this.props.teamCount, this.props.count, this.props.puzzleColonInfo, this.props.randomEniacWords) }
+        </div>
+        </div>
+    );
   }
 }
 
 function mapStateToProps(state, ownProps) {
+  let puzzleColonInfo = [];
+  // 여기도 없을 수가 없어, 그 이유는 (1)initialState에서 getAll()했기 때문에 15개의 원소가 담겨있는 배열이 올것이고,
+  // (2)위에서 axios로 가져올때, teamCount가 없으면 아예 가져오는거 자체를 안하기 때문이지 !
+  // 햇갈리면 안되는게 puzzleColonInfo가 있어야 박스를 그리는건 아니야 !! 둘은 별개야 별개 !
+  for ( var i = 0; i < state.puzzleColonInfo.length; i++ ) {
+    const parsed = JSON.parse(state.puzzleColonInfo[i].numbers);
+    puzzleColonInfo.push({
+      team: state.puzzleColonInfo[i].team,
+      numbers: (parsed ? parsed : [] )
+    });
+  }
+
   return {
-    activeModalClassName : state.modalControl.activeModalClassName,
-    teamCount: state.teamSettings.teamCount,
-    lastBoxGoogleDriveUrl: state.puzzleSettings.lastBoxGoogleDriveUrl,
-    randomEniacWords: state.puzzleSettings.randomEniacWords,
-    puzzleBoxCount: state.puzzleSettings.puzzleBoxCount,
+    teamCount: parseInt(state.teamCount), // [string 0]일 수도 있으니까 parseInt
+    count: parseInt(state.puzzleBoxCount), // [string 0]일 수도 있으니까 parseInt
+    puzzleColonInfo,
+    randomEniacWords: state.randomEniacWords,
+    lastBoxGoogleDriveUrl: state.lastBoxGoogleDriveUrl
   };
 }
 
-export default connect(mapStateToProps, { closeModal })(PuzzleStatusModal);
+export default connect(mapStateToProps, { updatePuzzleColonInfo })(Puzzle);

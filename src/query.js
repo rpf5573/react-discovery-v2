@@ -56,15 +56,17 @@ class DCQuery {
         };
 
       case 'assist':
-        var metas = await this.meta.get(['map']);
+        var metas = await this.meta.get(['map', 'random_eniac_words', 'puzzlebox_count', 'lastbox_google_drive_url', 'lastbox_state']);
         var teamCount = await this.teamPasswords.getTeamCount();
         var useablePoints = await this.points.get('useable');
         var postInfos = await this.postInfo.getAll();
+        var puzzleColonInfo = await this.puzzle.getAll();
         return {
           ...metas,
           teamCount,
           useablePoints,
-          postInfos
+          postInfos,
+          puzzleColonInfo
         };
       
       case 'warehouse':

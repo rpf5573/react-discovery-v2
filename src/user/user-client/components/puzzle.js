@@ -283,16 +283,14 @@ class Puzzle extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  let puzzleColonInfo = false;
-  if ( Array.isArray(state.puzzleColonInfo) ) {
-    puzzleColonInfo = [];
-    for ( var i = 0; i < state.puzzleColonInfo.length; i++ ) {
-      const parsed = JSON.parse(state.puzzleColonInfo[i].numbers);
-      puzzleColonInfo.push({
-        team: state.puzzleColonInfo[i].team,
-        numbers: (parsed ? parsed : [] )
-      });
-    }
+  let puzzleColonInfo = [];
+  // puzzleColonInfo는 없을 수가 없다
+  for ( var i = 0; i < state.puzzleColonInfo.length; i++ ) {
+    const parsed = JSON.parse(state.puzzleColonInfo[i].numbers);
+    puzzleColonInfo.push({
+      team: state.puzzleColonInfo[i].team,
+      numbers: (parsed ? parsed : [] )
+    });
   }
 
   return {

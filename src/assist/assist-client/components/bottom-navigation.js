@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import cn from 'classnames';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMap, faChartBar, faChessBoard, faImages, faInfo, faChartPie, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { faMap, faChartBar, faChessBoard, faImages, faInfo, faChartPie, faThumbsUp, faChess } from '@fortawesome/free-solid-svg-icons'
 
 library.add([faMap, faChartBar, faChessBoard, faImages, faInfo, faThumbsUp]);
 
@@ -30,6 +30,11 @@ class BottomNavigation extends Component {
         <NavLink to="/assist/page/point">
           <div className="icon"><FontAwesomeIcon icon={faThumbsUp} /></div>
           <div className="text">포인트</div>
+          <div className={rippleCN}></div>
+        </NavLink>
+        <NavLink to="/assist/page/puzzle">
+          <div className="icon"><FontAwesomeIcon icon={faChessBoard} /></div>
+          <div className="text">박스</div>
           <div className={rippleCN}></div>
         </NavLink>
         <NavLink to="/assist/page/result">

@@ -223,4 +223,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { closeModal, updatePuzzleBoxCount, updateEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState })(PuzzleSettings);
+export default connect(mapStateToProps, { closeModal, updatePuzzleBoxCount, updateEniacWords, updateRandomEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState })(PuzzleSettings);
