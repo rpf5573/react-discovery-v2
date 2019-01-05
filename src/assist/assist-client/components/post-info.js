@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
+import NotReady from './not-ready';
 
 class PostInfo extends Component {
   constructor(props) {
@@ -17,25 +18,24 @@ class PostInfo extends Component {
 
   renderPostInfoListItems() {
     var listItems = [];
-    if ( this.props.postInfos.length > 0 ) {
-      for ( var i = 0; i < this.props.postInfos.length; i++ ) {
-        const row = this.props.postInfos[i];
-        listItems.push(
-          <ListItem key={`${i}-post-info`} button component="a" className="post-info-list-item" href={row.googleDriveURL} target="_blank" rel="noopener noreferrer">
-            <ListItemText primary={`${row.post}포스트 - ${row.mission}`} />
-            <IconButton aria-label="PlayCircleOutline">
-              <PlayCircleOutline />
-            </IconButton>
-          </ListItem> );
-      }
-    } else {
-      return (<div className="no-infos">아직 설정된 포스트 정보가 없거나, 새로고침 해주시기 바랍니다</div>);
+    for ( var i = 0; i < this.props.postInfos.length; i++ ) {
+      const row = this.props.postInfos[i];
+      listItems.push(
+        <ListItem key={`${i}-post-info`} button component="a" className="post-info-list-item" href={row.googleDriveURL} target="_blank" rel="noopener noreferrer">
+          <ListItemText primary={`${row.post}포스트 - ${row.mission}`} />
+          <IconButton aria-label="PlayCircleOutline">
+            <PlayCircleOutline />
+          </IconButton>
+        </ListItem> );
     }
-
     return listItems;
   }
  
   render() {
+    if ( ! this.props.postInfos.length ) {
+      return (<NotReady></NotReady>);
+    }
+
     return (
       <div className="post-info-page full-container">
         <h2 className="title">포스트 동영상 정보</h2>
