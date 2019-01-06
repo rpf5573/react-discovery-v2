@@ -13,22 +13,28 @@ class WHQuery {
     };
   }
   async getAll() {
-    const sql = `SELECT post, mission, google_drive_url as googleDriveURL FROM ${this.table} ORDER BY post`;
+    const sql = `SELECT id, mission, google_drive_url as googleDriveURL FROM ${this.table} ORDER BY id`;
     const result = await this.mysql.query(sql);
+    return result;
+  }
+  async insert(postInfo) {
+    postInfo.googleDriveURL = encodeURI(postInfo.googleDriveURL);
+    let sql = `INSERT INTO ${this.table} 
+              (mission, google_drive_url) 
+              VALUES('${postInfo.mission}', '${postInfo.googleDriveURL}')`;
+    let result = await this.mysql.query(sql);
     return result;
   }
   async update(postInfo) {
     postInfo.googleDriveURL = encodeURI(postInfo.googleDriveURL);
-    let sql = `INSERT INTO ${this.table} 
-              (post, mission, google_drive_url) 
-              VALUES(${postInfo.post}, '${postInfo.mission}', '${postInfo.googleDriveURL}') 
-              ON DUPLICATE KEY UPDATE 
-              post=${postInfo.post}, mission='${postInfo.mission}', google_drive_url='${postInfo.googleDriveURL}'`;
+    let sql = `UPDATE ${this.table}
+              SET google_drive_url='${postInfo.googleDriveURL}' 
+              WHERE mission='${postInfo.mission}'`;
     let result = await this.mysql.query(sql);
     return result;
   }
-  async remove(post) {
-    let sql = `DELETE FROM ${this.table} WHERE post=${post}`;
+  async remove(mission) {
+    let sql = `DELETE FROM ${this.table} WHERE mission='${mission}'`;
     let result = this.mysql.query(sql);
     return result;
   }

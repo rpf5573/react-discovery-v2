@@ -1,7 +1,3 @@
-// utils
-import axios from 'axios';
-import * as utils from '../../../utils/client';
-
 // react & redux
 import React, { Component } from 'react';
 import PostInfoWarehouse from './post-info-warehouse';
