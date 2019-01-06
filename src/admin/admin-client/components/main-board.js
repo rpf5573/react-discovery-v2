@@ -6,7 +6,7 @@ import * as utils from '../../../utils/client';
 import * as constants from '../../../utils/constants';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faList } from '@fortawesome/free-solid-svg-icons';
 import { Button, Input, Row, Col, InputGroup, Card } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
@@ -142,7 +142,7 @@ class MainBoard extends Component {
           <FontAwesomeIcon icon={faPlus} />
         </button>
         <a href="/warehouse" target="_blank" className="open-post-info-warehouse">
-          <div className="icon"><FontAwesomeIcon icon={faPlus} /></div>
+          <div className="icon"><FontAwesomeIcon icon={faList} /></div>
         </a>
       </Row>
     );
