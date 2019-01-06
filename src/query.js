@@ -12,7 +12,6 @@ class DCQuery {
       puzzle: 'dc_puzzle',
       postInfo: 'dc_post_info',
       uploads: 'dc_uploads',
-      warehouse: 'dc_warehouse'
     }
     this.meta = new Meta(this.tables.meta, this.mysql);
     this.teamPasswords = new TeamPasswords(this.tables.teamPasswords, this.mysql);
@@ -21,9 +20,6 @@ class DCQuery {
     this.puzzle = new Puzzle(this.tables.puzzle, this.mysql);
     this.postInfo = new PostInfo(this.tables.postInfo, this.mysql);
     this.uploads = new Uploads(this.tables.uploads, this.mysql);
-
-    // 완전히 똑같은 기능을 하는 class를 2개 만들 필요는 없잖아 !
-    this.warehouse = new PostInfo(this.tables.warehouse, this.mysql);
   }
   async getInitialState(role) {
     switch( role ) {
@@ -67,12 +63,6 @@ class DCQuery {
           useablePoints,
           postInfos,
           puzzleColonInfo
-        };
-      
-      case 'warehouse':
-        var postInfos = await this.warehouse.getAll();
-        return {
-          postInfos
         };
         
       default:

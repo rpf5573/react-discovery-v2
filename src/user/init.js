@@ -1,8 +1,7 @@
 const utils = require('../utils/server');
 const fs = require('fs-extra');
 
-module.exports = (app, path, multer, mysql) => {
-  const DCQuery = new (require('../query'))(mysql);
+module.exports = (app, path, multer, DCQuery) => {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       let team = (req.body.team ? req.body.team : req.session.loginData.team );

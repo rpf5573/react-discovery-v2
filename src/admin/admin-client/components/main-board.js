@@ -141,7 +141,7 @@ class MainBoard extends Component {
         <button className="load-files-btn" onClick={this.loadUploadInfos}>
           <FontAwesomeIcon icon={faPlus} />
         </button>
-        <a href="/admin/warehouse" target="_blank" className="open-post-info-warehouse">
+        <a href="/warehouse" target="_blank" className="open-post-info-warehouse">
           <div className="icon"><FontAwesomeIcon icon={faPlus} /></div>
         </a>
       </Row>

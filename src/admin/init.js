@@ -1,7 +1,6 @@
 const fs = require('fs-extra');
 
-module.exports = (app, path, multer, mysql) => {
-  const DCQuery = new (require('../query'))(mysql);
+module.exports = (app, path, multer, DCQuery) => {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       let uploadPath = `public/admin/uploads/${process.env.DCV}/`;

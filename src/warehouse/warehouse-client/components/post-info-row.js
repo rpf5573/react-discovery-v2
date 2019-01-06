@@ -48,7 +48,7 @@ class PostInfoRow extends React.Component {
   async handleRemoveBtnClick(e) {
     const config = {
       method: 'POST',
-      url: '/admin/warehouse/post-info/remove',
+      url: '/warehouse/post-info/remove',
       data: {
         post: this.state.post
       }
@@ -99,7 +99,7 @@ class PostInfoRow extends React.Component {
 
     const config = {
       method: 'POST',
-      url: '/admin/warehouse/post-info/update-or-insert',
+      url: '/warehouse/post-info/update-or-insert',
       data: {
         postInfo
       }

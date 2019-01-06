@@ -1,4 +1,3 @@
-module.exports = (app, mysql) => {
-  const DCQuery = new (require('../query'))(mysql);
+module.exports = (app, DCQuery) => {
   require('./entranceRoute')(app, DCQuery);
 }

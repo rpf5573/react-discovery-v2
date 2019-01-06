@@ -1,6 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const join = require('path').join;
-const distPath = join(__dirname, '../../../public/admin/warehouse/');
+const distPath = join(__dirname, '../../../public/warehouse/');
 
 module.exports = {
   name: 'warehouse',
@@ -9,7 +9,7 @@ module.exports = {
   output: {
     filename: "main.js",
     path: distPath,
-    publicPath: '/admin/warehouse',
+    publicPath: '/warehouse',
   },
   module: {
     rules: [

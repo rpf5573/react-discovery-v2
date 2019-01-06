@@ -1,4 +1,3 @@
-module.exports = (app, mysql) => {
-  const DCQuery = new (require('../query'))(mysql);
-  require('./warehouseRoute')(app, DCQuery);
+module.exports = (app, WHQuery) => {
+  require('./warehouseRoute')(app, WHQuery);
 }

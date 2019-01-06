@@ -15,11 +15,13 @@ const MySQLStore = require('express-mysql-session');
 
 // mysql
 const pool = require('./database');
+const DCQuery = new (require('./query'))(pool.default);
+const WHQuery = new (require('./wh-query'))(pool.warehouse);
 const sessionStore = new MySQLStore({
   schema: {
     tableName: 'dc_sessions'
   }
-}/* session store options */, pool);
+}/* session store options */, pool.default);
 
 const app = express();
 app.use(bodyParser.json());
@@ -37,19 +39,19 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 // entrance
-require('./entrance/init')(app, pool);
+require('./entrance/init')(app, DCQuery);
 
 // admin
-require('./admin/init')(app, path, multer, pool);
+require('./admin/init')(app, path, multer, DCQuery);
 
 // user
-require('./user/init')(app, path, multer, pool, io);
+require('./user/init')(app, path, multer, DCQuery, io);
 
 // assist
-require('./assist/init')(app, pool);
+require('./assist/init')(app, DCQuery);
 
 // warehouse
-require('./warehouse/init')(app, pool);
+require('./warehouse/init')(app, WHQuery);
 
 app.use(express.static('public'));
 
