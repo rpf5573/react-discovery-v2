@@ -283,6 +283,8 @@ class Puzzle extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
+  const boxCount = parseInt(state.puzzlebox_count);
+
   let puzzleColonInfo = [];
   // puzzleColonInfo는 없을 수가 없다
   for ( var i = 0; i < state.puzzleColonInfo.length; i++ ) {
@@ -293,10 +295,30 @@ function mapStateToProps(state, ownProps) {
     });
   }
 
+  var maxX = 3; // 4
+  var maxY = 4; // 5
+  switch(boxCount) {
+    case 
+  }
+  // 원래는 boxCount 가 딱 30, 35, 40, 48개인데 마지막 박스를 고려해서 1개씩 뺀거임
+  if ( boxCount == 29 || boxCount == 34 || boxCount == 39 ) {
+    maxX = 4; // 0 ~ 4 => 5
+  } 
+  if (boxCount == 29) {
+    maxY = 5;
+  }
+
+  else if ( boxCount == 47 ) {
+    maxX = 5;
+  }
+
+  let puzzleLocationArray = [];
+
+
   return {
     teamCount: parseInt(state.teamCount), // 이게 없을때는 DB에서 string 0를 가져온다
     ourTeam: state.loginData.team,
-    count: parseInt(state.puzzlebox_count), // 이게 없을때는 DB에서 string 0를 가져온다
+    count: boxCount, // 이게 없을때는 DB에서 string 0를 가져온다
     puzzleColonInfo,
     mappingPoints: state.mapping_points,
     endPoint: state.rootPath,

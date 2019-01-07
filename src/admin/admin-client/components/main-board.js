@@ -100,7 +100,6 @@ class MainBoard extends Component {
       }
     };
 
-
     utils.simpleAxios(axios, config, (response) => {
       utils.shuffle(response.data.uploadInfos); // 한번 섞어줘야 공평하게 위에서 부터 뜨지 !
         for ( var i = 0; i < response.data.uploadInfos.length; i++ ) {
