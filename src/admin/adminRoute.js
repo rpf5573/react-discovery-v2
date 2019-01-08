@@ -85,7 +85,6 @@ module.exports = (app, DCQuery, upload) => {
     return;
   });
   app.post('/admin/timer/team-timers', async (req, res) => {
-    console.log( 'req.body : ', req.body );
     try {
       // 만약에 타이머를 끄는거라면, 시간에 맞게 포인트를 주거나 빼야지
       // 다행이도 끄는거는 한번에 끄는게 없다 !
