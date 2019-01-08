@@ -57,8 +57,7 @@ function getFileExtension(filename){
 
 function fileTypeCheck(filename){
   // file 확장자명 체크
-  const extension = getFileExtension(filename);
-  alert(extension);
+  const extension = getFileExtension(filename).toLowerCase();
   for ( var i = 0; i < fileExtensions.image.length; i++ ) {
     if ( extension == fileExtensions.image[i] ) {
       return constants.IMAGE;
