@@ -3,15 +3,8 @@ require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
 
 function getCurrentTimeInSeconds() {
-  let date = moment().toDate();
-
-  let h = date.getHours();
-  let m = date.getMinutes();
-  let s = date.getSeconds();
-
-  console.log( 'new time : ', h + '-' + m + '-' + s );
-
-  return(h*60*60 + m*60 + s);
+  let currentTime = moment().format('HH:mm:ss');
+  return moment.duration( currentTime ).asSeconds();
 }
 
 function getYYYYMMDDHHMMSS() {
