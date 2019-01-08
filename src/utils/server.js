@@ -4,11 +4,11 @@ moment.tz.setDefault("Asia/Seoul");
 
 function getCurrentTimeInSeconds() {
   let date = new Date();
-  console.log( 'date : ', date );
 
-  let momentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+  const day = moment().startOf('day');
+  console.log( 'day : ', day );
 
-  console.log( 'momentData : ', momentDate );
+  // myVar = moment.duration('').asSeconds()
 
   let h = date.getHours();
   let m = date.getMinutes();
