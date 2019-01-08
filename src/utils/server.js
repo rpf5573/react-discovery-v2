@@ -3,18 +3,7 @@ require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
 
 function getCurrentTimeInSeconds() {
-  let date = new Date();
-
-  const day = moment().startOf('day');
-  console.log( 'day : ', day );
-
-  const valueOf = moment().valueOf();
-  console.log( 'valueOf : ', valueOf );
-
-  const test = moment('12:10:12: PM', 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds');
-  console.log( 'test : ', test );
-
-  // myVar = moment.duration('').asSeconds()
+  let date = moment().toDate();
 
   let h = date.getHours();
   let m = date.getMinutes();
