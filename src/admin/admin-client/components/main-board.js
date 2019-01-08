@@ -119,7 +119,7 @@ class MainBoard extends Component {
       let files = data[i].files;
       if ( files ) {
         for ( var z = 0; z < files.length; z++ ) {
-          var type = utils.fileTypeCheck(files[z]); // null도 일단 받자.
+          var type = utils.mediaTypeCheck(files[z]); // null도 일단 받자.
           const filename = files[z];
           list.push(
             <Col xs="4" key={`${team}-${i}-${z}-${filename}`}>

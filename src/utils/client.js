@@ -55,7 +55,7 @@ function getFileExtension(filename){
   return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
 }
 
-function fileTypeCheck(filename){
+function mediaTypeCheck(filename){
   // file 확장자명 체크
   const extension = getFileExtension(filename).toLowerCase();
   for ( var i = 0; i < fileExtensions.image.length; i++ ) {
@@ -131,7 +131,7 @@ module.exports = {
   shuffle,
   isValidURL,
   getFileExtension,
-  fileTypeCheck,
+  mediaTypeCheck,
   getRandomInteger,
   simpleAxios,
   boxNumberToLocation,

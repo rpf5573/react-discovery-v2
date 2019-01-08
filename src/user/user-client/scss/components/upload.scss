@@ -33,6 +33,13 @@
     img {
       width: 96%;
     }
+    .videoPlayer {
+      max-height: 80%;
+      width: 100%;
+      .video-js {
+        width: 100%;
+      }
+    }
     .check-btns {
       position: absolute;
       right: 0;
@@ -74,9 +81,8 @@
       }
     }
     &--image {
-      video {
+      .videoPlayer {
         display: none;
-        max-height: 80%;
       }
     }
     &--video {

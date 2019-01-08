@@ -11,6 +11,7 @@ import Camera from '@material-ui/icons/CameraAltOutlined';
 import Done from '@material-ui/icons/Done';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import VideoPlayer from './video-player';
 
 class Upload extends Component {
 
@@ -32,21 +33,25 @@ class Upload extends Component {
 
   async fileSelectHandler(e) {
     const file = e.target.files[0];
+    if ( file ) {
+      var mediaType = utils.mediaTypeCheck(file.name);
+      if ( mediaType == null ) {
+        return alert("지원되지 않는 파일 형식입니다");
+      }
 
-    var fileType = utils.fileTypeCheck(file.name);
-    if ( fileType == null ) {
-      return alert("지원되지 않는 파일 형식입니다");
+      // about 100MB
+      if ( file.size > 99428800 ) {
+        return alert("파일 사이즈는 100MB를 넘으면 안됩니다");
+      }
+
+      this.props.updateFileInfo({
+        src: URL.createObjectURL(file),
+        type: file.type,
+        mediaType
+      });
+    } else {
+      console.log( 'no file select');
     }
-
-    // 50MB
-    if ( file.size > 102428800 ) {
-      return alert("파일 사이즈는 100MB를 넘으면 안됩니다");
-    }
-
-    this.props.updateFileInfo({
-      src: URL.createObjectURL(file),
-      type: fileType
-    });
   }
 
   uploadFile(e) {
@@ -111,7 +116,8 @@ class Upload extends Component {
 
     this.props.updateFileInfo({
       src: null,
-      type: null
+      type: null,
+      mediaType: null
     });
 
     this.props.updateProgressVal(0);
@@ -125,14 +131,18 @@ class Upload extends Component {
     let previewCN = cn({
       'preview': true,
       'd-none': (this.props.fileInfo.src ? false : true),
-      'preview--image': (this.props.fileInfo.type == constants.IMAGE ? true : false),
-      'preview--video': (this.props.fileInfo.type == constants.VIDEO ? true : false)
+      'preview--image': (this.props.fileInfo.mediaType == constants.IMAGE ? true : false),
+      'preview--video': (this.props.fileInfo.mediaType == constants.VIDEO ? true : false)
     });
+
     let checkBtnsCN = cn({
       'check-btns': true,
       'slide-left': (this.props.fileInfo.src ? true : false),
       'd-none': (this.props.progressVal > 0 ? true : false ) // 업로드 중일떄는 다른거 또 업로드 못하게 해야지 !
     });
+
+    console.log( 'this.props.fileInfo.src : ', this.props.fileInfo.src );
+
     return (
       <div className="upload-page full-container">
         <button className={uploadBoxCN} onClick={() => this.fileUploadInput.current.click()}>
@@ -146,9 +156,7 @@ class Upload extends Component {
         <input style={{display: 'none'}} type="file" onChange={this.fileSelectHandler} ref={this.fileUploadInput}></input>
         <div className={previewCN}>
           <img src={this.props.fileInfo.src}></img>
-          <video width="100%" src={this.props.fileInfo.src} controls>
-            Your browser does not support the video tag.
-          </video>
+          <VideoPlayer autoplay controls sources={[{src: this.props.fileInfo.src, type: this.props.fileInfo.type}]} />
           <div className={checkBtnsCN}>
             <button className="cancel" onClick={this.cancelPreview}>
               <DeleteForever></DeleteForever>
