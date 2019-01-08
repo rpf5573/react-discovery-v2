@@ -193,6 +193,9 @@ class Upload extends Component {
   }
 
   componentWillUnmount() {
+
+    alert('componentWillUnmount');
+
     // 만약에 업로드 중이 아니라면, reset시켜버리자
     if ( ! this.props.progressVal ) {
       this.reset();
