@@ -261,11 +261,9 @@ class Timer {
   }
 
   async updateState(team, state, isAll) {
-    console.log( 'updateState', ' is called' );
     var startTime = 0;
     if ( state ) {
       startTime = utils.getCurrentTimeInSeconds();
-      console.log( 'startTime : ', startTime );
     }
     var sql = `UPDATE ${this.table} SET state=${state}, startTime=${startTime} WHERE team=${team}`;
     if ( isAll ) {
