@@ -48,10 +48,8 @@ module.exports = (app, DCQuery, upload) => {
 
   app.post('/user/openBox', async (req, res) => {
     try {
-
       // 다른 팀이 이미 점령했는지 체크해야지
       var result = await DCQuery.puzzle.getAll(req.body.teamCount);
-
       for ( var i = 0; i < result.length; i++ ) {
         let numbers = JSON.parse( result[i].numbers );
         if ( Array.isArray(numbers) ) {
@@ -64,7 +62,6 @@ module.exports = (app, DCQuery, upload) => {
           }
         }
       }
-      console.log( 'result : ', result );
 
       // 돈 체크 합니다잉~
       result = await DCQuery.points.get('useable', req.body.team);

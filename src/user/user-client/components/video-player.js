@@ -2,10 +2,11 @@ import React, { Component, Fragment } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 
-
 export default class VideoPlayer extends Component {
   constructor(props) {
     super(props);
+
+    this.changeVideoSrc = this.changeVideoSrc.bind(this);
   }
 
   componentDidMount() {
@@ -22,12 +23,14 @@ export default class VideoPlayer extends Component {
     }
   }
 
-  render() {
-    console.log( 'render in video-player', ' is called' );
-    if ( this.player && this.props.sources) {
-      console.log( 'this.props.sources : ', this.props.sources );
-      this.player.src(this.props.sources);
+  changeVideoSrc(src) {
+    if ( this.player ) {
+      console.log( 'this.props.sources : ', src );
+      this.player.src(src);
     }
+  }
+
+  render() {
     return (
       <div className="videoPlayer">
         <div data-vjs-player>
