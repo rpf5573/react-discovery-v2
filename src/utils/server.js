@@ -8,6 +8,8 @@ function getCurrentTimeInSeconds() {
 
   let momentDate = moment().format('YYYY-MM-DD HH:mm:ss');
 
+  console.log( 'momentData : ', momentDate );
+
   let h = date.getHours();
   let m = date.getMinutes();
   let s = date.getSeconds();
