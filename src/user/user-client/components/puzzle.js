@@ -12,6 +12,7 @@ import Modal from '@material-ui/core/Modal';
 import TextField from '@material-ui/core/TextField';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import NotReady from './not-ready';
+import { withMobileDialog } from '@material-ui/core';
 
 class PuzzleBox extends Component {
   constructor(props) {
@@ -61,13 +62,14 @@ class Puzzle extends Component {
     super(props);
     this.state = {
       isModalOpen: false,
-      eniacSentance: false
+      eniacSentance: false,
+      grid: (this.props.count > 0 ? utils.makeGrid(this.props.maxLocation, this.props.puzzleColonInfo) : false)
     };
 
     this.socket = socketIOClient(this.props.endPoint);
     this.socket.on("puzzle_box_opened", data => {
-      console.log( 'data : ', data );
-      if ( this.boxes.length == this.props.count ) {
+      // 여기서 말하는 boxes는 lastBox를 제외한거야
+      if ( this.boxes.length == this.props.count - 1 ) {
         var node = ReactDOM.findDOMNode(this.boxes[data.boxNumber-1]);
         node.classList.add('flipping', `owner-${data.team}`);
       } else {
@@ -82,6 +84,7 @@ class Puzzle extends Component {
     this.handleModalClose = this.handleModalClose.bind(this);
     this.handleEniacSubmit = this.handleEniacSubmit.bind(this);
     this.handleEniacSentanceInput = this.handleEniacSentanceInput.bind(this);
+    this.checkBingo = this.checkBingo.bind(this);
 
     this.hiddenAnchorForNewTab = React.createRef();
   }
@@ -91,17 +94,16 @@ class Puzzle extends Component {
 
     // 20( 4 x 5 ), 24( 4 x 6 ), 30( 5 x 6 ), 35( 5 x 7 ), 40( 5 x 8 ), 48( 6 x 8 )
     var classWidth = 'w-25';
-    // 원래는 boxCount 가 딱 30, 35, 40, 48개인데 마지막 박스를 고려해서 1개씩 뺀거임
-    if ( boxCount == 29 || boxCount == 34 || boxCount == 39 ) {
+    if ( boxCount == 30 || boxCount == 35 || boxCount == 40 ) {
       classWidth = 'w-20';
     } 
-    else if ( boxCount == 47 ) {
+    else if ( boxCount == 48 ) {
       classWidth = 'w-18';
     }
 
     // 이거 시간 계산좀 해봐야 겠다,, 루프가 꽤 많이 도네, 많이 돌면 2천번은 돌겠는데 ?
-    var boxes = [];
-    for ( var i = 0; i < boxCount; i++ ) { // 마지막에 하나 빼먹어야지 !
+    var boxes = []; // this.boxes랑 햇갈리지 마랑!
+    for ( var i = 0; i < boxCount - 1; i++ ) { // 마지막에 하나 빼먹어야지 !
       var boxNumber = i+1;
       const word = ( randomEniacWords ? (randomEniacWords[i] ? randomEniacWords[i] : false) : false );
       var team = false;
@@ -226,6 +228,18 @@ class Puzzle extends Component {
     });
   }
 
+  checkBingo(boxNumber, team) {
+    let location = utils.boxNumberToLocation(boxNumber, this.props.maxLocation);
+
+    var x = location[0];
+    var y = location[1];
+    var count = 0;
+  }
+
+  updateGrid(boxNumber, team) {
+
+  }
+
   componentWillUnmount() {
     this.socket.disconnect();
   }
@@ -295,25 +309,24 @@ function mapStateToProps(state, ownProps) {
     });
   }
 
-  var maxX = 3; // 4
-  var maxY = 4; // 5
+  var maxLocation = [4,5];
   switch(boxCount) {
-    case 
+    case 24:
+      maxLocation = [4,6];
+      break;
+    case 30:
+      maxLocation = [5,6];
+      break;
+    case 35:
+      maxLocation = [5,7];
+      break;
+    case 40:
+      maxLocation = [5,8];
+      break;
+    case 48:
+      maxLocation = [6,8];
+      break;
   }
-  // 원래는 boxCount 가 딱 30, 35, 40, 48개인데 마지막 박스를 고려해서 1개씩 뺀거임
-  if ( boxCount == 29 || boxCount == 34 || boxCount == 39 ) {
-    maxX = 4; // 0 ~ 4 => 5
-  } 
-  if (boxCount == 29) {
-    maxY = 5;
-  }
-
-  else if ( boxCount == 47 ) {
-    maxX = 5;
-  }
-
-  let puzzleLocationArray = [];
-
 
   return {
     teamCount: parseInt(state.teamCount), // 이게 없을때는 DB에서 string 0를 가져온다
@@ -324,7 +337,8 @@ function mapStateToProps(state, ownProps) {
     endPoint: state.rootPath,
     randomEniacWords: state.random_eniac_words,
     originalEniacWords: state.original_eniac_words,
-    lastBoxGoogleDriveUrl: state.lastbox_google_drive_url
+    lastBoxGoogleDriveUrl: state.lastbox_google_drive_url,
+    maxLocation
   };
 }
 

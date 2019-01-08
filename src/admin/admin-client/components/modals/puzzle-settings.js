@@ -61,15 +61,16 @@ class PuzzleSettings extends React.Component {
     if ( val.length > 0 ) {
       var arr = val.replace(/\s/g, "").split('');
 
-      let zeroArr = new Array(this.props.puzzleBoxCount - arr.length).fill(0);
+      // 같아서도 안되! 박스가 20개인데, 글자개수가 20개면 안되 !! 마지막 박스는 안그려 지니까 !
+      if ( this.props.puzzleBoxCount <= arr.length ) {
+        return alert("ERROR : 글자개수가 박스개수보다 적어야 합니다");
+      }
+
+      // 마지막 박스는 어차피 글자가 안들어 가니까 원래 박스 개수에서 1개를 빼줘야쥬~
+      let zeroArr = new Array((this.props.puzzleBoxCount-1) - arr.length).fill(0);
       let resultArr = [...zeroArr, ...arr];
       utils.shuffle(resultArr);
       let json = JSON.stringify(resultArr);
-
-      // 참고로 : puzzleBoxCount가 이미 last box를 고려해서 1개 빼져있는 상태임
-      if ( this.props.puzzleBoxCount < resultArr.length ) {
-        return alert("ERROR : 글자개수가 박스개수보다 더 많습니다");
-      }
 
       const config = {
         method: 'POST',
@@ -135,7 +136,7 @@ class PuzzleSettings extends React.Component {
     for ( var i = 0; i < counts.length; i++ ) {
       let isActive = (this.props.puzzleBoxCount == counts[i]) ? true : false;
       list.push(
-        <DropdownItem active={isActive} key={i} data-count={counts[i] - 1} onClick={this.updatePuzzleBoxCount}>{counts[i]}개</DropdownItem>
+        <DropdownItem active={isActive} key={i} data-count={counts[i]} onClick={this.updatePuzzleBoxCount}>{counts[i]}개</DropdownItem>
       );
     }
     return list;
@@ -156,7 +157,7 @@ class PuzzleSettings extends React.Component {
               <div className="l-left">
                 <Dropdown direction="right" isOpen={this.state.btnDropright} toggle={() => { this.setState({ btnDropright: !this.state.btnDropright }); }}>
                   <DropdownToggle color="success" caret>
-                    {this.props.puzzleBoxCount + 1}개
+                    {this.props.puzzleBoxCount}개
                   </DropdownToggle>
                   <DropdownMenu>
                     {this.renderPuzzleBoxCountDropdownMenuItems()}

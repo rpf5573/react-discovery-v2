@@ -58,6 +58,7 @@ function getFileExtension(filename){
 function fileTypeCheck(filename){
   // file 확장자명 체크
   const extension = getFileExtension(filename);
+  alert(extension);
   for ( var i = 0; i < fileExtensions.image.length; i++ ) {
     if ( extension == fileExtensions.image[i] ) {
       return constants.IMAGE;
@@ -94,6 +95,37 @@ async function simpleAxios(axios, config, callback) {
   }
 }
 
+function boxNumberToLocation(number, maxLocation) {
+  // 일단
+  var x = 0, y = 0;
+  let quotient = parseInt(number/maxLocation[0]);
+  let rest = number - (maxLocation[0] * quotient);
+  if ( rest == 0 ) {
+    x = maxLocation[0] - 1;
+    y = quotient - 1;
+  } else {
+    x = rest - 1;
+    y = quotient;
+  }
+  return [x, y];
+}
+
+function makeGrid(maxLocation, puzzleColonInfo = []) {
+  var grid = [...Array(maxLocation[0])].map(e => Array(maxLocation[1]).fill(0));
+  
+  for ( var i = 0; i < puzzleColonInfo.length; i++ ) {
+    if ( Array.isArray(puzzleColonInfo[i].numbers) ) {
+      for ( var z = 0; z < puzzleColonInfo[i].numbers.length; z++ ) {
+        const number = puzzleColonInfo[i].numbers[z];
+        const location = boxNumberToLocation(number, maxLocation);
+        grid[location[0]][location[1]] = puzzleColonInfo[i].team;
+      }  
+    }
+  }
+
+  return grid;
+}
+
 module.exports = {
   getCurrentTimeInSeconds,
   secondToMinute,
@@ -102,5 +134,7 @@ module.exports = {
   getFileExtension,
   fileTypeCheck,
   getRandomInteger,
-  simpleAxios
+  simpleAxios,
+  boxNumberToLocation,
+  makeGrid
 }
