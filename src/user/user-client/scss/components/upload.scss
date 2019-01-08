@@ -59,6 +59,7 @@
         flex-direction: column;
         align-items: center;
         border: none; // remove default btn style
+        background-color: white;
         & > svg {
           font-size: 40px;
         }

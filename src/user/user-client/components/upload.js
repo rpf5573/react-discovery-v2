@@ -39,8 +39,8 @@ class Upload extends Component {
     }
 
     // 50MB
-    if ( file.size > 52428800 ) {
-      return alert("파일 사이즈는 50MB를 넘으면 안됩니다");
+    if ( file.size > 102428800 ) {
+      return alert("파일 사이즈는 100MB를 넘으면 안됩니다");
     }
 
     this.props.updateFileInfo({

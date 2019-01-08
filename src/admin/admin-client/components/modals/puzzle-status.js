@@ -189,6 +189,7 @@ class PuzzleStatusModal extends React.Component {
         teamCount: this.props.teamCount
       }
     }
+
     utils.simpleAxios(axios, config, (response) => {
       let puzzleColonInfo = [];
       for ( var i = 0; i < response.data.length; i++ ) {
