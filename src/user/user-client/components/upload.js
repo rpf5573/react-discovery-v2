@@ -11,12 +11,12 @@ import Camera from '@material-ui/icons/CameraAltOutlined';
 import Done from '@material-ui/icons/Done';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import VideoPlayer from './video-player';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 
 class Upload extends Component {
 
   constructor(props) {
-    console.log( 'upload component constructor', ' is called' );
     super(props);
 
     this.state = {
@@ -29,6 +29,7 @@ class Upload extends Component {
     this.cancelPreview = this.cancelPreview.bind(this);
     this.reset = this.reset.bind(this);
     this.timerCheck = this.timerCheck.bind(this);
+    this.changeVideoSrc = this.changeVideoSrc.bind(this);
   }
 
   async fileSelectHandler(e) {
@@ -44,11 +45,24 @@ class Upload extends Component {
         return alert("파일 사이즈는 100MB를 넘으면 안됩니다");
       }
 
+      const src = URL.createObjectURL(file);
+      const type = file.type;
+
       this.props.updateFileInfo({
-        src: URL.createObjectURL(file),
-        type: file.type,
+        src,
+        type,
         mediaType
       });
+
+      // video인경우에 src를 업데이트 해줘야함
+      if ( mediaType == constants.VIDEO ) {
+        this.changeVideoSrc(src, type);
+      } 
+      // 일단 안해주면 어떻게 될까 ??
+      // else if ( mediaType == constants.IMAGE ) {
+      //   this.changeVideoSrc(null, null);
+      // }
+
     } else {
       console.log( 'no file select');
     }
@@ -105,6 +119,10 @@ class Upload extends Component {
     });
   }
 
+  changeVideoSrc(src, type) {
+    this.player.src([{src, type}]);
+  }
+
   reset() {
     if ( this.fileUploadInput.current ) {
       this.fileUploadInput.current.value = null;
@@ -134,14 +152,11 @@ class Upload extends Component {
       'preview--image': (this.props.fileInfo.mediaType == constants.IMAGE ? true : false),
       'preview--video': (this.props.fileInfo.mediaType == constants.VIDEO ? true : false)
     });
-
     let checkBtnsCN = cn({
       'check-btns': true,
       'slide-left': (this.props.fileInfo.src ? true : false),
       'd-none': (this.props.progressVal > 0 ? true : false ) // 업로드 중일떄는 다른거 또 업로드 못하게 해야지 !
     });
-
-    console.log( 'this.props.fileInfo.src : ', this.props.fileInfo.src );
 
     return (
       <div className="upload-page full-container">
@@ -156,7 +171,11 @@ class Upload extends Component {
         <input style={{display: 'none'}} type="file" onChange={this.fileSelectHandler} ref={this.fileUploadInput}></input>
         <div className={previewCN}>
           <img src={this.props.fileInfo.src}></img>
-          <VideoPlayer autoplay controls sources={[{src: this.props.fileInfo.src, type: this.props.fileInfo.type}]} />
+          <div className="videoPlayer">
+            <div data-vjs-player>
+              <video ref={ node => this.videoNode = node } className="video-js"></video>
+            </div>
+          </div>
           <div className={checkBtnsCN}>
             <button className="cancel" onClick={this.cancelPreview}>
               <DeleteForever></DeleteForever>
@@ -178,6 +197,26 @@ class Upload extends Component {
     if ( ! this.props.progressVal ) {
       this.reset();
     }
+
+    // player 메모리에서 떼어내야되 왜냐면, 어차피 ComponentDidMount에서 다시 회복될꺼니까 !!
+    if (this.player) {
+      this.player.dispose();
+    }
+  }
+
+  componentDidMount() {
+
+    console.log( 'this.props.fileInfo : ', this.props.fileInfo );
+
+    const config = {
+      controls: true,
+    };
+    if ( this.props.fileInfo.mediaType == constants.VIDEO && this.props.fileInfo.src ) {
+      config.sources = [{src: this.props.fileInfo.src, type: this.props.fileInfo.type}];
+    }
+    this.player = videojs(this.videoNode, config, function onPlayerReady() {
+      console.log('onPlayerReady', this);
+    });
   }
 }
 

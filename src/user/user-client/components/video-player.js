@@ -30,7 +30,18 @@ export default class VideoPlayer extends Component {
     }
   }
 
+  componentWillReceiveProps() {
+    console.log( 'this.props in componentWillReceiveProps: ', this.props );
+  }
+
   render() {
+
+    if ( ! this.props.isUploading && this.player ) {
+      console.log( 'render and player src gogo', ' is called' );
+      console.log( 'this.props.sources : ', this.props.sources );
+      this.player.src(this.props.sources);
+    }
+
     return (
       <div className="videoPlayer">
         <div data-vjs-player>

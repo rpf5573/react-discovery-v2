@@ -13,7 +13,8 @@ export default function configureStore(initialSettings = {}) {
   var initialState = initialSettings;
   initialState.fileInfo = {
     src: null,
-    type: null
+    type: null,
+    mediaType: null
   }
   // initialState.progressVal = 0;
 
