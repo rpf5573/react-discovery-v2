@@ -22,7 +22,6 @@ module.exports = (app, DCQuery) => {
       
       try {
         let initialSettings = await DCQuery.getInitialState('assist');
-        initialSettings.rootPath = 'http://localhost:8080';
         initialSettings.loginData = req.session.loginData;
         let document = template(initialSettings, srcPath, process.env.DCV);
         return res.set('Content-Type', 'text/html').end(document);

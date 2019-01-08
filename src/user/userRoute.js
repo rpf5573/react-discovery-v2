@@ -23,7 +23,7 @@ module.exports = (app, DCQuery, upload) => {
       
       try {
         let initialSettings = await DCQuery.getInitialState('user');
-        initialSettings.rootPath = 'http://localhost:8080';
+        initialSettings.rootPath = `http://${process.env.DCV}.discovery21.world`;
         initialSettings.loginData = req.session.loginData;
         let document = template(initialSettings, srcPath, process.env.DCV);
         return res.set('Content-Type', 'text/html').end(document);
