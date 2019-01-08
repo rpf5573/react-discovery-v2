@@ -5,6 +5,9 @@ function getCurrentTimeInSeconds() {
   let h = date.getHours();
   let m = date.getMinutes();
   let s = date.getSeconds();
+
+  console.log( 'time : ', h + '-' + m + '-' + s );
+
   return(h*60*60 + m*60 + s);
 }
 
