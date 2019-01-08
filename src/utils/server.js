@@ -8,6 +8,9 @@ function getCurrentTimeInSeconds() {
   const day = moment().startOf('day');
   console.log( 'day : ', day );
 
+  const test = moment('12:10:12: PM', 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds');
+  console.log( 'test : ', test );
+
   // myVar = moment.duration('').asSeconds()
 
   let h = date.getHours();
