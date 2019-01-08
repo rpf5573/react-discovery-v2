@@ -180,7 +180,7 @@ module.exports = (app, DCQuery, upload) => {
       let td = req.body.laptime - ( currentTime - startTime );
       if ( td <= 0 ) {
         return res.status(201).json({
-          error: "타이머 시간이 지났습니다"
+          error: "교육전입니다"
         });
       } 
     
