@@ -4,7 +4,6 @@ const utils = require('../utils/server');
 const fs = require('fs-extra');
 
 module.exports = (app, DCQuery, upload) => {
-
   app.get('/admin', async (req, res) => {
     var srcPath = {
       style: 'style.css',
@@ -306,6 +305,5 @@ module.exports = (app, DCQuery, upload) => {
       console.log(e);
       return res.sendStatus(404);
     }
-  });
-  
+  }); 
 }

@@ -197,11 +197,12 @@ class Puzzle extends Component {
         type: (hasWord == 'true' ? constants.WORD : constants.EMPTY),
         point,
         boxOpenUse: this.props.mappingPoints.boxOpenUse,
+        teamCount: this.props.teamCount
       }
     };
     utils.simpleAxios(axios, config, (response) => {
-      alert( "성공" );
       this.socket.emit('open_puzzle_box', response.data);
+      alert( "성공" );
     });
   }
 

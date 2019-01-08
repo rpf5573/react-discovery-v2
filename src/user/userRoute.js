@@ -3,7 +3,6 @@ const template = require('./user-client/template');
 const utils = require('../utils/server');
 
 module.exports = (app, DCQuery, upload) => {
-
   app.get(['/user', '/user/page'], (req, res) => {
     return res.redirect('/user/page/map');
   });
@@ -49,8 +48,26 @@ module.exports = (app, DCQuery, upload) => {
 
   app.post('/user/openBox', async (req, res) => {
     try {
-      // 돈먼저 체크 합니다잉~
-      var result = await DCQuery.points.get('useable', req.body.team);
+
+      // 다른 팀이 이미 점령했는지 체크해야지
+      var result = await DCQuery.puzzle.getAll(req.body.teamCount);
+
+      for ( var i = 0; i < result.length; i++ ) {
+        let numbers = JSON.parse( result[i].numbers );
+        if ( Array.isArray(numbers) ) {
+          for ( var z = 0; z < numbers.length; z++ ) {
+            if ( numbers[z] == req.body.boxNumber ) {
+              return res.status(401).json({
+                error: "이미 다른팀에의해 점령당했습니다"
+              });
+            }
+          }
+        }
+      }
+      console.log( 'result : ', result );
+
+      // 돈 체크 합니다잉~
+      result = await DCQuery.points.get('useable', req.body.team);
 
       if ( result[0].useable < req.body.boxOpenUse ) {
         return res.status(201).json({ error: '포인트가 부족합니다' });
