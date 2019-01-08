@@ -213,6 +213,9 @@ class Upload extends Component {
 
     const config = {
       controls: true,
+      controlBar: {
+        fullscreenToggle: false
+      }
     };
     if ( this.props.fileInfo.mediaType == constants.VIDEO && this.props.fileInfo.src ) {
       config.sources = [{src: this.props.fileInfo.src, type: this.props.fileInfo.type}];
