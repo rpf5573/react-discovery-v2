@@ -1,7 +1,13 @@
-require('date-utils');
+var moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault("Asia/Seoul");
 
 function getCurrentTimeInSeconds() {
   let date = new Date();
+  console.log( 'date : ', date );
+
+  let momentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+
   let h = date.getHours();
   let m = date.getMinutes();
   let s = date.getSeconds();
