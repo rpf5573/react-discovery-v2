@@ -55,7 +55,7 @@ module.exports = (app, DCQuery, upload) => {
         if ( Array.isArray(numbers) ) {
           for ( var z = 0; z < numbers.length; z++ ) {
             if ( numbers[z] == req.body.boxNumber ) {
-              return res.status(401).json({
+              return res.status(201).json({
                 error: "이미 다른팀에의해 점령당했습니다"
               });
             }
