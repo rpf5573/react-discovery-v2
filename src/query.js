@@ -179,8 +179,8 @@ class Meta {
       timer_plus: 100,
       timer_minus: 100,
       upload: 1000,
-      boxOpenGetEmpty: 6000,
-      boxOpenGetWord: 9000,
+      boxOpenGetEmpty: 2000,
+      boxOpenGetWord: 4000,
       boxOpenUse: 1000,
       eniac: 20000
     }
