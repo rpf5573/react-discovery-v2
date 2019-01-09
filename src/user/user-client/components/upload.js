@@ -68,36 +68,37 @@ class Upload extends Component {
     }
   }
 
-  uploadFile(e) {
+  async uploadFile(e) {
     // timer check first
-    this.timerCheck(this.props.ourTeam, this.props.laptime, (response) => {
-      const file = this.fileUploadInput.current.files[0];
-      if ( ! file ) {
-        return alert( "ERROR : 업로드할 파일이 없습니다" );
+    let response = await this.timerCheck(this.props.ourTeam, this.props.laptime);
+    console.log( 'response : ', response );
+
+    const file = this.fileUploadInput.current.files[0];
+    if ( ! file ) {
+      return alert( "ERROR : 업로드할 파일이 없습니다" );
+    }
+    // 이제 여기서 업로드 함.
+    const fd = new FormData();
+    // 이거를 먼저 써주는게 중요하다. 왜냐하면 서버입장에서는 userFile을 다 받기 전에는 team을 못읽을 수 가 있거든. 
+    // http body부분이 엄청 길거 아니냐 ! 근데 team정보가 맨 마지막에 있으면 좀 곤란하지 !
+    fd.append('team', this.props.ourTeam);
+    fd.append('userFile', file, file.name);
+    fd.append('point', this.props.mappingPoints.upload);
+
+    const config = {
+      method: 'POST',
+      url: '/user/upload',
+      data: fd,
+      onUploadProgress: (progressEvent) => {
+        let val = Math.floor( (progressEvent.loaded / progressEvent.total) * 100 );
+        console.log( 'val : ', val );
+        this.props.updateProgressVal(val);
       }
-      // 이제 여기서 업로드 함.
-      const fd = new FormData();
-      // 이거를 먼저 써주는게 중요하다. 왜냐하면 서버입장에서는 userFile을 다 받기 전에는 team을 못읽을 수 가 있거든. 
-      // http body부분이 엄청 길거 아니냐 ! 근데 team정보가 맨 마지막에 있으면 좀 곤란하지 !
-      fd.append('team', this.props.ourTeam);
-      fd.append('userFile', file, file.name);
-      fd.append('point', this.props.mappingPoints.upload);
-  
-      const config = {
-        method: 'POST',
-        url: '/user/upload',
-        data: fd,
-        onUploadProgress: (progressEvent) => {
-          let val = Math.floor( (progressEvent.loaded / progressEvent.total) * 100 );
-          console.log( 'val : ', val );
-          this.props.updateProgressVal(val);
-        }
-      };
-  
-      utils.simpleAxios(axios, config, (response) => {
-        alert(`성공 !`);
-        this.reset();
-      });
+    };
+
+    utils.simpleAxios(axios, config, (response) => {
+      alert(`성공 !`);
+      this.reset();
     });
   }
 
@@ -105,7 +106,7 @@ class Upload extends Component {
     this.reset();
   }
 
-  async timerCheck(team, laptime, callback) {
+  async timerCheck(team, laptime) {
     const config = {
       method: "POST",
       url: "/user/timer-check",
@@ -114,9 +115,10 @@ class Upload extends Component {
         laptime
       }
     };
-    utils.simpleAxios(axios, config, (response) => {
-      callback(response);  
+    let result = await utils.simpleAxios(axios, config, (response) => {
+      return response;
     });
+    console.log( 'result : ', result );
   }
 
   changeVideoSrc(src, type) {

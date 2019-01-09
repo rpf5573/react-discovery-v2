@@ -273,6 +273,24 @@ class Timer {
     return result;
   }
 
+  async check(team, laptime) {
+    let result = await this.get(team);
+    let timerState = parseInt(result[0].state);
+    if ( ! timerState ) {
+      return {
+        state: false,
+        td: 0
+      };
+    }
+    const startTime = result[0].startTime;
+    const currentTime = utils.getCurrentTimeInSeconds();
+    let td = laptime - ( currentTime - startTime );
+    return {
+      state: true,
+      td
+    }
+  }
+
   async reset() {
     let sql = `UPDATE ${this.table} SET startTime = 0, state = 0`;
     let result = this.mysql.query(sql);
@@ -438,7 +456,7 @@ class Uploads {
   }
 
   async get(team) {
-    let sql = `SELECT files, temp FROM ${this.table} WHERE team = ${team}`;
+    let sql = `SELECT files, temp, uploadTime FROM ${this.table} WHERE team = ${team}`;
     let result = await this.mysql.query(sql);
     return result;
   }
@@ -452,12 +470,17 @@ class Uploads {
     return result;
   }
 
-  async add(team, filename, isTemp = false) {
+  async add(team, filename, currentTime, isTemp = false) {
     let result = await this.get(team);
     let col = isTemp ? 'temp' : 'files'; // 아주 기발했다 !
     let files = (result[0][col] ? JSON.parse(result[0][col]) : []);
     files.push(filename);
-    let sql = `UPDATE ${this.table} SET ${col} = '${JSON.stringify(files)}' WHERE team = ${team}`;
+
+    let sql = `UPDATE ${this.table} SET ${col} = '${JSON.stringify(files)}'`;
+    if ( currentTime > 0 ) { // 항상 넣으면 안되고, 새로운 시간이 들어왔을때만 넣어야되
+      sql += `, uploadTime = ${currentTime}`;
+    }
+    sql += ` WHERE team = ${team}`;
     result = await this.mysql.query(sql);
 
     return result;
@@ -486,7 +509,7 @@ class Uploads {
     if ( temp.length > 0 ) {
       let files = (result[0].files ? JSON.parse(result[0].files) : []);
       let newFiles = files.concat(temp);
-      let sql = `UPDATE ${this.table} SET files = '${JSON.stringify(newFiles)}', temp = NULL WHERE team = ${team}`;
+      let sql = `UPDATE ${this.table} SET files = '${JSON.stringify(newFiles)}', temp = NULL, uploadTime = 0 WHERE team = ${team}`;
       result = await this.mysql.query(sql);
     }
     return result;

@@ -62,9 +62,13 @@ class Puzzle extends Component {
     super(props);
     this.state = {
       isModalOpen: false,
-      eniacSentance: false,
-      grid: (this.props.count > 0 ? utils.makeGrid(this.props.maxLocation, this.props.puzzleColonInfo) : false)
+      eniacSentance: false
     };
+
+    console.log( 'puzzle component constructor : ' );
+
+    // 이걸 굳이 state에 넣을 필요는 없지 ! View에 반영되는건 아니니께~
+    this.grid = (this.props.count > 0 ? utils.makeGrid(this.props.maxLocation, this.props.puzzleColonInfo) : false);
 
     this.socket = socketIOClient(this.props.endPoint);
     this.socket.on("puzzle_box_opened", data => {
@@ -85,6 +89,7 @@ class Puzzle extends Component {
     this.handleEniacSubmit = this.handleEniacSubmit.bind(this);
     this.handleEniacSentanceInput = this.handleEniacSentanceInput.bind(this);
     this.checkBingo = this.checkBingo.bind(this);
+    this.updateGrid = this.updateGrid.bind(this);
 
     this.hiddenAnchorForNewTab = React.createRef();
   }
@@ -185,6 +190,12 @@ class Puzzle extends Component {
     let hasWord = e.currentTarget.getAttribute('data-hasword');
     let point = this.props.mappingPoints.boxOpenGetEmpty;
 
+    this.updateGrid(boxNumber, this.props.ourTeam);
+    console.log( 'updated grid : ', this.grid );
+
+    let totalCount = this.checkBingo( boxNumber, this.props.ourTeam );
+    console.log( 'Bingo ! - totalCount : ', totalCount );
+
     if ( hasWord == 'true' ) {
       point = this.props.mappingPoints.boxOpenGetWord;
     }
@@ -201,6 +212,7 @@ class Puzzle extends Component {
       }
     };
     utils.simpleAxios(axios, config, (response) => {
+      // grid update하구요
       this.socket.emit('open_puzzle_box', response.data);
       alert( "성공" );
     });
@@ -230,15 +242,116 @@ class Puzzle extends Component {
   }
 
   checkBingo(boxNumber, team) {
+    const xMax = this.grid.length - 1;
+    const yMax = this.grid[0].length - 1;
+    var totalCount = 0;
     let location = utils.boxNumberToLocation(boxNumber, this.props.maxLocation);
 
+    /*  가로
+    /* --------------------------------------------------- */
     var x = location[0];
     var y = location[1];
     var count = 0;
+
+    /* ------ 맨 왼쪽으로 이동 ------ */
+    while(x > 0 && this.grid[x-1][y] == team) {
+      x--;
+    }
+
+    /* ------ 오른쪽으로 2개 발견할때까지 이동 왜냐면 내가 방금 누른곳이 거기니까 ------ */
+    while(x <= xMax && this.grid[x][y] == team) {
+      x += 1;
+      count++;
+
+      if ( count == 3) {
+        totalCount += 1;
+        break;
+      }
+    }
+
+
+
+    /*  세로
+    /* --------------------------------------------------- */
+    x = location[0];
+    y = location[1];
+    count = 0;
+
+    /* ------ 위쪽으로 이동 ------ */
+    while(y > 0 && this.grid[x][y-1] == team) {
+      y--;
+    }
+
+    /* ------ 아래쪽으로 3개 발견할때까지 이동 ------ */
+    while(y <= yMax && this.grid[x][y] == team) {
+      y += 1;
+      count++;
+
+      if ( count == 3) {
+        totalCount += 1;
+        break;
+      }
+    }
+
+
+
+    /*  오른쪽 위 대각
+    /* --------------------------------------------------- */
+    x = location[0];
+    y = location[1];
+    count = 0;
+
+    /* ------ 오른쪽위으로 이동 ------ */
+    while((y > 0 && x < xMax) && this.grid[x+1][y-1] == team) {
+      x++;
+      y--;
+    }
+
+    /* ------ 아래왼쪽으로 3개 발견할때까지 이동 ------ */
+    while((y <= yMax && x >= 0) && this.grid[x][y] == team) {
+      x--;
+      y++;
+      count++;
+
+      if ( count == 3) {
+        totalCount += 1;
+        break;
+      }
+    }
+
+
+
+    /*  왼쪽 위 대각
+    /* --------------------------------------------------- */
+    x = location[0];
+    y = location[1];
+    count = 0;
+
+    /* ------ 왼쪽위으로 이동 ------ */
+    while((x > 0 && y > 0) && this.grid[x-1][y-1] == team) {
+      x--;
+      y--;
+    }
+
+    /* ------ 아래오른쪽으로 2개 발견할때까지 이동 ------ */
+    while((y <= yMax && x <= xMax) && this.grid[x][y] == team) {
+      x++;
+      y++;
+      count++;
+
+      if ( count == 3) {
+        totalCount += 1;
+        break;
+      }
+    }
+
+    return totalCount;
   }
 
   updateGrid(boxNumber, team) {
-
+    let location = utils.boxNumberToLocation(boxNumber, this.props.maxLocation);
+    console.log( 'location : ', location );
+    this.grid[location[0]][location[1]] = team;
   }
 
   componentWillUnmount() {

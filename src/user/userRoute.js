@@ -164,11 +164,13 @@ module.exports = (app, DCQuery, upload) => {
           });
         } else {
           try {
+            console.log( 'success upload !! ' );
+            const currentTime = utils.getCurrentTimeInSeconds();
             DCQuery.points.updateOneRow({
               team: req.body.team,
-              temp: req.body.point // useable이 아니라 temp를 업데이트 한다
+              temp: req.body.point, // useable이 아니라 temp를 업데이트 한다,
             });
-            DCQuery.uploads.add(req.body.team, req.files.userFile[0].filename, true);
+            DCQuery.uploads.add(req.body.team, req.files.userFile[0].filename, currentTime, true);
             res.sendStatus(201);
           } catch (e) {
             console.log( 'e : ', e );
@@ -181,18 +183,14 @@ module.exports = (app, DCQuery, upload) => {
 
   app.post('/user/timer-check', async (req, res) => {
     try {
-      let result = await DCQuery.timer.get(req.body.team);
-      let timerState = parseInt(result[0].state);
-      if ( ! timerState ) {
+      let result = await DCQuery.timer.check(req.body.team, req.body.laptime);
+      if ( ! result.state ) {
         return res.status(201).json({
           error: "타이머가 꺼져있습니다. 잠시 후에 다시 시도해 주시기 바랍니다"
         });
       }
 
-      const startTime = result[0].startTime;
-      const currentTime = utils.getCurrentTimeInSeconds();
-      let td = req.body.laptime - ( currentTime - startTime );
-      if ( td <= 0 ) {
+      if ( result.td <= 0 ) {
         return res.status(201).json({
           error: "교육전입니다"
         });
