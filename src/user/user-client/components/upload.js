@@ -183,6 +183,15 @@ class Upload extends Component {
           </div>
           <div className="l-bottom">
             여기를 눌러 촬영 및 업로드 해주세요
+            <div style={{color: 'red'}}>주의</div>
+            <ol className="notice">
+              <li>
+                업로드 후 1분이 경과해야 다시 업로드 가능합니다.
+              </li>
+              <li>
+                
+              </li>
+            </ol>
           </div>
         </button>
         <input style={{display: 'none'}} type="file" onChange={this.fileSelectHandler} ref={this.fileUploadInput}></input>

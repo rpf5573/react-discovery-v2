@@ -516,7 +516,7 @@ class Uploads {
   }
 
   async reset(col = null, team = null) {
-    let sql = `UPDATE ${this.table} SET files = NULL, temp = NULL`;
+    let sql = `UPDATE ${this.table} SET files = NULL, temp = NULL, uploadTime = 0`;
     if ( col && team ) {
       sql = `UPDATE ${this.table} SET ${col} = NULL WHERE team = ${team}`;
     }
