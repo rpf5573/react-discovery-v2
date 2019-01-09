@@ -113,21 +113,21 @@ module.exports = (app, DCQuery, upload) => {
         // 등수에 맞게 포인트 지급
         switch( rank ) {
           case 2:
-            point = Math.floor( (point * 0.9) );
-            break;
-          case 3:
             point = Math.floor( (point * 0.8) );
             break;
+          case 3:
+            point = Math.floor( (point * 0.6) );
+            break;
           case 4:
-            point = Math.floor( (point * 0.7) );
+            point = Math.floor( (point * 0.4) );
             break;
           case 5:
-            point = Math.floor( (point * 0.6) );
+            point = Math.floor( (point * 0.2) );
             break;
             
           // 6등부터는 같은 점수
           default:
-            point = Math.floor( (point * 0.5) );
+            point = Math.floor( (point * 0.2) );
             break;
         }
       }
