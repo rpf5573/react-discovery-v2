@@ -181,7 +181,7 @@ class Meta {
       upload: 1000,
       boxOpenGetEmpty: 6000,
       boxOpenGetWord: 9000,
-      boxOpenUse: 3000,
+      boxOpenUse: 1000,
       eniac: 20000
     }
     sql = `UPDATE ${this.table} SET meta_value='${JSON.stringify(mappingPoints)}' WHERE meta_key='mapping_points'`;
