@@ -71,18 +71,17 @@ class MainBoard extends Component {
         filename
       }
     };
-    utils.simpleAxios(axios, config, (response) => {
-      let newUploadInfos = [...this.state.uploadInfos];
-      for ( var i = 0; i < newUploadInfos.length; i++ ) {
-        if ( newUploadInfos[i].team == team && Array.isArray(newUploadInfos[i].files) ) {
-          newUploadInfos[i].files = newUploadInfos[i].files.filter( val => val !== filename );
-          break;
-        }
+    let response = await utils.simpleAxios(axios, config);
+    let newUploadInfos = [...this.state.uploadInfos];
+    for ( var i = 0; i < newUploadInfos.length; i++ ) {
+      if ( newUploadInfos[i].team == team && Array.isArray(newUploadInfos[i].files) ) {
+        newUploadInfos[i].files = newUploadInfos[i].files.filter( val => val !== filename );
+        break;
       }
-      alert( `성공 : ${team}팀에게 ${point}점을 지급하였습니다` );
-      this.setState({
-        uploadInfos: newUploadInfos
-      });
+    }
+    alert( `성공 : ${team}팀에게 ${point}점을 지급하였습니다` );
+    this.setState({
+      uploadInfos: newUploadInfos
     });
   }
 
@@ -100,15 +99,14 @@ class MainBoard extends Component {
       }
     };
 
-    utils.simpleAxios(axios, config, (response) => {
-      utils.shuffle(response.data.uploadInfos); // 한번 섞어줘야 공평하게 위에서 부터 뜨지 !
-        for ( var i = 0; i < response.data.uploadInfos.length; i++ ) {
-          let parsed = JSON.parse(response.data.uploadInfos[i].files);
-          response.data.uploadInfos[i].files = parsed;
-        }
-        this.setState({
-          uploadInfos: response.data.uploadInfos
-        });
+    let response = await utils.simpleAxios(axios, config);
+    utils.shuffle(response.data.uploadInfos); // 한번 섞어줘야 공평하게 위에서 부터 뜨지 !
+    for ( var i = 0; i < response.data.uploadInfos.length; i++ ) {
+      let parsed = JSON.parse(response.data.uploadInfos[i].files);
+      response.data.uploadInfos[i].files = parsed;
+    }
+    this.setState({
+      uploadInfos: response.data.uploadInfos
     });
   }
 

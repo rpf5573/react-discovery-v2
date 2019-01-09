@@ -96,12 +96,11 @@ class ResultModal extends React.Component {
           puzzleBoxCount: this.props.puzzleBoxCount
         }
       }
-      utils.simpleAxios(axios, config, (response) => {
-        console.log( 'response : ', response );
-        this.setState({
-          error: false,
-          rows: response.data
-        });
+      let response = await utils.simpleAxios(axios, config);
+      console.log( 'response : ', response );
+      this.setState({
+        error: false,
+        rows: response.data
       });
     } else {
       this.setState({

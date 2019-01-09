@@ -51,10 +51,9 @@ class PostInfoRow extends React.Component {
         mission: this.state.mission
       }
     };
-    utils.simpleAxios(axios, config, (response) => {
-      this.props.onRemove(this.state.mission);
-      alert("성공");
-    });
+    let response = await utils.simpleAxios(axios, config);
+    this.props.onRemove(this.state.mission);
+    alert("성공");
   }
 
   async handleAddBtnClick(e) {
@@ -91,10 +90,9 @@ class PostInfoRow extends React.Component {
       }
     };
 
-    utils.simpleAxios(axios, config, (response) => {
-      this.props.onAdd(postInfo);
-      alert("성공");
-    });
+    let response = await utils.simpleAxios(axios, config);
+    this.props.onAdd(postInfo);
+    alert("성공");
   }
 
   async handleUpdateBtnClick(e) {
@@ -122,10 +120,9 @@ class PostInfoRow extends React.Component {
       }
     };
 
-    utils.simpleAxios(axios, config, (response) => {
-      this.props.onUpdate(postInfo);
-      alert("성공");
-    });
+    let response = await utils.simpleAxios(axios, config);
+    this.props.onUpdate(postInfo);
+    alert("성공");
   }
 
   async handleApplyBtnClick(e) {
@@ -166,14 +163,13 @@ class PostInfoRow extends React.Component {
       }
     };
 
-    utils.simpleAxios(axios, config, (response) => {
-      if ( this.state.isNew ) {
-        this.props.onAdd(postInfo);
-      } else {
-        this.props.onUpdate(postInfo);
-      }
-      alert("성공");
-    });
+    let response = await utils.simpleAxios(axios, config);
+    if ( this.state.isNew ) {
+      this.props.onAdd(postInfo);
+    } else {
+      this.props.onUpdate(postInfo);
+    }
+    alert("성공");
   }
 
   render() {

@@ -30,6 +30,7 @@ class Upload extends Component {
     this.reset = this.reset.bind(this);
     this.timerCheck = this.timerCheck.bind(this);
     this.changeVideoSrc = this.changeVideoSrc.bind(this);
+    this.uploadTimeIntervalCheck = this.uploadTimeIntervalCheck.bind(this);
   }
 
   async fileSelectHandler(e) {
@@ -69,10 +70,13 @@ class Upload extends Component {
   }
 
   async uploadFile(e) {
-    // timer check first
-    let response = await this.timerCheck(this.props.ourTeam, this.props.laptime);
-    console.log( 'response : ', response );
 
+    // 타이머 시간이 경과했는지 체크
+    await this.timerCheck(this.props.ourTeam, this.props.laptime);
+    // 업로드 한지 1분이 지났는지 안지났는지 체크
+    await this.uploadTimeIntervalCheck(this.props.ourTeam);
+
+    // 이제 업로드 시작
     const file = this.fileUploadInput.current.files[0];
     if ( ! file ) {
       return alert( "ERROR : 업로드할 파일이 없습니다" );
@@ -85,7 +89,7 @@ class Upload extends Component {
     fd.append('userFile', file, file.name);
     fd.append('point', this.props.mappingPoints.upload);
 
-    const config = {
+    var config = {
       method: 'POST',
       url: '/user/upload',
       data: fd,
@@ -96,10 +100,9 @@ class Upload extends Component {
       }
     };
 
-    utils.simpleAxios(axios, config, (response) => {
-      alert(`성공 !`);
-      this.reset();
-    });
+    await utils.simpleAxios(axios, config);
+    alert(`성공 !`);
+    this.reset();
   }
 
   async cancelPreview(e) {
@@ -115,10 +118,22 @@ class Upload extends Component {
         laptime
       }
     };
-    let result = await utils.simpleAxios(axios, config, (response) => {
-      return response;
-    });
-    console.log( 'result : ', result );
+    let result = await utils.simpleAxios(axios, config);
+    return result;
+  }
+
+  async uploadTimeIntervalCheck(team) {
+    // 업로드 한지 1분 지났는지 테스트
+    const config = {
+      method: 'POST',
+      url: '/user/upload-interval-check',
+      data: {
+        team
+      },
+    };
+
+    let result = await utils.simpleAxios(axios, config);
+    return result;
   }
 
   changeVideoSrc(src, type) {

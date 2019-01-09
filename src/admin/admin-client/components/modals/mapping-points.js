@@ -52,15 +52,14 @@ class PointPart extends React.Component {
         mapping_point
       }
     };
-    utils.simpleAxios(axios, config, (response) => {
-      alert("성공");
-      this.setState({
-        isEditing: false,
-        point: point
-      });
-      this.props.onPointUpdate( mapping_point );
-      this.pointInput.current.value = null;
+    let response = await utils.simpleAxios(axios, config);
+    alert("성공");
+    this.setState({
+      isEditing: false,
+      point: point
     });
+    this.props.onPointUpdate( mapping_point );
+    this.pointInput.current.value = null;
   }
 
   render() {

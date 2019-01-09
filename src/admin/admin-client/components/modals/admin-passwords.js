@@ -46,17 +46,16 @@ class AdminPasswordModal extends React.Component {
         }
       }
     };
-    utils.simpleAxios(axios, config, (response) => {
-      alert( '성공' );
-      if ( this.adminInput.current.value ) {
-        this.adminInput.current.placeholder = this.adminInput.current.value;
-        this.adminInput.current.value = '';
-      }
-      if ( this.assistInput.current.value ) {
-        this.assistInput.current.placeholder = this.assistInput.current.value;
-        this.assistInput.current.value = '';
-      }
-    });
+    let response = await utils.simpleAxios(axios, config);
+    alert( '성공' );
+    if ( this.adminInput.current.value ) {
+      this.adminInput.current.placeholder = this.adminInput.current.value;
+      this.adminInput.current.value = '';
+    }
+    if ( this.assistInput.current.value ) {
+      this.assistInput.current.placeholder = this.assistInput.current.value;
+      this.assistInput.current.value = '';
+    }
   }
 
   handleInput(e) {

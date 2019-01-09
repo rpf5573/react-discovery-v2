@@ -46,10 +46,9 @@ class ResetModal extends React.Component {
           reset_password: 'discovery_reset'
         }
       };
-      utils.simpleAxios(axios, config, (response) => {
-        alert( "성공 !" );
-        window.location.reload(); // refresh
-      });
+      let response = await utils.simpleAxios(axios, config);
+      alert( "성공 !" );
+      window.location.reload(); // refresh
     } else {
       alert( "ERROR : 다시 확인해 주세요" );
     }

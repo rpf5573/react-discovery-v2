@@ -35,12 +35,11 @@ class Uploads extends React.Component {
       data: fd
     };
 
-    utils.simpleAxios(axios, config, (response) => {
-      this.props.uploadImageFile({
-        companyImage: filename
-      })
-      alert("성공");
-    });
+    let response = await utils.simpleAxios(axios, config);
+    this.props.uploadImageFile({
+      companyImage: filename
+    })
+    alert("성공");
   }
   async mapFileSelectHandler(e) {
     const map = e.target.files[0];
@@ -56,12 +55,11 @@ class Uploads extends React.Component {
       data: fd
     };
 
-    utils.simpleAxios(axios, config, (response) => {
-      this.props.uploadImageFile({
-        map: filename
-      });
-      alert("성공");
+    let response = await utils.simpleAxios(axios, config);
+    this.props.uploadImageFile({
+      map: filename
     });
+    alert("성공");
   }
 
   render() {

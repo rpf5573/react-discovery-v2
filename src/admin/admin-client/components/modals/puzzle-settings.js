@@ -45,11 +45,10 @@ class PuzzleSettings extends React.Component {
         puzzleBoxCount: count
       }
     };
-    utils.simpleAxios(axios, config, (response) => {
-      alert( "성공" );
-      this.eniacWordInput.current.value = '';
-      this.props.updatePuzzleBoxCount(count);
-    });
+    let response = await utils.simpleAxios(axios, config);
+    alert( "성공" );
+    this.eniacWordInput.current.value = '';
+    this.props.updatePuzzleBoxCount(count);
   }
 
   async updateEniacWords() {
@@ -81,12 +80,11 @@ class PuzzleSettings extends React.Component {
         }
       };
 
-      utils.simpleAxios(axios, config, (response) => {
-        this.props.updateEniacWords(val);
-        this.props.updateRandomEniacWords(resultArr);
-        alert("성공");
-        this.eniacWordInput.current.value = '';
-      });
+      let response = await utils.simpleAxios(axios, config);
+      this.props.updateEniacWords(val);
+      this.props.updateRandomEniacWords(resultArr);
+      alert("성공");
+      this.eniacWordInput.current.value = '';
     }
   }
 
@@ -105,11 +103,10 @@ class PuzzleSettings extends React.Component {
       }
     };
 
-    utils.simpleAxios(axios, config, (response) => {
-      this.props.updateLastBoxGoogleDriveUrl(url);
-      alert("성공");
-      this.lastBoxGoogleDriveUrlInput.current.value = '';
-    });
+    let response = await utils.simpleAxios(axios, config);
+    this.props.updateLastBoxGoogleDriveUrl(url);
+    alert("성공");
+    this.lastBoxGoogleDriveUrlInput.current.value = '';
     
   }
 
@@ -124,10 +121,9 @@ class PuzzleSettings extends React.Component {
       }
     };
 
-    utils.simpleAxios(axios, config, (response) => {
-      this.props.updateLastBoxState(val);
-      alert("성공");
-    });
+    let response = await utils.simpleAxios(axios, config);
+    this.props.updateLastBoxState(val);
+    alert("성공");
   }
 
   renderPuzzleBoxCountDropdownMenuItems() {

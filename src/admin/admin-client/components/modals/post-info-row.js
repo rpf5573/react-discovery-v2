@@ -53,10 +53,9 @@ class PostInfoRow extends React.Component {
         post: this.state.post
       }
     };
-    utils.simpleAxios(axios, config, (response) => {
-      this.props.onRemove(this.state.post);
-      alert("성공");
-    });
+    let response = await utils.simpleAxios(axios, config);
+    this.props.onRemove(this.state.post);
+    alert("성공");
   }
 
   async handleApplyBtnClick(e) {
@@ -105,14 +104,13 @@ class PostInfoRow extends React.Component {
       }
     };
 
-    utils.simpleAxios(axios, config, (response) => {
-      if ( this.state.isNew ) {
-        this.props.onAdd(postInfo);
-      } else {
-        this.props.onUpdate(postInfo);
-      }
-      alert("성공");
-    });
+    let response = await utils.simpleAxios(axios, config);
+    if ( this.state.isNew ) {
+      this.props.onAdd(postInfo);
+    } else {
+      this.props.onUpdate(postInfo);
+    }
+    alert("성공");
   }
 
   render() {

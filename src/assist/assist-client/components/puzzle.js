@@ -112,13 +112,12 @@ class Puzzle extends Component {
   }
 
   async openLastBox(e) {
-    utils.simpleAxios(axios, '/user/open-lastbox', (response) => {
-      if ( ! this.props.lastBoxGoogleDriveUrl ) {
-        return alert( "현재 영상이 설정되어있지 않습니다. 새로고침 하거나, 관리자에게 문의 해주시기 바랍니다" );
-      } else {
-        this.hiddenAnchorForNewTab.current.click();
-      }
-    });
+    let response = await utils.simpleAxios(axios, '/user/open-lastbox');
+    if ( ! this.props.lastBoxGoogleDriveUrl ) {
+      return alert( "현재 영상이 설정되어있지 않습니다. 새로고침 하거나, 관리자에게 문의 해주시기 바랍니다" );
+    } else {
+      this.hiddenAnchorForNewTab.current.click();
+    }
   }
 
   async componentDidMount() {
@@ -132,9 +131,8 @@ class Puzzle extends Component {
         teamCount: this.props.teamCount
       }
     }
-    utils.simpleAxios(axios, config, (response) => {
-      this.props.updatePuzzleColonInfo(response.data);
-    });
+    let response = await utils.simpleAxios(axios, config);
+    this.props.updatePuzzleColonInfo(response.data);
   }
 
   render() {

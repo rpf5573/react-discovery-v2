@@ -77,21 +77,24 @@ function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-async function simpleAxios(axios, config, callback) {
-  try {
-    let response = await axios(config);
-    if ( response.status == 201 ) {
-      if ( response.data.error ) {
-        return alert( response.data.error );
+async function simpleAxios(axios, config) {
+  return new Promise(async function(resolve, reject) {
+    try {
+      let response = await axios(config);
+      if ( response.status == 201 ) {
+        if ( response.data.error ) {
+          alert( response.data.error );
+          reject(response.data.error);
+        }
+        resolve(response);
+      } else {
+        alert( constants.ERROR.unknown );
       }
-      callback(response);
-    } else {
+    } catch(e) {
       alert( constants.ERROR.unknown );
+      reject(e);
     }
-  } catch(e) {
-    console.error(e);
-    alert( constants.ERROR.unknown );
-  }
+  });
 }
 
 function boxNumberToLocation(number, maxLocation) {

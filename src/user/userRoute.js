@@ -204,6 +204,23 @@ module.exports = (app, DCQuery, upload) => {
     }
   });
 
+  app.post('/user/upload-interval-check', async (req, res) => {
+    try {
+      let result = await DCQuery.uploads.get(req.body.team);
+      let currentTime = utils.getCurrentTimeInSeconds();
+      let uploadTime = result[0].uploadTime;
+      if ( (currentTime - uploadTime) < 60 ) {
+        return res.status(201).json({
+          error: "1분 이내에 재업로드는 불가능합니다. 잠시후 다시 시도해 주시기 바랍니다"
+        });
+      }
+      return res.sendStatus(201);
+    } catch (e) {
+      console.log( 'e : ', e );
+      return res.sendStatus(404);
+    }
+  });
+
   app.get('/user/open-lastbox', async (req, res) => {
     try {
       let result = await DCQuery.meta.get('lastbox_state');
