@@ -13,6 +13,7 @@ import DeleteForever from '@material-ui/icons/DeleteForever';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import EXIF from 'exif';
 
 class Upload extends Component {
 
@@ -31,6 +32,7 @@ class Upload extends Component {
     this.timerCheck = this.timerCheck.bind(this);
     this.changeVideoSrc = this.changeVideoSrc.bind(this);
     this.uploadTimeIntervalCheck = this.uploadTimeIntervalCheck.bind(this);
+    this.rotate = this.rotate.bind(this);
   }
 
   async fileSelectHandler(e) {
@@ -45,6 +47,8 @@ class Upload extends Component {
       if ( file.size > 99428800 ) {
         return alert("파일 사이즈는 100MB를 넘으면 안됩니다");
       }
+
+      this.rotate(file);
 
       const src = URL.createObjectURL(file);
       const type = file.type;
@@ -134,6 +138,47 @@ class Upload extends Component {
 
     let result = await utils.simpleAxios(axios, config);
     return result;
+  }
+
+  rotate(file) {
+    EXIF.getData(file,function() {
+      var orientation = EXIF.getTag(this,"Orientation");
+      var can = document.createElement("canvas");
+      var ctx = can.getContext('2d');
+      var thisImage = new Image;
+      thisImage.onload = function() {
+        can.width  = thisImage.width;
+        can.height = thisImage.height;
+        ctx.save();
+        var width  = can.width;  var styleWidth  = can.style.width;
+        var height = can.height; var styleHeight = can.style.height;
+        if (orientation) {
+          if (orientation > 4) {
+            can.width  = height; can.style.width  = styleHeight;
+            can.height = width;  can.style.height = styleWidth;
+          }
+          switch (orientation) {
+          case 2: ctx.translate(width, 0);     ctx.scale(-1,1); break;
+          case 3: ctx.translate(width,height); ctx.rotate(Math.PI); break;
+          case 4: ctx.translate(0,height);     ctx.scale(1,-1); break;
+          case 5: ctx.rotate(0.5 * Math.PI);   ctx.scale(1,-1); break;
+          case 6: ctx.rotate(0.5 * Math.PI);   ctx.translate(0,-height); break;
+          case 7: ctx.rotate(0.5 * Math.PI);   ctx.translate(width,-height); ctx.scale(-1,1); break;
+          case 8: ctx.rotate(-0.5 * Math.PI);  ctx.translate(-width,0); break;
+          }
+        }
+    
+        ctx.drawImage(thisImage,0,0);
+        ctx.restore();
+        var dataURL = can.toDataURL();
+    
+        // at this point you can save the image away to your back-end using 'dataURL'
+      }
+    
+      // now trigger the onload function by setting the src to your HTML5 file object (called 'file' here)
+      thisImage.src = URL.createObjectURL(file);
+    
+    });
   }
 
   changeVideoSrc(src, type) {
