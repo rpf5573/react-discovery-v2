@@ -19,10 +19,10 @@
       }
       &.w-18 {
         width: calc(100%/6);
-      }
 
-      // 요기만 글자 크기를 좀 작게 만들자. 사이즈가 작으니까 !!
-      &.w-18 {
+        .front {
+          padding: 30px;
+        }
         .word {
           font-size: 28px !important;
         }
@@ -42,21 +42,30 @@
         position: relative;
 
         &--normal {
-          
         }
         &--flipper {
           transform-style: preserve-3d; 
           transition: transform 3.3s ease-in;
           .front {
+            box-sizing: border-box;
             backface-visibility: hidden;
             position: absolute;
             width: 100%;
             height: calc(100% + 2px);
-            padding: 0;
             z-index: 2;
             transform: rotateY(0deg);
-            background-color: white;
-            border: none;
+            padding-top: 45%;
+            padding-bottom: 45%;
+            padding-right: 40%;
+            padding-left: 40%;
+            .front-inner-btn {
+              width: 100%;
+              height: 100%;
+              padding: 0;
+              margin: 0;
+              background-color: white;
+              border: none;
+            }
           }
 
           .back {            

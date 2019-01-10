@@ -34,8 +34,9 @@ class PuzzleBox extends Component {
     }
     else if ( ! this.props.owner ) {
       boxContent = <div className={flipperBoxCN}>
-                    <button className="front" data-number={this.props.number} data-hasword={(this.props.word ? true : false)} onClick={this.props.onBoxClick}>
-                    </button>
+                    <div className="front">
+                      <button className="front-inner-btn" data-number={this.props.number} data-hasword={(this.props.word ? true : false)} onClick={this.props.onBoxClick}></button>
+                    </div>
                     <div className="back d-f-center">
                       <span className="team d-f-center"></span>
                       { this.props.word ? <span className="word outline">{this.props.word}</span> : <span className="word placeholder">강</span> }
