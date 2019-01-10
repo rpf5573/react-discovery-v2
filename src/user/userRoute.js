@@ -218,7 +218,7 @@ module.exports = (app, DCQuery, upload) => {
       let uploadTime = result[0].uploadTime;
       if ( (currentTime - uploadTime) < 60 ) {
         return res.status(201).json({
-          error: "1분 이내에 재업로드는 불가능합니다. 잠시후 다시 시도해 주시기 바랍니다"
+          error: "연속적으로 업로드 할 수 없습니다. 잠시후 다시 시도해 주시기 바랍니다"
         });
       }
       return res.sendStatus(201);

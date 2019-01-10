@@ -50,34 +50,30 @@ class Upload extends Component {
         return alert("파일 사이즈는 100MB를 넘으면 안됩니다");
       }
 
-      // this.rotate(file);
-
-      const src = URL.createObjectURL(file);
       const type = file.type;
-
-      this.props.updateFileInfo({
-        src,
-        type,
-        mediaType
-      });
 
       // video인경우에 src를 업데이트 해줘야함
       if ( mediaType == constants.VIDEO ) {
+        const src = URL.createObjectURL(file);
+        this.props.updateFileInfo({
+          src,
+          type,
+          mediaType
+        });
+
         this.changeVideoSrc(src, type);
       } 
+      // image인경우에는 이미지 돌려서 다시 해야함
       else if ( mediaType == constants.IMAGE ) {
-        console.log( 'this.imageCanvas : ', this.imageCanvas );
-        loadImage(src, (img) => {
-          console.log( 'img src : ', img.current );
-          img.className = 'fit_to_parent'; // css class: { max-width: 100%; max-height: 100%; }
-          ReactDOM.findDOMNode(this.imageCanvas).appendChild(img);
-        });
+        loadImage(file, (canvas) => {
+          console.dir( canvas );
+          this.props.updateFileInfo({
+            src: canvas.toDataURL(),
+            type,
+            mediaType
+          });
+        }, { canvas: true });
       }
-      // 일단 안해주면 어떻게 될까 ??
-      // else if ( mediaType == constants.IMAGE ) {
-      //   this.changeVideoSrc(null, null);
-      // }
-
     } else {
       console.log( 'no file select');
     }
