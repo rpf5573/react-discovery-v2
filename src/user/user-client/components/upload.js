@@ -32,7 +32,8 @@ class Upload extends Component {
     this.timerCheck = this.timerCheck.bind(this);
     this.changeVideoSrc = this.changeVideoSrc.bind(this);
     this.uploadTimeIntervalCheck = this.uploadTimeIntervalCheck.bind(this);
-    this.rotate = this.rotate.bind(this);
+    this.imageCanvas = React.createRef();
+    // this.rotate = this.rotate.bind(this);
   }
 
   async fileSelectHandler(e) {
@@ -238,9 +239,6 @@ class Upload extends Component {
             <div className="notice">
               <h4>주의</h4>
               <ol>
-                <li>
-                  업로드 후 1분이 경과해야 다시 업로드 가능합니다.
-                </li>
                 <li>
                   동영상 촬영시 화질을 <span className="blue">최저</span>로 낮춰주세요.
                 </li>

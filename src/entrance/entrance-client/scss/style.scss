@@ -19,16 +19,16 @@ html, body, #app, .page {
   background: url('http://unsplash.it/1200x800') center center no-repeat;
   background-size: cover;
   
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-image: linear-gradient(to bottom right,#002f4b,#ced4da);
-    opacity: .7; 
-  }
+  // &:before {
+  //   content: '';
+  //   position: absolute;
+  //   top: 0;
+  //   right: 0;
+  //   bottom: 0;
+  //   left: 0;
+  //   background-image: linear-gradient(to bottom right,#002f4b,#ced4da);
+  //   opacity: .7; 
+  // }
 }
 
 .page-inner {
@@ -59,8 +59,8 @@ html, body, #app, .page {
 .text-container {
   font-size: 40px;
   text-align: center;
-  color: white;
-  font-weight: 200;
+  color: #0d0101;
+  font-weight: 300;
   letter-spacing: 6px;
 }
 
