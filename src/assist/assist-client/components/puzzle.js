@@ -67,14 +67,19 @@ class Puzzle extends Component {
   renderPuzzleBoxes(teamCount, boxCount, puzzleColonInfo, randomEniacWords) {
     this.boxes = [];
 
-    // 20( 4 x 5 ), 24( 4 x 6 ), 30( 5 x 6 ), 35( 5 x 7 ), 40( 5 x 8 ), 48( 6 x 8 )
+    // 20( 4 x 5 ), 24( 4 x 6 ), 30( 5 x 6 ), 35( 5 x 7 ), 40( 5 x 8 ), 48( 6 x 8 ), 54( 6 x 9 ), 60( 6 x 10 )
     var classWidth = 'w-25';
-    // 원래는 boxCount 가 딱 30, 35, 40, 48개인데 마지막 박스를 고려해서 1개씩 뺀거임
-    if ( boxCount == 29 || boxCount == 34 || boxCount == 39 ) {
-      classWidth = 'w-20';
-    } 
-    else if ( boxCount == 47 ) {
-      classWidth = 'w-18';
+    switch( boxCount ) {
+      case 30:
+      case 35:
+      case 40:
+        classWidth = 'w-20';
+        break;
+      case 48:
+      case 54:
+      case 60:
+        classWidth = 'w-18';
+        break;
     }
 
     // 이거 시간 계산좀 해봐야 겠다,, 루프가 꽤 많이 도네, 많이 돌면 2천번은 돌겠는데 ?

@@ -156,6 +156,10 @@ class Upload extends Component {
     });
 
     this.props.updateProgressVal(0);
+
+    if ( this.player ) {
+      this.player.reset();
+    }
   }
 
   render() {
@@ -183,15 +187,21 @@ class Upload extends Component {
           </div>
           <div className="l-bottom">
             여기를 눌러 촬영 및 업로드 해주세요
-            <div style={{color: 'red'}}>주의</div>
-            <ol className="notice">
-              <li>
-                업로드 후 1분이 경과해야 다시 업로드 가능합니다.
-              </li>
-              <li>
-                
-              </li>
-            </ol>
+
+            <div className="notice">
+              <h4>주의</h4>
+              <ol>
+                <li>
+                  업로드 후 1분이 경과해야 다시 업로드 가능합니다.
+                </li>
+                <li>
+                  동영상 촬영시 화질을 <span className="blue">최저</span>로 낮춰주세요.
+                </li>
+                <li>
+                  동영상은 1분 이내로 찍어주시기 바랍니다
+                </li>
+              </ol>
+            </div>
           </div>
         </button>
         <input style={{display: 'none'}} type="file" onChange={this.fileSelectHandler} ref={this.fileUploadInput}></input>

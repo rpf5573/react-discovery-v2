@@ -97,13 +97,19 @@ class Puzzle extends Component {
   renderPuzzleBoxes(teamCount, boxCount, puzzleColonInfo, randomEniacWords) {
     this.boxes = [];
 
-    // 20( 4 x 5 ), 24( 4 x 6 ), 30( 5 x 6 ), 35( 5 x 7 ), 40( 5 x 8 ), 48( 6 x 8 )
+    // 20( 4 x 5 ), 24( 4 x 6 ), 30( 5 x 6 ), 35( 5 x 7 ), 40( 5 x 8 ), 48( 6 x 8 ), 54( 6 x 9 ), 60( 6 x 10 )
     var classWidth = 'w-25';
-    if ( boxCount == 30 || boxCount == 35 || boxCount == 40 ) {
-      classWidth = 'w-20';
-    } 
-    else if ( boxCount == 48 ) {
-      classWidth = 'w-18';
+    switch( boxCount ) {
+      case 30:
+      case 35:
+      case 40:
+        classWidth = 'w-20';
+        break;
+      case 48:
+      case 54:
+      case 60:
+        classWidth = 'w-18';
+        break;
     }
 
     // 이거 시간 계산좀 해봐야 겠다,, 루프가 꽤 많이 도네, 많이 돌면 2천번은 돌겠는데 ?
@@ -187,16 +193,17 @@ class Puzzle extends Component {
   async openBox(e) {
     let boxNumber = parseInt(e.currentTarget.getAttribute('data-number'));
     let hasWord = e.currentTarget.getAttribute('data-hasword');
-    let point = this.props.mappingPoints.boxOpenGetEmpty;
+    let puzzlePoint = this.props.mappingPoints.boxOpenGetEmpty;
 
     this.updateGrid(boxNumber, this.props.ourTeam);
     console.log( 'updated grid : ', this.grid );
 
     let totalCount = this.checkBingo( boxNumber, this.props.ourTeam );
-    console.log( 'Bingo ! - totalCount : ', totalCount );
+    console.log( 'totalCount : ', totalCount );
+    let bingoPoint = totalCount * this.props.mappingPoints.bingo;
 
     if ( hasWord == 'true' ) {
-      point = this.props.mappingPoints.boxOpenGetWord;
+      puzzlePoint = this.props.mappingPoints.boxOpenGetWord;
     }
     const config = {
       url: '/user/openBox',
@@ -205,7 +212,8 @@ class Puzzle extends Component {
         team: this.props.ourTeam,
         boxNumber,
         type: (hasWord == 'true' ? constants.WORD : constants.EMPTY),
-        point,
+        puzzlePoint,
+        bingoPoint,
         boxOpenUse: this.props.mappingPoints.boxOpenUse,
         teamCount: this.props.teamCount
       }
@@ -213,7 +221,12 @@ class Puzzle extends Component {
     let response = await utils.simpleAxios(axios, config);
     // grid update하구요
     this.socket.emit('open_puzzle_box', response.data);
-    alert( "성공" );
+    if ( bingoPoint > 0 ) {
+      alert( `성공 - ${totalCount}개의 빙고를 맞추셔서 ${bingoPoint}를 추가로 획득하셨습니다` );
+    } else {
+      alert( "성공" );
+    }
+    
   }
 
   async openLastBox(e) {
@@ -259,8 +272,14 @@ class Puzzle extends Component {
       x += 1;
       count++;
 
+      // 딱 3개만 발견해야 하는거니까, 3개째는 추가하고 4개째는 멈춰! 4개째 멈췄으니까 5개째는 당연히 없겠지 !
+      // 왜 이렇게 하냐고? 다 세고 3개 이상인지 체크하는건 비효율 적이기 때문이지
       if ( count == 3) {
         totalCount += 1;
+      }
+      if ( count == 4 ) {
+        // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
+        totalCount -= 1;
         break;
       }
     }
@@ -285,6 +304,10 @@ class Puzzle extends Component {
 
       if ( count == 3) {
         totalCount += 1;
+      }
+      if ( count == 4 ) {
+        // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
+        totalCount -= 1;
         break;
       }
     }
@@ -311,6 +334,10 @@ class Puzzle extends Component {
 
       if ( count == 3) {
         totalCount += 1;
+      }
+      if ( count == 4 ) {
+        // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
+        totalCount -= 1;
         break;
       }
     }
@@ -337,6 +364,10 @@ class Puzzle extends Component {
 
       if ( count == 3) {
         totalCount += 1;
+      }
+      if ( count == 4 ) {
+        // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
+        totalCount -= 1;
         break;
       }
     }
@@ -435,6 +466,12 @@ function mapStateToProps(state, ownProps) {
       break;
     case 48:
       maxLocation = [6,8];
+      break;
+    case 54:
+      maxLocation = [6,9];
+      break;
+    case 60:
+      maxLocation = [6,10];
       break;
   }
 

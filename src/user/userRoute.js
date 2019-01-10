@@ -65,14 +65,21 @@ module.exports = (app, DCQuery, upload) => {
 
       // 돈 체크 합니다잉~
       result = await DCQuery.points.get('useable', req.body.team);
-
       if ( result[0].useable < req.body.boxOpenUse ) {
         return res.status(201).json({ error: '포인트가 부족합니다' });
       }
 
-      await DCQuery.points.updateOneRow({ team: req.body.team, useable: -(req.body.boxOpenUse) });
-      await DCQuery.points.updateOneRow({ team: req.body.team, puzzle: req.body.point });
+      // 퍼즐 먼저 업데이트 하즈아 !
       await DCQuery.puzzle.update( req.body.team, req.body.boxNumber, req.body.type );
+
+      // 포인트 업데이트
+      await DCQuery.points.updateOneRow({ 
+        team: req.body.team, 
+        useable: -(req.body.boxOpenUse),
+        puzzle: req.body.puzzlePoint,
+        bingo: req.body.bingoPoint
+      });
+
       res.status(201).json({
         team: req.body.team,
         boxNumber: req.body.boxNumber

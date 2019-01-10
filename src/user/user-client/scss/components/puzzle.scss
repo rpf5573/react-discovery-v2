@@ -20,6 +20,19 @@
       &.w-18 {
         width: calc(100%/6);
       }
+
+      // 요기만 글자 크기를 좀 작게 만들자. 사이즈가 작으니까 !!
+      &.w-18 {
+        .word {
+          font-size: 28px !important;
+        }
+        .team:before {
+          font-size: 14px !important;
+          width: 20px !important;
+          height: 20px !important;
+        }
+      }
+
       box-sizing: border-box;
       border: 1px solid black;
 

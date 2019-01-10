@@ -17,6 +17,7 @@ function TableRow(props) {
       <td colSpan="2">{props.obj.timer}</td>
       <td colSpan="2">{props.obj.puzzle}</td>
       <td colSpan="2">{props.obj.eniac}</td>
+      <td colSpan="2">{props.obj.bingo}</td>
 
       <td colSpan="2">{props.obj.emptyPuzzleBoxOpenCount}</td>
       <td colSpan="2">{props.obj.wordPuzzleBoxOpenCount}</td>
@@ -54,7 +55,7 @@ class ResultModal extends React.Component {
             <thead>
               <tr>
                 <th rowSpan="2" colSpan="1">TEAM</th>
-                <th colSpan="8">평가점수</th>
+                <th colSpan="10">평가점수</th>
                 <th colSpan="6">구역 점유</th>
                 <th colSpan="4">결과</th>
               </tr>
@@ -63,6 +64,7 @@ class ResultModal extends React.Component {
                 <th colSpan="2">이동시간</th>
                 <th colSpan="2">구역점유</th>
                 <th colSpan="2">문장해독</th>
+                <th colSpan="2">빙고점수</th>
 
                 <th colSpan="2">일반박스</th>
                 <th colSpan="2">글자박스</th>

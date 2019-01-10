@@ -162,6 +162,12 @@ class MappingPointModal extends React.Component {
                 </td>
               </tr>
               <tr>
+                <td>빙고 점수</td>
+                <td>
+                  <PointPart mapping_key="bingo" point={this.props.mappingPoints.bingo} onPointUpdate={this.props.updateMappingPoints}></PointPart>
+                </td>
+              </tr>
+              <tr>
                 <td>문장해독 점수</td>
                 <td>
                   <PointPart mapping_key="eniac" point={this.props.mappingPoints.eniac} onPointUpdate={this.props.updateMappingPoints}></PointPart>

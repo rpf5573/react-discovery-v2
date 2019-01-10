@@ -96,10 +96,11 @@ class DCQuery {
         timer: points[i].timer,
         eniac: points[i].eniac,
         puzzle: points[i].puzzle,
+        bingo: points[i].bingo,
         emptyPuzzleBoxOpenCount: puzzles[i].empty_puzzle_box_open_count,
         wordPuzzleBoxOpenCount: puzzles[i].word_puzzle_box_open_count,
         puzzleBoxOpenRate,
-        totalPoint: points[i].useable + points[i].timer + points[i].eniac + points[i].puzzle,
+        totalPoint: points[i].useable + points[i].timer + points[i].eniac + points[i].puzzle + points[i].bingo,
         rank: teamCount
       }
       rows.push(row);
@@ -182,7 +183,8 @@ class Meta {
       boxOpenGetEmpty: 2000,
       boxOpenGetWord: 4000,
       boxOpenUse: 1000,
-      eniac: 10000
+      eniac: 10000,
+      bingo: 3000
     }
     sql = `UPDATE ${this.table} SET meta_value='${JSON.stringify(mappingPoints)}' WHERE meta_key='mapping_points'`;
     result = await this.mysql.query(sql);
@@ -337,9 +339,10 @@ class Points {
     let timer = obj.hasOwnProperty('timer') ? obj.timer : 0;
     let eniac = obj.hasOwnProperty('eniac') ? obj.eniac : 0;
     let puzzle = obj.hasOwnProperty('puzzle') ? obj.puzzle : 0;
+    let bingo = obj.hasOwnProperty('bingo') ? obj.bingo : 0;
     let temp = obj.hasOwnProperty('temp') ? obj.temp : 0;
 
-    let sql = `UPDATE ${this.table} SET useable = useable + ${useable}, timer = timer + ${timer}, eniac = eniac + ${eniac}, puzzle = puzzle + ${puzzle}, temp = temp + ${temp} WHERE team = ${team}`;
+    let sql = `UPDATE ${this.table} SET useable = useable + ${useable}, timer = timer + ${timer}, eniac = eniac + ${eniac}, puzzle = puzzle + ${puzzle}, bingo = bingo + ${bingo}, temp = temp + ${temp} WHERE team = ${team}`;
     let result = await this.mysql.query(sql);
     return result;
   }
@@ -354,7 +357,7 @@ class Points {
     return result;
   }
   async reset(col = null, team = null) {
-    let sql = `UPDATE ${this.table} SET useable = 0, timer = 0, eniac = 0, puzzle = 0, temp = 0`;
+    let sql = `UPDATE ${this.table} SET useable = 0, timer = 0, eniac = 0, puzzle = 0, bingo = 0, temp = 0`;
     if ( col && team ) {
       sql = `UPDATE ${this.table} SET ${col} = 0 WHERE team = ${team}`;
     }

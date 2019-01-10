@@ -48,6 +48,7 @@ class PuzzleSettings extends React.Component {
     let response = await utils.simpleAxios(axios, config);
     alert( "성공" );
     this.eniacWordInput.current.value = '';
+    this.eniacWordInput.current.placeholder = '';
     this.props.updatePuzzleBoxCount(count);
   }
 
@@ -127,7 +128,7 @@ class PuzzleSettings extends React.Component {
   }
 
   renderPuzzleBoxCountDropdownMenuItems() {
-    let counts = [20, 24, 30, 35, 40, 48];
+    let counts = [20, 24, 30, 35, 40, 48, 54, 60];
     var list = [];
     for ( var i = 0; i < counts.length; i++ ) {
       let isActive = (this.props.puzzleBoxCount == counts[i]) ? true : false;

@@ -105,6 +105,21 @@
     animation: slideLeft 0.6s;
     animation-fill-mode: forwards;
   }
+  .notice {
+    text-align: left;
+    margin-top: 10px;
+    h4 {
+      color: red;
+      text-align: center;
+    }
+    ol {
+      padding-left: 10px;
+    }
+    li {
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+  }
 
   @keyframes slideLeft {
     from {
