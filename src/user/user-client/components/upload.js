@@ -13,6 +13,7 @@ import DeleteForever from '@material-ui/icons/DeleteForever';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import * as loadImage from 'blueimp-load-image';
 
 class Upload extends Component {
 
@@ -47,7 +48,7 @@ class Upload extends Component {
         return alert("파일 사이즈는 100MB를 넘으면 안됩니다");
       }
 
-      this.rotate(file);
+      // this.rotate(file);
 
       const src = URL.createObjectURL(file);
       const type = file.type;
