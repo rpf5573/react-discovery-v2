@@ -20,6 +20,8 @@ class Upload extends Component {
   constructor(props) {
     super(props);
 
+    console.log( 'loadImage : ', loadImage );
+
     this.state = {
       progressVal: null
     }
@@ -32,7 +34,6 @@ class Upload extends Component {
     this.timerCheck = this.timerCheck.bind(this);
     this.changeVideoSrc = this.changeVideoSrc.bind(this);
     this.uploadTimeIntervalCheck = this.uploadTimeIntervalCheck.bind(this);
-    this.imageCanvas = React.createRef();
     // this.rotate = this.rotate.bind(this);
   }
 
@@ -64,6 +65,14 @@ class Upload extends Component {
       if ( mediaType == constants.VIDEO ) {
         this.changeVideoSrc(src, type);
       } 
+      else if ( mediaType == constants.IMAGE ) {
+        console.log( 'this.imageCanvas : ', this.imageCanvas );
+        loadImage(src, (img) => {
+          console.log( 'img src : ', img.current );
+          img.className = 'fit_to_parent'; // css class: { max-width: 100%; max-height: 100%; }
+          ReactDOM.findDOMNode(this.imageCanvas).appendChild(img);
+        });
+      }
       // 일단 안해주면 어떻게 될까 ??
       // else if ( mediaType == constants.IMAGE ) {
       //   this.changeVideoSrc(null, null);
@@ -251,7 +260,9 @@ class Upload extends Component {
         </button>
         <input style={{display: 'none'}} type="file" onChange={this.fileSelectHandler} ref={this.fileUploadInput}></input>
         <div className={previewCN}>
-          <img src={this.props.fileInfo.src}></img>
+          <div className="imageCanvas" ref={(ref) => this.imageCanvas = ref}>
+            <img src={this.props.fileInfo.src}></img>
+          </div>
           <div className="videoPlayer">
             <div data-vjs-player>
               <video ref={ node => this.videoNode = node } className="video-js"></video>
