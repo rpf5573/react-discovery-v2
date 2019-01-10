@@ -5,9 +5,6 @@ module.exports = {
   name: 'user',
   entry: [join(__dirname, '/index.js')],
   devtool: 'source-map',
-  node: {
-    fs: 'empty' // 가끔 에러가 나오더라고, 그래서 이거를 넣어줌 https://github.com/MrRio/jsPDF/issues/1764
-  },
   output: {
     filename: "main.js",
     path: join(__dirname, '../../../public/user/'),
