@@ -20,17 +20,11 @@ class App extends Component {
       password: null
     }
     this.handlePasswordInput = this.handlePasswordInput.bind(this);
-    this.handleLoginBtnClick = this.handleLoginBtnClick.bind(this);
+    this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
   }
 
-  handlePasswordInput(e) {
-    let val = e.currentTarget.value;
-    this.setState({
-      password: val
-    });
-  }
-
-  async handleLoginBtnClick(e) {
+  handleLoginSubmit(e) {
+    e.preventDefault();
     if ( this.state.password ) {
       const config = {
         method: 'POST',
@@ -47,6 +41,13 @@ class App extends Component {
     }
   }
 
+  handlePasswordInput(e) {
+    let val = e.currentTarget.value;
+    this.setState({
+      password: val
+    });
+  }
+
   render() {
     return (
       <div className="page">
@@ -60,10 +61,10 @@ class App extends Component {
             </div>
           </div>
           <div className="l-bottom">
-            <div className="login-container">
+            <form className="login-container" onSubmit={this.handleLoginSubmit}>
               <input className="form-control" placeholder="비밀번호" onChange={this.handlePasswordInput}></input>
-              <button className="btn btn-primary btn-block" onClick={this.handleLoginBtnClick}>로그인</button>
-            </div>
+              <button type="submit" className="btn btn-primary btn-block">로그인</button>
+            </form>
           </div>
         </div>
       </div>
