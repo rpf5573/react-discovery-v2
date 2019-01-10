@@ -193,7 +193,7 @@ module.exports = (app, DCQuery, upload) => {
       let result = await DCQuery.timer.check(req.body.team, req.body.laptime);
       if ( ! result.state ) {
         return res.status(201).json({
-          error: "타이머가 꺼져있습니다. 잠시 후에 다시 시도해 주시기 바랍니다"
+          error: "교육 진행 전입니다"
         });
       }
 
