@@ -13,7 +13,6 @@ import DeleteForever from '@material-ui/icons/DeleteForever';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-import EXIF from 'exif';
 
 class Upload extends Component {
 
@@ -141,7 +140,7 @@ class Upload extends Component {
   }
 
   rotate(file) {
-    EXIF.getData(file,function() {
+    let test = EXIF.getData(file,function() {
       var orientation = EXIF.getTag(this,"Orientation");
       var can = document.createElement("canvas");
       var ctx = can.getContext('2d');
@@ -179,6 +178,8 @@ class Upload extends Component {
       thisImage.src = URL.createObjectURL(file);
     
     });
+
+    console.log( 'test : ', test );
   }
 
   changeVideoSrc(src, type) {
