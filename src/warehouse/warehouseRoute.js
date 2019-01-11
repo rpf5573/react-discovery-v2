@@ -27,16 +27,18 @@ module.exports = (app, WHQuery) => {
       return res.redirect('/?message=' + encodeURIComponent('관리자 페이지에서 다시 접속해 주세요'));
     }
   });
-  app.post('/warehouse/post-info/insert', async (req, res) => {
+  app.post('/warehouse/post-info/add', async (req, res) => {
     try {
-      await WHQuery.insert(req.body.postInfo);
-      return res.sendStatus(201);
+      let result = await WHQuery.insert(req.body.postInfo);
+      return res.status(201).json({
+        id: result.insertId
+      });
     } catch(e) {
       console.log( 'e : ', e );
       return res.sendStatus(401);
     }
   });
-  app.post('/warehouse/post-info/update', async (req, res) => {
+  app.post('/warehouse/post-info/edit', async (req, res) => {
     try {
       await WHQuery.update(req.body.postInfo);
       return res.sendStatus(201);
@@ -47,7 +49,7 @@ module.exports = (app, WHQuery) => {
   });
   app.post('/warehouse/post-info/remove', async (req, res) => {
     try {
-      await WHQuery.remove(req.body.mission);
+      await WHQuery.remove(req.body.id);
       return res.sendStatus(201);
     } catch(e) {
       console.log( 'e : ', e );

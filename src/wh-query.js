@@ -20,7 +20,7 @@ class WHQuery {
   async insert(postInfo) {
     postInfo.googleDriveURL = encodeURI(postInfo.googleDriveURL);
     let sql = `INSERT INTO ${this.table} 
-              (mission, google_drive_url) 
+              (mission, google_drive_url)
               VALUES('${postInfo.mission}', '${postInfo.googleDriveURL}')`;
     let result = await this.mysql.query(sql);
     return result;
@@ -28,13 +28,13 @@ class WHQuery {
   async update(postInfo) {
     postInfo.googleDriveURL = encodeURI(postInfo.googleDriveURL);
     let sql = `UPDATE ${this.table}
-              SET google_drive_url='${postInfo.googleDriveURL}' 
-              WHERE mission='${postInfo.mission}'`;
+              SET google_drive_url='${postInfo.googleDriveURL}', mission='${postInfo.mission}'
+              WHERE id=${postInfo.id}`;
     let result = await this.mysql.query(sql);
     return result;
   }
-  async remove(mission) {
-    let sql = `DELETE FROM ${this.table} WHERE mission='${mission}'`;
+  async remove(id) {
+    let sql = `DELETE FROM ${this.table} WHERE id='${id}'`;
     let result = this.mysql.query(sql);
     return result;
   }

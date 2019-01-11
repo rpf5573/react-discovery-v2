@@ -430,7 +430,7 @@ class PostInfo {
     const result = await this.mysql.query(sql);
     return result;
   }
-  async add(postInfo) {
+  async insert(postInfo) {
     postInfo.googleDriveURL = encodeURI(postInfo.googleDriveURL);
     let sql = `INSERT INTO ${this.table}
               (post, mission, google_drive_url)

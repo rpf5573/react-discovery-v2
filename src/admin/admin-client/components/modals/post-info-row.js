@@ -26,6 +26,7 @@ class PostInfoRow extends React.Component {
     this.handleApplyBtnClick = this.handleApplyBtnClick.bind(this);
     this.handleAddComplete = this.handleAddComplete.bind(this);
     this.handleEditComplete = this.handleEditComplete.bind(this);
+    this.validateEmpty = this.validateEmpty.bind(this);
   }
 
   handleEditBtnClick(e) {
@@ -73,38 +74,9 @@ class PostInfoRow extends React.Component {
   }
 
   async handleAddComplete() {
-    const post = parseInt(this.postInput.current.value);
-    if ( isNaN(post) || !post ) {
-      alert( 'ERROR : 포스트를 설정해 주시기 바랍니다' );
+    const postInfo = this.validateEmpty();
+    if ( ! postInfo ) {
       return;
-    }
-
-    if ( ! this.props.validatePostDuplication(post) ){
-      alert( 'ERROR : 해당 포스트는 이미 존재합니다' );
-      return;
-    }
-  
-    let mission = this.missionInput.current.value;
-    if ( !mission ) {
-      alert( 'ERROR : 미션을 설정해 주시기 바랍니다' );
-      return;
-    }
-
-    let googleDriveURL = this.googleDriveURLInput.current.value;
-    if ( !googleDriveURL ) {
-      alert( 'ERROR : 구글드라이브 주소를 입력해 주시기 바랍니다' );
-      return;
-    }
-
-    if ( ! utils.isValidURL(googleDriveURL) ) {
-      alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
-      return;
-    }
-
-    let postInfo = {
-      post,
-      mission,
-      googleDriveURL
     }
 
     const config = {
@@ -122,42 +94,12 @@ class PostInfoRow extends React.Component {
   }
 
   async handleEditComplete() {
-    const originalPost = this.state.post;
-    const post = parseInt(this.postInput.current.value);
-    if ( isNaN(post) || !post ) {
-      alert( 'ERROR : 포스트를 설정해 주시기 바랍니다' );
+    
+    const postInfo = this.validateEmpty();
+    if ( ! postInfo ) {
       return;
     }
-
-    // 기존에 입력한거랑 다르면서 , 다른 포스트랑 같다면 ! => 에러가 있는거지 !
-    if ( (originalPost != post) && ! this.props.validatePostDuplication(post) ) {
-      alert( 'ERROR : 해당 포스트는 이미 존재합니다' );
-      return;
-    }
-  
-    let mission = this.missionInput.current.value;
-    if ( !mission ) {
-      alert( 'ERROR : 미션을 설정해 주시기 바랍니다' );
-      return;
-    }
-
-    let googleDriveURL = this.googleDriveURLInput.current.value;
-    if ( !googleDriveURL ) {
-      alert( 'ERROR : 구글드라이브 주소를 입력해 주시기 바랍니다' );
-      return;
-    }
-
-    if ( ! utils.isValidURL(googleDriveURL) ) {
-      alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
-      return;
-    }
-
-    let postInfo = {
-      originalPost,
-      post,
-      mission,
-      googleDriveURL
-    }
+    postInfo.originalPost = this.state.post;
 
     const config = {
       method: 'POST',
@@ -169,8 +111,50 @@ class PostInfoRow extends React.Component {
 
     await utils.simpleAxios(axios, config);
     this.props.onEdit(postInfo);
-    
+
     alert("성공");
+  }
+
+  validateEmpty() {
+    const post = parseInt(this.postInput.current.value);
+    if ( isNaN(post) || !post ) {
+      alert( 'ERROR : 포스트를 설정해 주시기 바랍니다' );
+      return false;
+    }
+
+    if ( this.state.isNew ) {
+      if ( ! this.props.validatePostDuplication(post) ){
+        alert( 'ERROR : 해당 포스트는 이미 존재합니다' );
+        return false;
+      }
+    } 
+    else if ( this.state.isEditing ) {
+      const originalPost = this.state.post;
+      // 기존에 입력한거랑 다르면서 , 다른 포스트랑 같다면 ! => 에러가 있는거지 !
+      if ( (originalPost != post) && ! this.props.validatePostDuplication(post) ) {
+        alert( 'ERROR : 해당 포스트는 이미 존재합니다' );
+        return false;
+      }
+    }
+  
+    let mission = this.missionInput.current.value;
+    if ( !mission ) {
+      alert( 'ERROR : 미션을 설정해 주시기 바랍니다' );
+      return false;
+    }
+
+    let googleDriveURL = this.googleDriveURLInput.current.value;
+    if ( !googleDriveURL ) {
+      alert( 'ERROR : 구글드라이브 주소를 입력해 주시기 바랍니다' );
+      return false;
+    }
+
+    if ( ! utils.isValidURL(googleDriveURL) ) {
+      alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
+      return false;
+    }
+
+    return { post, mission, googleDriveURL };
   }
 
   render() {

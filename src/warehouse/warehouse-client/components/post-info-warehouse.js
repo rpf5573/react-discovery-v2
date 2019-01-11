@@ -14,7 +14,6 @@ class PostInfoWarehouse extends React.Component {
       newRows: 0
     }
     this.handleAdd = this.handleAdd.bind(this);
-    this.validateAdd = this.validateAdd.bind(this);
     this.handleCancelAdd = this.handleCancelAdd.bind(this);
     this.renderNewRows = this.renderNewRows.bind(this);
     this.onAdd = this.onAdd.bind(this);
@@ -33,15 +32,6 @@ class PostInfoWarehouse extends React.Component {
     this.setState({
       newRows: this.state.newRows - 1
     });
-  }
-
-  validateAdd(mission) {
-    for( var i = 0; i < this.props.postInfos.length; i++ ) {
-      if ( mission == this.props.postInfos[i].mission ) {
-        return false;
-      }
-    }
-    return true;
   }
 
   onAdd(postInfo) {
@@ -63,9 +53,8 @@ class PostInfoWarehouse extends React.Component {
           key={utils.getRandomInteger(1, 5000)}
           postInfo={emptyPostInfo}
           onAdd={this.onAdd}
-          onUpdate={this.props.updatePostInfo}
+          onEdit={this.props.updatePostInfo}
           onRemove={this.props.removePostInfo}
-          validateAdd={this.validateAdd}
           onCancelAdd={this.handleCancelAdd}></PostInfoRow>
       );
     }
@@ -93,7 +82,7 @@ class PostInfoWarehouse extends React.Component {
               <PostInfoRow
                 key={utils.getRandomInteger(1, 5000)}
                 postInfo={postInfo} 
-                onUpdate={this.props.updatePostInfo} 
+                onEdit={this.props.updatePostInfo} 
                 onRemove={this.props.removePostInfo} ></PostInfoRow> ) }
             { this.renderNewRows(this.state.newRows) }
           </tbody>

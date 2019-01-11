@@ -10,6 +10,7 @@ class PostInfoRow extends React.Component {
 
     this.state = {
       isEditing: false,
+      id: this.props.postInfo.id,
       mission: this.props.postInfo.mission,
       googleDriveURL: this.props.postInfo.googleDriveURL,  // naming 지못미...
       isNew: (this.props.onCancelAdd ? true : false),
@@ -21,8 +22,10 @@ class PostInfoRow extends React.Component {
     this.handleEditBtnClick = this.handleEditBtnClick.bind(this);
     this.handleRemoveBtnClick = this.handleRemoveBtnClick.bind(this);
     this.handleCancelBtnClick = this.handleCancelBtnClick.bind(this);
-    this.handleAddBtnClick = this.handleAddBtnClick.bind(this);
-    this.handleUpdateBtnClick = this.handleUpdateBtnClick.bind(this);
+    this.handleApplyBtnClick = this.handleApplyBtnClick.bind(this);
+    this.handleAddComplete = this.handleAddComplete.bind(this);
+    this.handleEditComplete = this.handleEditComplete.bind(this);
+    this.validateEmpty = this.validateEmpty.bind(this);
   }
 
   handleEditBtnClick(e) {
@@ -40,6 +43,8 @@ class PostInfoRow extends React.Component {
     this.setState({
       isEditing: false
     });
+
+    this.missionInput.current.value = '';
     this.googleDriveURLInput.current.value = '';
   }
 
@@ -48,152 +53,107 @@ class PostInfoRow extends React.Component {
       method: 'POST',
       url: '/warehouse/post-info/remove',
       data: {
-        mission: this.state.mission
+        id: this.state.id
       }
     };
-    let response = await utils.simpleAxios(axios, config);
-    this.props.onRemove(this.state.mission);
-    alert("성공");
-  }
-
-  async handleAddBtnClick(e) {
-    let mission = this.missionInput.current.value;
-    if ( !mission ) {
-      return alert( 'ERROR : 미션을 설정해 주시기 바랍니다' );
-    }
-
-    if ( ! this.props.validateAdd(mission) ) {
-      return alert("해당 미션은 이미 존재합니다");
-    }
-
-    let googleDriveURL = this.googleDriveURLInput.current.value;
-    if ( !googleDriveURL ) {
-      alert( 'ERROR : 구글드라이브 주소를 입력해 주시기 바랍니다' );
-      return;
-    }
-
-    if ( ! utils.isValidURL(googleDriveURL) ) {
-      alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
-      return;
-    }
-
-    let postInfo = {
-      mission,
-      googleDriveURL
-    };
-
-    const config = {
-      method: 'POST',
-      url: '/warehouse/post-info/insert',
-      data: {
-        postInfo
-      }
-    };
-
-    let response = await utils.simpleAxios(axios, config);
-    this.props.onAdd(postInfo);
-    alert("성공");
-  }
-
-  async handleUpdateBtnClick(e) {
-    let googleDriveURL = this.googleDriveURLInput.current.value;
-    if ( !googleDriveURL ) {
-      alert( 'ERROR : 구글드라이브 주소를 입력해 주시기 바랍니다' );
-      return;
-    }
-
-    if ( ! utils.isValidURL(googleDriveURL) ) {
-      alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
-      return;
-    }
-
-    let postInfo = {
-      mission: this.state.mission,
-      googleDriveURL
-    };
-
-    const config = {
-      method: 'POST',
-      url: '/warehouse/post-info/update',
-      data: {
-        postInfo
-      }
-    };
-
-    let response = await utils.simpleAxios(axios, config);
-    this.props.onUpdate(postInfo);
+    await utils.simpleAxios(axios, config);
+    this.props.onRemove(this.state.id);
     alert("성공");
   }
 
   async handleApplyBtnClick(e) {
-
     if ( this.state.isNew ) {
-      let mission = this.missionInput.current.value;
-      if ( !mission ) {
-        alert( 'ERROR : 미션을 설정해 주시기 바랍니다' );
-        return;
-      }
-
-      if ( ! this.props.validateAdd ) {
-        return alert("해당 미션은 이미 존재합니다");
-      }
+      this.handleAddComplete();
     }
+    else if ( this.state.isEditing ) {
+      this.handleEditComplete();
+    } else {
+      alert( "ERROR - 알수없는 동작입니다" );
+    }
+  }
 
-    let googleDriveURL = this.googleDriveURLInput.current.value;
-    if ( !googleDriveURL ) {
-      alert( 'ERROR : 구글드라이브 주소를 입력해 주시기 바랍니다' );
+  async handleAddComplete() {
+    let postInfo = this.validateEmpty();
+
+    if ( ! postInfo ) {
       return;
     }
-
-    if ( ! utils.isValidURL(googleDriveURL) ) {
-      alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
-      return;
-    }
-
-    let postInfo = {
-      mission,
-      googleDriveURL
-    };
-
     const config = {
       method: 'POST',
-      url: `/warehouse/post-info/${this.state.isNew ? 'insert' : 'update'}`,
+      url: '/warehouse/post-info/add',
       data: {
         postInfo
       }
     };
 
     let response = await utils.simpleAxios(axios, config);
-    if ( this.state.isNew ) {
-      this.props.onAdd(postInfo);
-    } else {
-      this.props.onUpdate(postInfo);
-    }
+    postInfo.id = response.data.id;
+    this.props.onAdd(postInfo);
     alert("성공");
+  }
+
+  async handleEditComplete() {
+    let postInfo = this.validateEmpty();
+    if ( ! postInfo ) {
+      return;
+    }
+    postInfo.id = this.state.id;
+    const config = {
+      method: 'POST',
+      url: '/warehouse/post-info/edit',
+      data: {
+        postInfo
+      }
+    };
+
+    let response = await utils.simpleAxios(axios, config);
+    this.props.onEdit(postInfo);
+    alert("성공");
+  }
+
+  validateEmpty() {
+    let mission = this.missionInput.current.value;
+    if ( !mission ) {
+      alert( 'ERROR : 미션을 설정해 주시기 바랍니다' );
+      return false;
+    }
+
+    let googleDriveURL = this.googleDriveURLInput.current.value;
+    if ( !googleDriveURL ) {
+      alert( 'ERROR : 구글드라이브 주소를 입력해 주시기 바랍니다' );
+      return false;
+    }
+
+    if ( ! utils.isValidURL(googleDriveURL) ) {
+      alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
+      return false;
+    }
+
+    return { mission, googleDriveURL };
   }
 
   render() {
     return (
       <tr className="post-info-row">
         <td>
-          <span className={ cn({ 'd-none': this.state.isNew }) }>{this.state.mission}</span>
-          <input className={cn({
-            'form-control': true,
-            'd-block': this.state.isNew,
-          })} ref={this.missionInput}></input>
-        </td>
-        <td>
-          <span className={ cn({ 'd-none': (this.state.isEditing || this.state.isNew ) }) }>{this.state.googleDriveURL}</span>
+          <span className={ cn({ 'd-none': (this.state.isEditing || this.state.isNew) }) }>{this.state.mission}</span>
           <input className={cn({
             'form-control': true,
             'd-block': (this.state.isEditing || this.state.isNew)
-          })} ref={this.googleDriveURLInput}></input>
+          })} ref={this.missionInput} defaultValue={this.state.isEditing ? this.state.mission : ''}></input>
+        </td>
+        <td>
+          <span className={ cn({ 'd-none': (this.state.isEditing || this.state.isNew) }) }>{this.state.googleDriveURL}</span>
+          <input className={cn({
+            'form-control': true,
+            'd-block': (this.state.isEditing || this.state.isNew)
+          })} ref={this.googleDriveURLInput} defaultValue={this.state.isEditing ? this.state.googleDriveURL : ''}></input>
         </td>
         <td>
           <Button size="sm" outline color="success" className={cn({ 'mr-2': true, 'd-none': (this.state.isEditing || this.state.isNew) })} onClick={this.handleEditBtnClick}>수정</Button>
           <Button size="sm" outline color="danger" className={cn({ 'd-none': (this.state.isEditing || this.state.isNew) })} onClick={this.handleRemoveBtnClick}>삭제</Button>
           <Button size="sm" outline color="secondary" className={cn({ 'cancel-btn': true, 'd-inline-block': (this.state.isEditing || this.state.isNew), 'mr-2': true })} onClick={this.handleCancelBtnClick}>취소</Button>
-          <Button size="sm" outline color="primary" className={cn({ 'apply-btn': true, 'd-inline-block': (this.state.isEditing || this.state.isNew) })} onClick={ this.state.isNew ? this.handleAddBtnClick : this.handleUpdateBtnClick }>적용</Button>
+          <Button size="sm" outline color="primary" className={cn({ 'apply-btn': true, 'd-inline-block': (this.state.isEditing || this.state.isNew) })} onClick={ this.handleApplyBtnClick }>적용</Button>
         </td>
       </tr>
     );
