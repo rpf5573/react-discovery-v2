@@ -78,7 +78,7 @@ class Puzzle extends Component {
         var node = ReactDOM.findDOMNode(this.boxes[data.boxNumber-1]);
         node.classList.add('flipping', `owner-${data.team}`);
       } else {
-        console.error( "박스의 개수가 일치하지 않습니다" );
+        console.error( "구역의 개수가 일치하지 않습니다" );
       }
     });
 
@@ -224,7 +224,7 @@ class Puzzle extends Component {
       // grid update하구요
       this.socket.emit('open_puzzle_box', response.data);
       if ( bingoPoint > 0 ) {
-        alert( `성공 - ${totalCount}개의 빙고를 맞추셔서 ${bingoPoint}를 추가로 획득하셨습니다` );
+        alert( `성공 - ${totalCount}개의 구역연결을 해서 ${bingoPoint}를 추가로 획득하셨습니다` );
       } else {
         alert( "성공" );
       }

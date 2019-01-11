@@ -34,7 +34,7 @@ class BottomNavigation extends Component {
         </NavLink>
         <NavLink to="/user/page/puzzle">
           <div className="icon"><PuzzleIcon /></div>
-          <div className="text">박스</div>
+          <div className="text">구역</div>
           <div className={rippleCN}></div>
         </NavLink>
         <NavLink to="/user/page/upload">

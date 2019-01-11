@@ -65,7 +65,7 @@ class PuzzlePage extends Component {
 
     // 박스가 있어야 그리던가 말던가 하지 !
     if ( ! boxCount ) {
-      return (<div>박스 설정을 먼저 해주세요</div>);
+      return (<div>구역 설정을 먼저 해주세요</div>);
     }
 
     this.boxes = [];
@@ -168,11 +168,11 @@ class PuzzleStatusModal extends React.Component {
     return (
       <Modal isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} onOpened={this.onOpened} size="md">
         <ModalHeader toggle={this.close}>
-          유저의 박스 점유 현황
+          유저의 구역 점유 현황
         </ModalHeader>
         <ModalBody>
           { (this.props.puzzleBoxCount > 0 && this.state.puzzleColonInfo.length > 0) ? <PuzzlePage lastBoxGoogleDriveUrl={this.props.lastBoxGoogleDriveUrl} teamCount={this.props.teamCount} count={this.props.puzzleBoxCount} puzzleColonInfo={this.state.puzzleColonInfo} randomEniacWords={this.props.randomEniacWords} ></PuzzlePage> : '' }
-          { !this.props.puzzleBoxCount ? <Alert color="warning"> 박스 설정을 해주세요 </Alert> : '' }
+          { !this.props.puzzleBoxCount ? <Alert color="warning"> 구역 설정을 해주세요 </Alert> : '' }
         </ModalBody>
       </Modal>
     );

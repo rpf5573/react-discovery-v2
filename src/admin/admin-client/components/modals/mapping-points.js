@@ -145,19 +145,19 @@ class MappingPointModal extends React.Component {
                 </td>
               </tr>
               <tr>
-                <td>글자 없는 박스</td>
+                <td>글자 없는 구역</td>
                 <td>
                   <PointPart mapping_key="boxOpenGetEmpty" point={this.props.mappingPoints.boxOpenGetEmpty} onPointUpdate={this.props.updateMappingPoints}></PointPart>
                 </td>
               </tr>
               <tr>
-                <td>글자 있는 박스</td>
+                <td>글자 있는 구역</td>
                 <td>
                   <PointPart mapping_key="boxOpenGetWord" point={this.props.mappingPoints.boxOpenGetWord} onPointUpdate={this.props.updateMappingPoints}></PointPart>
                 </td>
               </tr>
               <tr>
-                <td>박스 열때 필요한 점수</td>
+                <td>구역점수시 필요한 점수</td>
                 <td>
                   <PointPart mapping_key="boxOpenUse" point={this.props.mappingPoints.boxOpenUse} onPointUpdate={this.props.updateMappingPoints}></PointPart>
                 </td>

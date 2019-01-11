@@ -236,7 +236,7 @@ module.exports = (app, DCQuery, upload) => {
         return res.sendStatus(201);
       } else {
         return res.status(201).json({
-          error: "현재 해당 박스는 열 수 없습니다"
+          error: "현재 해당 구역는 오픈할 수 없습니다"
         });
       }
     } catch (e) {

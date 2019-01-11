@@ -66,8 +66,8 @@ class ResultModal extends React.Component {
                 <th colSpan="2">문장해독</th>
                 <th colSpan="2">구역연결점수</th>
 
-                <th colSpan="2">일반박스</th>
-                <th colSpan="2">글자박스</th>
+                <th colSpan="2">일반구역</th>
+                <th colSpan="2">글자구역</th>
                 <th colSpan="2">점유율</th>
 
                 <th colSpan="2">평가점수 합산</th>
@@ -107,7 +107,7 @@ class ResultModal extends React.Component {
       });
     } else {
       this.setState({
-        error: '팀설정과 박스설정을 먼저 완료해 주시기 바랍니다'
+        error: '팀설정과 구역설정을 먼저 완료해 주시기 바랍니다'
       });
     }
   }

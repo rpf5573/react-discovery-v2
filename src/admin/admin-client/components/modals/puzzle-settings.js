@@ -55,7 +55,7 @@ class PuzzleSettings extends React.Component {
 
   async updateEniacWords() {
     if ( ! this.props.puzzleBoxCount ) {
-      return alert( 'ERROR : 박스 개수를 먼저 설정해 주세요' );
+      return alert( 'ERROR : 구역 개수를 먼저 설정해 주세요' );
     }
 
     const val = this.eniacWordInput.current.value;
@@ -64,7 +64,7 @@ class PuzzleSettings extends React.Component {
 
       // 같아서도 안되! 박스가 20개인데, 글자개수가 20개면 안되 !! 마지막 박스는 안그려 지니까 !
       if ( this.props.puzzleBoxCount <= arr.length ) {
-        return alert("ERROR : 글자개수가 박스개수보다 적어야 합니다");
+        return alert("ERROR : 글자개수가 구역개수보다 적어야 합니다");
       }
 
       // 마지막 박스는 어차피 글자가 안들어 가니까 원래 박스 개수에서 1개를 빼줘야쥬~
@@ -146,12 +146,12 @@ class PuzzleSettings extends React.Component {
     return (
       <Modal isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} size="lg">
         <ModalHeader toggle={this.close}>
-          <span>박스 설정</span>
+          <span>구역 설정</span>
         </ModalHeader>
         <ModalBody>
           <Row>
             <Col xs="12">
-              <Label>박스 개수 설정</Label>
+              <Label>구역 개수 설정</Label>
             </Col>
             <Col xs="12" className={"d-flex justify-content-between"}>
               <div className="l-left">
@@ -166,7 +166,7 @@ class PuzzleSettings extends React.Component {
               </div>
               <div className="l-right d-flex w-75 align-items-center">
                 <div className="l-left no-wrap-text mr-2">
-                  박스 메세지 :
+                  구역 메세지 :
                 </div>
                 <InputGroup className="l-right">
                   <input className={"form-control"} placeholder={this.props.eniacWords} ref={this.eniacWordInput}></input>
@@ -178,7 +178,7 @@ class PuzzleSettings extends React.Component {
           <div className="divider--uncolor"></div>
           <Row>
             <Col xs="12">
-              <Label>최종박스 동영상 구글드라이브 주소</Label>
+              <Label>최종구역 동영상 구글드라이브 주소</Label>
             </Col>
             <Col xs="12">
               <InputGroup>
@@ -192,7 +192,7 @@ class PuzzleSettings extends React.Component {
             <Col xs="6">
               <div className="d-flex">
                 <span className="mr-3">
-                <FontAwesomeIcon icon={faQuestionCircle} /> 박스 :  
+                <FontAwesomeIcon icon={faQuestionCircle} /> 구역 :  
                 </span>
                 <div className="radio abc-radio abc-radio-primary mr-3">
                   <input type="radio" id="lastBoxStateRadioInput01" onChange={this.updateLastBoxState} checked={ this.props.lastBoxState ? true : false } value={constants.ON}/>
