@@ -15,33 +15,34 @@ class Point extends Component {
   }
 
   async componentDidMount() {
-    let response = await utils.simpleAxios(axios, '/user/get-updated-points');
-    this.props.updatePoints(response.data);
-    this.setState({
-      chartSize: {
-        horizontal: {
-          width: this.chartWrapper.current.offsetWidth - 20,
-          height: this.chartWrapper.current.offsetHeight - 40, // for top, bottom padding
-          margin: {
-            top: 0,
-            right: 10,
-            left: 0,
-            bottom: 0
+    utils.simpleAxios(axios, '/user/get-updated-points').then(response => {
+      this.props.updatePoints(response.data);
+      this.setState({
+        chartSize: {
+          horizontal: {
+            width: this.chartWrapper.current.offsetWidth - 20,
+            height: this.chartWrapper.current.offsetHeight - 40, // for top, bottom padding
+            margin: {
+              top: 0,
+              right: 10,
+              left: 0,
+              bottom: 0
+            },
+            barSize: (this.props.chartData.length < 9) ? 30 : 20
           },
-          barSize: (this.props.chartData.length < 9) ? 30 : 20
-        },
-        vertical: {
-          width: this.chartWrapper.current.offsetWidth - 20,
-          height: this.chartWrapper.current.offsetHeight - 40, // for top, bottom padding
-          margin: {
-            top: 0,
-            right: 10,
-            left: -20,
-            bottom: 0
-          },
-          barSize: (this.props.chartData.length < 9) ? 30 : 20
+          vertical: {
+            width: this.chartWrapper.current.offsetWidth - 20,
+            height: this.chartWrapper.current.offsetHeight - 40, // for top, bottom padding
+            margin: {
+              top: 0,
+              right: 10,
+              left: -20,
+              bottom: 0
+            },
+            barSize: (this.props.chartData.length < 9) ? 30 : 20
+          }
         }
-      }
+      });
     });
   }
 

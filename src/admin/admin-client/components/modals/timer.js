@@ -44,10 +44,11 @@ class TimerModal extends React.Component {
         laptime: this.props.laptime
       }
     };
-    let response = await utils.simpleAxios(axios, config);
-    let newTeamTimers = response.data;
-    this.props.updateTeamTimerState(newTeamTimers);
-    alert( team+'팀의 타이머를 '+actionWord+'하였습니다' );
+    utils.simpleAxios(axios, config).then(response => {
+      let newTeamTimers = response.data;
+      this.props.updateTeamTimerState(newTeamTimers);
+      alert( team+'팀의 타이머를 '+actionWord+'하였습니다' );
+    });
   }
 
   async allTimerStart(e) {
@@ -61,10 +62,11 @@ class TimerModal extends React.Component {
       }
     };
 
-    let response = await utils.simpleAxios(axios, config);
-    let newTeamTimers = response.data;
-    this.props.updateTeamTimerState(newTeamTimers);
-    alert("전체 타이머를 시작하였습니다");
+    utils.simpleAxios(axios, config).then(response => {
+      let newTeamTimers = response.data;
+      this.props.updateTeamTimerState(newTeamTimers);
+      alert("전체 타이머를 시작하였습니다");
+    });
   }
 
   async updateLapTime(e) {
@@ -84,12 +86,13 @@ class TimerModal extends React.Component {
       }
     };
 
-    let response = await utils.simpleAxios(axios, config);
-    this.lapTimeInput.value = '';
-    const time = utils.secondToMinute(laptime);
-    this.lapTimeInput.placeholder = time;
-    this.props.updateLapTime(laptime);
-    alert( "성공 : 랩타임이 " + time + "로 설정되었습니다" );
+    utils.simpleAxios(axios, config).then(() => {
+      this.lapTimeInput.value = '';
+      const time = utils.secondToMinute(laptime);
+      this.lapTimeInput.placeholder = time;
+      this.props.updateLapTime(laptime);
+      alert( "성공 : 랩타임이 " + time + "로 설정되었습니다" );
+    });
   }
 
   async updateEniacState(e) {
@@ -102,9 +105,10 @@ class TimerModal extends React.Component {
         eniacState: val
       }
     };
-    let response = await utils.simpleAxios(axios, config);
-    this.props.updateEniacState(val);
-    alert("성공");
+    utils.simpleAxios(axios, config).then(() => {
+      this.props.updateEniacState(val);
+      alert("성공");
+    });
   }
 
   renderTimerManageBtns(count) {

@@ -58,16 +58,17 @@ class PointReward extends React.Component {
           points
         }
       };
-      let response = await utils.simpleAxios(axios, config);
-      for( var i = 0; i < this.pointInputFields.length; i++ ) {
-        let input = this.pointInputFields[i];
-        let val = parseInt(input.value);
-        if ( ! isNaN(val) && val > 0 ) {
-          input.value = '';
-          input.placeholder = val;
+      utils.simpleAxios(axios, config).then(() => {
+        for( var i = 0; i < this.pointInputFields.length; i++ ) {
+          let input = this.pointInputFields[i];
+          let val = parseInt(input.value);
+          if ( ! isNaN(val) && val > 0 ) {
+            input.value = '';
+            input.placeholder = val;
+          }
         }
-      }
-      alert( "성공" );
+        alert( "성공" );
+      });
     }
   }
 

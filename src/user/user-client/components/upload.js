@@ -110,9 +110,10 @@ class Upload extends Component {
       }
     };
 
-    await utils.simpleAxios(axios, config);
-    alert(`성공 !`);
-    this.reset();
+    utils.simpleAxios(axios, config).then(() => {
+      alert(`성공 !`);
+      this.reset();
+    });
   }
 
   async cancelPreview(e) {

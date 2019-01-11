@@ -45,11 +45,12 @@ class PuzzleSettings extends React.Component {
         puzzleBoxCount: count
       }
     };
-    let response = await utils.simpleAxios(axios, config);
-    alert( "성공" );
-    this.eniacWordInput.current.value = '';
-    this.eniacWordInput.current.placeholder = '';
-    this.props.updatePuzzleBoxCount(count);
+    utils.simpleAxios(axios, config).then(() => {
+      alert( "성공" );
+      this.eniacWordInput.current.value = '';
+      this.eniacWordInput.current.placeholder = '';
+      this.props.updatePuzzleBoxCount(count);
+    });
   }
 
   async updateEniacWords() {
@@ -81,11 +82,12 @@ class PuzzleSettings extends React.Component {
         }
       };
 
-      let response = await utils.simpleAxios(axios, config);
-      this.props.updateEniacWords(val);
-      this.props.updateRandomEniacWords(resultArr);
-      alert("성공");
-      this.eniacWordInput.current.value = '';
+      utils.simpleAxios(axios, config).then(() => {
+        this.props.updateEniacWords(val);
+        this.props.updateRandomEniacWords(resultArr);
+        alert("성공");
+        this.eniacWordInput.current.value = '';
+      });
     }
   }
 
@@ -104,11 +106,11 @@ class PuzzleSettings extends React.Component {
       }
     };
 
-    let response = await utils.simpleAxios(axios, config);
-    this.props.updateLastBoxGoogleDriveUrl(url);
-    alert("성공");
-    this.lastBoxGoogleDriveUrlInput.current.value = '';
-    
+    utils.simpleAxios(axios, config).then(() => {
+      this.props.updateLastBoxGoogleDriveUrl(url);
+      alert("성공");
+      this.lastBoxGoogleDriveUrlInput.current.value = '';
+    });
   }
 
   async updateLastBoxState(e) {
@@ -122,9 +124,10 @@ class PuzzleSettings extends React.Component {
       }
     };
 
-    let response = await utils.simpleAxios(axios, config);
-    this.props.updateLastBoxState(val);
-    alert("성공");
+    utils.simpleAxios(axios, config).then(() => {
+      this.props.updateLastBoxState(val);
+      alert("성공");
+    });
   }
 
   renderPuzzleBoxCountDropdownMenuItems() {
