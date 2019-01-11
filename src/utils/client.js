@@ -80,6 +80,7 @@ function getRandomInteger(min, max) {
 async function simpleAxios(axios, config) {
   return new Promise(async function(resolve, reject) {
     try {
+      console.log( 'simpleAxios try', ' is called' );
       let response = await axios(config);
       if ( response.status == 201 ) {
         if ( response.data.error ) {

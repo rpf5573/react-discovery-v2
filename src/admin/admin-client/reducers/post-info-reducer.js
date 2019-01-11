@@ -4,7 +4,7 @@ export default function(state = [], action) {
   switch( action.type ) {
     case UPDATE_POST_INFO :
       return state.map((postInfo, i) => {
-        if ( action.payload.post != postInfo.post ) {
+        if ( action.payload.originalPost != postInfo.post ) {
           return postInfo;
         }
         return action.payload;

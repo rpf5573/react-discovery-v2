@@ -261,14 +261,24 @@ module.exports = (app, DCQuery, upload) => {
   });
 
   // post info
-  app.post('/admin/post-info/update-or-insert', async (req, res) => {
-    let result = await DCQuery.postInfo.update(req.body.postInfo);
-    if ( result.err ) {
-      return res.status(201).json({
-        error: result.err
-      });
+  app.post('/admin/post-info/add', async (req, res) => {
+    try {
+      await DCQuery.postInfo.add(req.body.postInfo);
+      return res.sendStatus(201);
+    } catch (e){
+      console.error(e);
+      return res.sendStatus(401);
     }
-    return res.sendStatus(201);
+    
+  });
+  app.post('/admin/post-info/edit', async (req, res) => {
+    try {
+      await DCQuery.postInfo.remove(req.body.postInfo.originalPost);
+      await DCQuery.postInfo.add(req.body.postInfo);
+      return res.sendStatus(201);
+    } catch(e) {
+      return res.sendStatus(401);
+    }
   });
   app.post('/admin/post-info/remove', async (req, res) => {
     let result = await DCQuery.postInfo.remove(req.body.post);

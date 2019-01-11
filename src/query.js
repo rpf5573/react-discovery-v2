@@ -430,13 +430,11 @@ class PostInfo {
     const result = await this.mysql.query(sql);
     return result;
   }
-  async update(postInfo) {
+  async add(postInfo) {
     postInfo.googleDriveURL = encodeURI(postInfo.googleDriveURL);
-    let sql = `INSERT INTO ${this.table} 
-              (post, mission, google_drive_url) 
-              VALUES(${postInfo.post}, '${postInfo.mission}', '${postInfo.googleDriveURL}') 
-              ON DUPLICATE KEY UPDATE 
-              post=${postInfo.post}, mission='${postInfo.mission}', google_drive_url='${postInfo.googleDriveURL}'`;
+    let sql = `INSERT INTO ${this.table}
+              (post, mission, google_drive_url)
+              VALUES(${postInfo.post}, '${postInfo.mission}', '${postInfo.googleDriveURL}')`;
     let result = await this.mysql.query(sql);
     return result;
   }

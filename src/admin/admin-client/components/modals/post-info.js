@@ -20,7 +20,7 @@ class PostInfoModal extends React.Component {
     this.handleAdd = this.handleAdd.bind(this);
     this.handleCancelAdd = this.handleCancelAdd.bind(this);
     this.renderNewRows = this.renderNewRows.bind(this);
-    this.validateAdd = this.validateAdd.bind(this);
+    this.validatePostDuplication = this.validatePostDuplication.bind(this);
     this.onAdd = this.onAdd.bind(this);
   }
 
@@ -43,7 +43,7 @@ class PostInfoModal extends React.Component {
     })
   }
 
-  validateAdd(post) {
+  validatePostDuplication(post) {
     for( var i = 0; i < this.props.postInfos.length; i++ ) {
       if ( post == this.props.postInfos[i].post ) {
         return false;
@@ -72,10 +72,10 @@ class PostInfoModal extends React.Component {
           key={utils.getRandomInteger(1, 5000)}
           postInfo={emptyPostInfo}
           onAdd={this.onAdd}
-          onUpdate={this.props.updatePostInfo}
+          onEdit={this.props.updatePostInfo}
           onRemove={this.props.removePostInfo}
           onCancelAdd={this.handleCancelAdd} 
-          validateAdd={this.validateAdd}></PostInfoRow>
+          validatePostDuplication={this.validatePostDuplication}></PostInfoRow>
       );
     }
     return newRows;
@@ -108,8 +108,9 @@ class PostInfoModal extends React.Component {
                 <PostInfoRow
                   key={utils.getRandomInteger(1, 5000)}
                   postInfo={postInfo} 
-                  onUpdate={this.props.updatePostInfo} 
-                  onRemove={this.props.removePostInfo} ></PostInfoRow> ) }
+                  onEdit={this.props.updatePostInfo} 
+                  onRemove={this.props.removePostInfo}
+                  validatePostDuplication={this.validatePostDuplication} ></PostInfoRow> ) }
               { this.renderNewRows(this.state.newRows) }
             </tbody>
           </Table>

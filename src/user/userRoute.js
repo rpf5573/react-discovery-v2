@@ -216,7 +216,7 @@ module.exports = (app, DCQuery, upload) => {
       let result = await DCQuery.uploads.get(req.body.team);
       let currentTime = utils.getCurrentTimeInSeconds();
       let uploadTime = result[0].uploadTime;
-      if ( (currentTime - uploadTime) < 60 ) {
+      if ( (currentTime - uploadTime) < 180 ) {
         return res.status(201).json({
           error: "연속적으로 업로드 할 수 없습니다. 잠시후 다시 시도해 주시기 바랍니다"
         });
