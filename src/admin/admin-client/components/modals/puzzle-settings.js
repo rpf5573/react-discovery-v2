@@ -131,7 +131,7 @@ class PuzzleSettings extends React.Component {
   }
 
   renderPuzzleBoxCountDropdownMenuItems() {
-    let counts = [20, 24, 30, 35, 40, 48, 54, 60];
+    let counts = [20, 24, 30, 35, 40, 48, 54, 60, 66];
     var list = [];
     for ( var i = 0; i < counts.length; i++ ) {
       let isActive = (this.props.puzzleBoxCount == counts[i]) ? true : false;

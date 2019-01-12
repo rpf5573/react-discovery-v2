@@ -81,6 +81,7 @@ class PuzzlePage extends Component {
       case 48:
       case 54:
       case 60:
+      case 66:
         classWidth = 'w-18';
         break;
     }

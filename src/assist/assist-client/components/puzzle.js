@@ -78,13 +78,14 @@ class Puzzle extends Component {
       case 48:
       case 54:
       case 60:
+      case 66:
         classWidth = 'w-18';
         break;
     }
 
     // 이거 시간 계산좀 해봐야 겠다,, 루프가 꽤 많이 도네, 많이 돌면 2천번은 돌겠는데 ?
     var boxes = [];
-    for ( var i = 0; i < boxCount; i++ ) { // 마지막에 하나 빼먹어야지 !
+    for ( var i = 0; i < boxCount - 1; i++ ) { // 마지막에 하나 빼먹어야지 !
       var boxNumber = i+1;
       const word = ( randomEniacWords ? (randomEniacWords[i] ? randomEniacWords[i] : false) : false );
       var team = false;
