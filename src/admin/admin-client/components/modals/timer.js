@@ -31,6 +31,12 @@ class TimerModal extends React.Component {
     let newState = state ? constants.OFF : constants.ON;
     let actionWord = newState ? constants.START : constants.STOP;
 
+    // 아빠의 요청대로 시작버튼은 작동하지 않도록 했다. 전체시작만 쓴대 !. 하지만 나는 이렇게 임시적으로만 막아놔야지.
+    // 혹시 나중에 필요할지도 모르니까 - 2019.01.12
+    if ( newState == constants.ON ) {
+      return;
+    }
+
     const config = {
       method: 'POST',
       url: '/admin/timer/team-timers',
@@ -116,20 +122,20 @@ class TimerModal extends React.Component {
     var btnList = [];
     for ( var i = 1; i <= count; i++ ) {
       let teamTimer = this.props.teamTimers[i-1] // 이게 1팀부터 15팀까지 순서대로 정리되어있으니까,,,그냥 이렇게 찾아도 문제없음
+      console.log( 'teamTimer : ', teamTimer );
       let color = cn({
         basic: !teamTimer.state,
         danger: teamTimer.state
       });
-      let text = teamTimer.state ? constants.STOP : constants.START;
-      let restTimeBox = false;
+      let text = teamTimer.state ? constants.STOP : constants.WAIT;
+      var restTime = teamTimer.restTime;
       if ( teamTimer.state ) {
-        let restTime = this.props.laptime - (currentTime - teamTimer.startTime);
-        let restTimeCN = cn({
-          restTime: true,
-          'restTime--minus': (restTime < 0) ? true : false
-        });
-        restTimeBox = (<div className={restTimeCN}> 남은시간 : { utils.secondToMinute(restTime) } </div>);
+        restTime = this.props.laptime - (currentTime - teamTimer.startTime);
       }
+      let restTimeCN = cn({
+        restTime: true,
+        'restTime--minus': (restTime < 0) ? true : false
+      });
       let timerAppendBoxCN = cn({
         'd-none': !teamTimer.state
       });
@@ -153,7 +159,7 @@ class TimerModal extends React.Component {
               </InputGroupText>
             </InputGroupAddon>
           </InputGroup>
-          {restTimeBox}
+          <div className={restTimeCN}> 남은시간 : { utils.secondToMinute(restTime) } </div>
         </Col>
       );
     }
@@ -169,7 +175,7 @@ class TimerModal extends React.Component {
             타이머
           </div>
           <div className="l-right">
-            <div className="l-left d-flex">
+            <div className="l-left d-flex eniac-on-off">
               <span className="mr-3">
                 문장해독 : 
               </span>

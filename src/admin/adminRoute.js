@@ -86,13 +86,14 @@ module.exports = (app, DCQuery, upload) => {
   });
   app.post('/admin/timer/team-timers', async (req, res) => {
     try {
+      var td = 0;
       // 만약에 타이머를 끄는거라면, 시간에 맞게 포인트를 주거나 빼야지
       // 다행이도 끄는거는 한번에 끄는게 없다 !
       if ( req.body.newState == 0 ) {
         let result = await DCQuery.timer.get(req.body.team);
         const startTime = result[0].startTime;
         const currentTime = utils.getCurrentTimeInSeconds();
-        let td = req.body.laptime - ( currentTime - startTime );
+        td = req.body.laptime - ( currentTime - startTime );
         var point = Math.floor(td/30) * ( td > 0 ? req.body.mappingPoints.timer_plus : req.body.mappingPoints.timer_minus );
         await DCQuery.points.updateOneRow({team: req.body.team, timer: point});
 
@@ -106,7 +107,7 @@ module.exports = (app, DCQuery, upload) => {
         }
       }
       
-      await DCQuery.timer.updateState(req.body.team, req.body.newState, req.body.isAll);
+      await DCQuery.timer.updateState(req.body.team, req.body.newState, td, req.body.isAll);
       let newTeamTimers = await DCQuery.timer.getAll();
       return res.status(201).json(newTeamTimers);
     } catch (e) {

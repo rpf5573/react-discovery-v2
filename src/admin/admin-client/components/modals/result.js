@@ -51,6 +51,9 @@ class ResultModal extends React.Component {
     return (
       <Modal style={{maxWidth: '1200px'}} isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} onOpened={this.onOpened}>
         <ModalBody>
+          <ModalHeader toggle={this.close}>
+            최종결과표
+          </ModalHeader>
           <Table bordered={true}>
             <thead>
               <tr>

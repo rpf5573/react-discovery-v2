@@ -262,12 +262,14 @@ class Timer {
     return result;
   }
 
-  async updateState(team, state, isAll) {
+  async updateState(team, state, restTime, isAll = false) {
     var startTime = 0;
     if ( state ) {
       startTime = utils.getCurrentTimeInSeconds();
     }
-    var sql = `UPDATE ${this.table} SET state=${state}, startTime=${startTime} WHERE team=${team}`;
+    var sql = `UPDATE ${this.table} SET state=${state}, startTime=${startTime}, restTime=${restTime} WHERE team=${team}`;
+
+    // 이렇게 쿼리내용이 빈약한 이유는, 어차피 전체 시작밖에 없기 때문이야. startTime만 저장하면 되는 각!
     if ( isAll ) {
       sql = `UPDATE ${this.table} SET state=${state}, startTime=${startTime}`;
     }
@@ -294,7 +296,7 @@ class Timer {
   }
 
   async reset() {
-    let sql = `UPDATE ${this.table} SET startTime = 0, state = 0`;
+    let sql = `UPDATE ${this.table} SET startTime = 0, state = 0, restTime = 0`;
     let result = this.mysql.query(sql);
     return result;
   }
