@@ -7,8 +7,8 @@ import * as constants from '../../../utils/constants';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faList } from '@fortawesome/free-solid-svg-icons';
-import { Button, Input, Row, Col, InputGroup, Card } from 'reactstrap';
-import { NavLink } from 'react-router-dom';
+import { Button, Input, Row, Col, InputGroup, Card, Dropdown, DropdownToggle, DropdownItem, DropdownMenu, } from 'reactstrap';
+// import FileDownloadDropDown from './file-download-dropdown';
 
 class FileItem extends Component {
   constructor(props) {
@@ -50,11 +50,10 @@ class FileItem extends Component {
 }
 
 class MainBoard extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      uploadInfos: []
+      uploadInfos: [],
     };
 
     this.loadUploadInfos = this.loadUploadInfos.bind(this);
@@ -137,12 +136,13 @@ class MainBoard extends Component {
     return (
       <Row>
         { (this.props.teamCount && Array.isArray(this.state.uploadInfos)) ? this.renderUploadInfos(this.state.uploadInfos) : '' }
-        <button className="load-files-btn" onClick={this.loadUploadInfos}>
-          <FontAwesomeIcon icon={faPlus} />
-        </button>
-        <a href="/warehouse" target="_blank" className="open-post-info-warehouse">
-          <div className="icon"><FontAwesomeIcon icon={faList} /></div>
+        <a href="/warehouse" target="_blank" className="btn btn-primary open-post-info-warehouse">
+          포스트 창고
         </a>
+        <Button className="load-files-btn" color="danger" onClick={this.loadUploadInfos}>
+          미션자료 불러오기
+        </Button>
+        
       </Row>
     );
   }

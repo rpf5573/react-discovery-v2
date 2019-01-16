@@ -6,6 +6,7 @@
   "author": "rpf5573",
   "license": "MIT",
   "dependencies": {
+    "archiver": "^3.0.0",
     "body-parser": "^1.18.3",
     "cookie-session": "^2.0.0-beta.3",
     "date-utils": "^1.2.21",

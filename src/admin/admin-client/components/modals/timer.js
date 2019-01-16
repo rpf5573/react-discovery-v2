@@ -39,7 +39,7 @@ class TimerModal extends React.Component {
 
     const config = {
       method: 'POST',
-      url: '/admin/timer/team-timers',
+      url: '/admin/timer/update-team-timers',
       data: {
         newState, 
         team,
@@ -60,7 +60,7 @@ class TimerModal extends React.Component {
   async allTimerStart(e) {
     const config = {
       method: 'POST',
-      url: '/admin/timer/team-timers',
+      url: '/admin/timer/update-team-timers',
       data: {
         team: 0,
         newState: constants.ON,
@@ -159,7 +159,7 @@ class TimerModal extends React.Component {
               </InputGroupText>
             </InputGroupAddon>
           </InputGroup>
-          <div className={restTimeCN}> 남은시간 : { utils.secondToMinute(restTime) } </div>
+          <div className={restTimeCN}> { teamTimer.state ? ( '남은시간 : ' + utils.secondToMinute(restTime) ) : ( '종료시간 : ' + utils.secondToMinute(restTime) ) } </div>
         </Col>
       );
     }

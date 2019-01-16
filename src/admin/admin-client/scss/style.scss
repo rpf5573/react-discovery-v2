@@ -5,7 +5,8 @@
 
 /*  Utils ( useful functions, mixins )
 /* --------------------------------------------------- */
-@import "utils/ripple";
+@import "utils/ripple",
+        "utils/spinner";
 
 /*  General ( default setup , override other plugin's settings )
 /* ----------------------------------------------------------------- */

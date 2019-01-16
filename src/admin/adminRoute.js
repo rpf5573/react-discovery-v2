@@ -84,7 +84,7 @@ module.exports = (app, DCQuery, upload) => {
     res.sendStatus(201);
     return;
   });
-  app.post('/admin/timer/team-timers', async (req, res) => {
+  app.post('/admin/timer/update-team-timers', async (req, res) => {
     try {
       var td = 0;
       // 만약에 타이머를 끄는거라면, 시간에 맞게 포인트를 주거나 빼야지
@@ -122,6 +122,15 @@ module.exports = (app, DCQuery, upload) => {
     } catch (e) {
       console.log( 'error : ', e );
       return res.sendStatus(404);
+    }
+  });
+  app.post('/admin/timer/get-team-timers', async (req, res) => {
+    try {
+      let teamTimers = await DCQuery.timer.getAll(req.body.teamCount);
+      return res.status(201).json(teamTimers);
+    } catch (e) {
+      console.log( 'e : ', e );
+      return res.sendStatus(401);
     }
   });
 
@@ -315,4 +324,23 @@ module.exports = (app, DCQuery, upload) => {
       return res.sendStatus(404);
     }
   }); 
+  app.post('/admin/zip-path', async (req, res) => {
+    const team = req.body.team;
+    try {
+      let folder = path.resolve( __dirname, `../../public/user/uploads/${process.env.DCV}/${team}`);
+      let output = path.resolve( __dirname, `../../public/user/uploads/${process.env.DCV}/${team}.zip`);
+      await utils.archive.zip(folder, output);
+      res.status(201).json({
+        zipPath: `/user/uploads/${process.env.DCV}/${team}.zip`
+      })
+    } catch(e) {
+      console.log( 'e : ', e.code );
+      if ( e.code == 'ENOENT' ) {
+        return res.status(201).json({
+          error: '아직 업로드 자료가 없습니다'
+        });
+      }
+      res.sendStatus(401);
+    }
+  });
 }

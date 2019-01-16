@@ -1,6 +1,7 @@
 var moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
+var archive = require('./zip');
 
 function getCurrentTimeInSeconds() {
   let currentTime = moment().format('HH:mm:ss');
@@ -15,5 +16,6 @@ function getYYYYMMDDHHMMSS() {
 
 module.exports = {
   getCurrentTimeInSeconds,
-  getYYYYMMDDHHMMSS
+  getYYYYMMDDHHMMSS,
+  archive
 }

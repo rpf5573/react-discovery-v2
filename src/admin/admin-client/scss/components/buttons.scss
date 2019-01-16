@@ -2,26 +2,21 @@
   position: fixed;
   right: 20px;
   bottom: 20px;
-  width: 42px;
-  height: 42px;
-  background-color: red;
-  color: white;
-  border: 1px solid white;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 30px;
 
   cursor: pointer;
 }
 
 .open-post-info-warehouse {
   @extend .load-files-btn ;
-
   bottom: 70px;
-  background-color: blue;
+  color: white;
   &:hover {
     color: white;
   }
+}
+
+.file-download-dropdown {
+  position: fixed;
+  right: 20px;
+  top: 20px;
 }

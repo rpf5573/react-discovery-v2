@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell} from 'recharts';
 import axios from 'axios';
 import { updatePoints } from '../actions';
+import NotReady from './not-ready';
 
 class Result extends Component {
   constructor(props) {
@@ -47,6 +48,11 @@ class Result extends Component {
   }
 
   render() {
+    if ( ! this.props.teamCount ) {
+      return (<NotReady></NotReady>);
+    }
+
+
     let chart;
     if ( this.state.chartSize ) {
       if (this.props.chartData.length < 6) {
