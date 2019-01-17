@@ -10,7 +10,7 @@ export default class MainMenu extends Component {
 
   createMenu() {
     let menuList = [
-      {label: "팀설정", className: "team-setting"},
+      {label: "팀설정", className: "team-settings"},
       {label: "타이머", className: "timer"},
       {label: "이미지설정", className: "uploads"},
       {label: "구역설정", className: "puzzle-settings"},

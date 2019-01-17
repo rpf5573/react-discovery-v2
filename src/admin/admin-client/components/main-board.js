@@ -63,7 +63,7 @@ class MainBoard extends Component {
   async rewardPoint(team, point, filename) {
     const config = {
       method: 'POST',
-      url: '/admin/point-reward/upload',
+      url: '/admin/points/upload',
       data: {
         team,
         point,

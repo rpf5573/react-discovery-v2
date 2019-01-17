@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TeamSetting from './team-setting';
+import TeamSetting from './team-settings';
 import Uploads from './uploads';
 import Timer from './timer';
 import PuzzleSettings from './puzzle-settings';
@@ -16,7 +16,7 @@ class Modals extends Component {
   render() { 
     return (
       <div className="modals">
-        <TeamSetting className="modal--team-setting"></TeamSetting>
+        <TeamSetting className="modal--team-settings"></TeamSetting>
         <Uploads className="modal--uploads"></Uploads>
         <Timer className="modal--timer"></Timer>
         <PuzzleSettings className="modal--puzzle-settings"></PuzzleSettings>

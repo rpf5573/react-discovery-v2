@@ -21,7 +21,7 @@ export default function(state = {
 
     case UPDATE_LASTBOX_GOOGLEDRIVE_URL :
       return Object.assign({}, state, {
-        lastBoxGoogleDriveUrl: action.payload
+        lastBoxUrl: action.payload
       });
     
     case UPDATE_LASTBOX_STATE:

@@ -69,7 +69,7 @@ class Puzzle extends Component {
     console.log( 'puzzle component constructor : ' );
 
     // 이걸 굳이 state에 넣을 필요는 없지 ! View에 반영되는건 아니니께~
-    this.grid = (this.props.count > 0 ? utils.makeGrid(this.props.maxLocation, this.props.puzzleColonInfo) : false);
+    this.grid = (this.props.count > 0 ? utils.makeGrid(this.props.maxLocation, this.props.puzzleColonInfos) : false);
 
     this.socket = socketIOClient(this.props.endPoint);
     this.socket.on("puzzle_box_opened", data => {
@@ -95,7 +95,7 @@ class Puzzle extends Component {
     this.hiddenAnchorForNewTab = React.createRef();
   }
 
-  renderPuzzleBoxes(teamCount, boxCount, puzzleColonInfo, randomEniacWords) {
+  renderPuzzleBoxes(teamCount, boxCount, puzzleColonInfos, randomEniacWords) {
     this.boxes = [];
 
     // 20( 4 x 5 ), 24( 4 x 6 ), 30( 5 x 6 ), 35( 5 x 7 ), 40( 5 x 8 ), 48( 6 x 8 ), 54( 6 x 9 ), 60( 6 x 10 )
@@ -121,9 +121,9 @@ class Puzzle extends Component {
       const word = ( randomEniacWords ? (randomEniacWords[i] ? randomEniacWords[i] : false) : false );
       var team = false;
       for ( var z = 0; z < teamCount; z++ ) {
-        for ( var m = 0; m < puzzleColonInfo[z].numbers.length; m++ ) {
-          if ( boxNumber == puzzleColonInfo[z].numbers[m] ) {
-            team = puzzleColonInfo[z].team;
+        for ( var m = 0; m < puzzleColonInfos[z].numbers.length; m++ ) {
+          if ( boxNumber == puzzleColonInfos[z].numbers[m] ) {
+            team = puzzleColonInfos[z].team;
           }
         }
         // team을 찾았으면 루프 그만 돌아도 될듯 !
@@ -143,7 +143,7 @@ class Puzzle extends Component {
 
     const puzzleBoxClassName = classWidth + ' last-box';
     // 마지막엔 이벤트 박스 넣어줘야징 !
-    boxes.push(<PuzzleBox className={puzzleBoxClassName} key='last-box' isLast number={boxNumber} onBoxClick={this.openLastBox} href={this.props.lastBoxGoogleDriveUrl} ></PuzzleBox>);
+    boxes.push(<PuzzleBox className={puzzleBoxClassName} key='last-box' isLast number={boxNumber} onBoxClick={this.openLastBox} href={this.props.lastBoxUrl} ></PuzzleBox>);
 
     return boxes;
   }
@@ -234,7 +234,7 @@ class Puzzle extends Component {
 
   async openLastBox(e) {
     utils.simpleAxios(axios, '/user/open-lastbox').then(() => {
-      if ( ! this.props.lastBoxGoogleDriveUrl ) {
+      if ( ! this.props.lastBoxUrl ) {
         return alert( "현재 영상이 설정되어있지 않습니다. 새로고침 하거나, 관리자에게 문의 해주시기 바랍니다" );
       } else {
         this.hiddenAnchorForNewTab.current.click();
@@ -406,9 +406,9 @@ class Puzzle extends Component {
 
     return (
       <div className="puzzle-page full-container">
-        <a className="d-none" href={this.props.lastBoxGoogleDriveUrl} target="_blank" rel="noopener noreferrer" ref={this.hiddenAnchorForNewTab}></a>
+        <a className="d-none" href={this.props.lastBoxUrl} target="_blank" rel="noopener noreferrer" ref={this.hiddenAnchorForNewTab}></a>
         <div className="puzzle-container">
-          { this.renderPuzzleBoxes(this.props.teamCount, this.props.count, this.props.puzzleColonInfo, this.props.randomEniacWords) }
+          { this.renderPuzzleBoxes(this.props.teamCount, this.props.count, this.props.puzzleColonInfos, this.props.randomEniacWords) }
         </div>
         <Button variant="contained" color="secondary" className={eniacBtnCN} onClick={this.handleModalOpen}>
           문장해독
@@ -443,14 +443,14 @@ class Puzzle extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const boxCount = parseInt(state.puzzlebox_count);
+  const boxCount = parseInt(state.puzzleBoxCount);
 
-  let puzzleColonInfo = [];
-  // puzzleColonInfo는 없을 수가 없다
-  for ( var i = 0; i < state.puzzleColonInfo.length; i++ ) {
-    const parsed = JSON.parse(state.puzzleColonInfo[i].numbers);
-    puzzleColonInfo.push({
-      team: state.puzzleColonInfo[i].team,
+  let puzzleColonInfos = [];
+  // puzzleColonInfos는 없을 수가 없다
+  for ( var i = 0; i < state.puzzleColonInfos.length; i++ ) {
+    const parsed = JSON.parse(state.puzzleColonInfos[i].numbers);
+    puzzleColonInfos.push({
+      team: state.puzzleColonInfos[i].team,
       numbers: (parsed ? parsed : [] )
     });
   }
@@ -484,12 +484,12 @@ function mapStateToProps(state, ownProps) {
     teamCount: parseInt(state.teamCount), // 이게 없을때는 DB에서 string 0를 가져온다
     ourTeam: state.loginData.team,
     count: boxCount, // 이게 없을때는 DB에서 string 0를 가져온다
-    puzzleColonInfo,
-    mappingPoints: state.mapping_points,
+    puzzleColonInfos,
+    mappingPoints: state.mappingPoints,
     endPoint: state.rootPath,
-    randomEniacWords: state.random_eniac_words,
-    originalEniacWords: state.original_eniac_words,
-    lastBoxGoogleDriveUrl: state.lastbox_google_drive_url,
+    randomEniacWords: state.randomEniacWords,
+    originalEniacWords: state.originalEniacWords,
+    lastBoxUrl: state.lastBoxUrl,
     maxLocation
   };
 }

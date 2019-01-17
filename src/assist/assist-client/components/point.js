@@ -99,7 +99,7 @@ class Point extends Component {
     // timer check
     let config = {
       method: 'POST',
-      url: '/admin/timer/get-team-timers',
+      url: '/admin/timers/get-team-timers',
       data: {
         teamCount: this.props.teamCount
       }
@@ -138,7 +138,7 @@ class Point extends Component {
     if ( points.length > 0 ) {
       config = {
         method: 'POST',
-        url: '/admin/point-reward/points',
+        url: '/admin/points/reward',
         data: {
           points
         }

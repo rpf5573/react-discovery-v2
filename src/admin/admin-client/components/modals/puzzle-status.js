@@ -61,7 +61,7 @@ class PuzzlePage extends Component {
     this.hiddenAnchorForNewTab = React.createRef();
   }
 
-  renderPuzzleBoxes(teamCount = 0, boxCount, puzzleColonInfo, randomEniacWords) {
+  renderPuzzleBoxes(teamCount = 0, boxCount, puzzleColonInfos, randomEniacWords) {
 
     // 박스가 있어야 그리던가 말던가 하지 !
     if ( ! boxCount ) {
@@ -94,11 +94,11 @@ class PuzzlePage extends Component {
       var team = false;
 
       // 아래의 componeneDidMout에서 teamCount가 없는 경우에는 안가져 왔는데,
-      // 여기서도 puzzleColonInfo가 어차피 teamCount안에서 루프를 도는거니까, 안전함
+      // 여기서도 puzzleColonInfos가 어차피 teamCount안에서 루프를 도는거니까, 안전함
       for ( var z = 0; z < teamCount; z++ ) {
-        for ( var m = 0; m < puzzleColonInfo[z].numbers.length; m++ ) {
-          if ( boxNumber == puzzleColonInfo[z].numbers[m] ) {
-            team = puzzleColonInfo[z].team;
+        for ( var m = 0; m < puzzleColonInfos[z].numbers.length; m++ ) {
+          if ( boxNumber == puzzleColonInfos[z].numbers[m] ) {
+            team = puzzleColonInfos[z].team;
           }
         }
         // team을 찾았으면 루프 그만 돌아도 될듯 !
@@ -118,14 +118,14 @@ class PuzzlePage extends Component {
 
     const puzzleBoxClassName = classWidth + ' last-box';
     // 마지막엔 이벤트 박스 넣어줘야징 !
-    boxes.push(<PuzzleBox className={puzzleBoxClassName} key='last-box' isLast number={boxNumber} onBoxClick={this.openLastBox} href={this.props.lastBoxGoogleDriveUrl} ></PuzzleBox>);
+    boxes.push(<PuzzleBox className={puzzleBoxClassName} key='last-box' isLast number={boxNumber} onBoxClick={this.openLastBox} href={this.props.lastBoxUrl} ></PuzzleBox>);
 
     return boxes;
   }
 
   async openLastBox(e) {
     utils.simpleAxios(axios, '/user/open-lastbox').then(() => {
-      if ( ! this.props.lastBoxGoogleDriveUrl ) {
+      if ( ! this.props.lastBoxUrl ) {
         alert( "현재 영상이 설정되어있지 않습니다. 새로고침 하거나, 관리자에게 문의 해주시기 바랍니다" );
       } else {
         this.hiddenAnchorForNewTab.current.click();
@@ -136,9 +136,9 @@ class PuzzlePage extends Component {
   render() {
     return (
       <div className="puzzle-page">
-        <a className="d-none" href={this.props.lastBoxGoogleDriveUrl} target="_blank" rel="noopener noreferrer" ref={this.hiddenAnchorForNewTab}></a>
+        <a className="d-none" href={this.props.lastBoxUrl} target="_blank" rel="noopener noreferrer" ref={this.hiddenAnchorForNewTab}></a>
         <div className="puzzle-container">
-          { this.renderPuzzleBoxes(this.props.teamCount, this.props.count, this.props.puzzleColonInfo, this.props.randomEniacWords) }
+          { this.renderPuzzleBoxes(this.props.teamCount, this.props.count, this.props.puzzleColonInfos, this.props.randomEniacWords) }
         </div>
       </div>
     );
@@ -151,7 +151,7 @@ class PuzzleStatusModal extends React.Component {
     this.pointInputFields = [];
     this.state = {
       backdrop: true,
-      puzzleColonInfo: []
+      puzzleColonInfos: []
     };
 
     this.close = this.close.bind(this);
@@ -164,7 +164,7 @@ class PuzzleStatusModal extends React.Component {
   }
 
   render() {
-    console.log( 'this.state.puzzleColonInfo : ', this.state.puzzleColonInfo );
+    console.log( 'this.state.puzzleColonInfos : ', this.state.puzzleColonInfos );
 
     return (
       <Modal isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} onOpened={this.onOpened} size="md">
@@ -172,7 +172,7 @@ class PuzzleStatusModal extends React.Component {
           유저의 구역 점유 현황
         </ModalHeader>
         <ModalBody>
-          { (this.props.puzzleBoxCount > 0 && this.state.puzzleColonInfo.length > 0) ? <PuzzlePage lastBoxGoogleDriveUrl={this.props.lastBoxGoogleDriveUrl} teamCount={this.props.teamCount} count={this.props.puzzleBoxCount} puzzleColonInfo={this.state.puzzleColonInfo} randomEniacWords={this.props.randomEniacWords} ></PuzzlePage> : '' }
+          { (this.props.puzzleBoxCount > 0 && this.state.puzzleColonInfos.length > 0) ? <PuzzlePage lastBoxUrl={this.props.lastBoxUrl} teamCount={this.props.teamCount} count={this.props.puzzleBoxCount} puzzleColonInfos={this.state.puzzleColonInfos} randomEniacWords={this.props.randomEniacWords} ></PuzzlePage> : '' }
           { !this.props.puzzleBoxCount ? <Alert color="warning"> 구역 설정을 해주세요 </Alert> : '' }
         </ModalBody>
       </Modal>
@@ -197,17 +197,17 @@ class PuzzleStatusModal extends React.Component {
     }
 
     utils.simpleAxios(axios, config).then((response) => {
-      let puzzleColonInfo = [];
+      let puzzleColonInfos = [];
       for ( var i = 0; i < response.data.length; i++ ) {
         const parsed = JSON.parse(response.data[i].numbers);
-        puzzleColonInfo.push({
+        puzzleColonInfos.push({
           team: response.data[i].team,
           numbers: (parsed ? parsed : [] )
         });
       }
       
       this.setState({
-        puzzleColonInfo
+        puzzleColonInfos
       });
     });
   }
@@ -217,7 +217,7 @@ function mapStateToProps(state, ownProps) {
   return {
     activeModalClassName : state.modalControl.activeModalClassName,
     teamCount: state.teamSettings.teamCount,
-    lastBoxGoogleDriveUrl: state.puzzleSettings.lastBoxGoogleDriveUrl,
+    lastBoxUrl: state.puzzleSettings.lastBoxUrl,
     randomEniacWords: state.puzzleSettings.randomEniacWords,
     puzzleBoxCount: state.puzzleSettings.puzzleBoxCount,
   };

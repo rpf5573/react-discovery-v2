@@ -147,7 +147,7 @@ class TeamSetting extends React.Component {
 
       const config = {
         method: 'POST',
-        url: '/admin/team-setting/passwords',
+        url: '/admin/team-settings/passwords',
         data: {
           teamPasswords: teamPasswords
         }
@@ -207,7 +207,7 @@ class TeamSetting extends React.Component {
   render() {
     return (
       <Modal isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} size="lg">
-        <form id="form-team-setting" onSubmit={this.handleFormSubmit}>
+        <form id="form-team-settings" onSubmit={this.handleFormSubmit}>
           <ModalHeader toggle={this.close}>
             <span>팀설정</span>
           </ModalHeader>

@@ -22,7 +22,7 @@ class PostInfo extends Component {
       for ( var i = 0; i < this.props.postInfos.length; i++ ) {
         const row = this.props.postInfos[i];
         listItems.push(
-          <ListItem key={`${i}-post-info`} button component="a" className="post-info-list-item" href={row.googleDriveURL} target="_blank" rel="noopener noreferrer">
+          <ListItem key={`${i}-post-info`} button component="a" className="post-info-list-item" href={row.url} target="_blank" rel="noopener noreferrer">
             <ListItemText primary={`${row.post}포스트 - ${row.mission}`} />
             <IconButton aria-label="PlayCircleOutline">
               <PlayCircleOutline />

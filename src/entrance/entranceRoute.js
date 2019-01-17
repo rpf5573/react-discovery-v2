@@ -10,7 +10,7 @@ module.exports = (app, DCQuery) => {
   });
 
   app.get('/entrance/companyImage', async (req, res) => {
-    let companyImage = await DCQuery.meta.get('company_image');
+    let companyImage = await DCQuery.metas.get('companyImage');
     res.status(201).json({
       companyImage
     });
@@ -23,7 +23,7 @@ module.exports = (app, DCQuery) => {
       team: null
     }
     try {
-      let adminPasswords = await DCQuery.meta.get('admin_passwords');
+      let adminPasswords = await DCQuery.metas.get('adminPasswords');
       const json = (function(raw) {
         try {
           return JSON.parse(raw);

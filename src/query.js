@@ -5,20 +5,20 @@ class DCQuery {
   constructor(mysql) {
     this.mysql = mysql;
     this.tables = {
-      meta: 'dc_meta',
-      teamPasswords: 'dc_team_passwords',
-      timer: 'dc_timer',
+      metas: 'dc_metas',
+      teamPasswords: 'dc_teamPasswords',
+      timers: 'dc_timers',
       points: 'dc_points',
-      puzzle: 'dc_puzzle',
-      postInfo: 'dc_post_info',
+      puzzles: 'dc_puzzles',
+      postInfos: 'dc_postInfos',
       uploads: 'dc_uploads',
     }
-    this.meta = new Meta(this.tables.meta, this.mysql);
+    this.metas = new Metas(this.tables.metas, this.mysql);
     this.teamPasswords = new TeamPasswords(this.tables.teamPasswords, this.mysql);
-    this.timer = new Timer(this.tables.timer, this.mysql);
+    this.timers = new Timers(this.tables.timers, this.mysql);
     this.points = new Points(this.tables.points, this.mysql);
-    this.puzzle = new Puzzle(this.tables.puzzle, this.mysql);
-    this.postInfo = new PostInfo(this.tables.postInfo, this.mysql);
+    this.puzzles = new Puzzles(this.tables.puzzles, this.mysql);
+    this.postInfos = new PostInfos(this.tables.postInfos, this.mysql);
     this.uploads = new Uploads(this.tables.uploads, this.mysql);
   }
   async getInitialState(role) {
@@ -26,9 +26,9 @@ class DCQuery {
       case 'admin':
         var teamCount = await this.teamPasswords.getTeamCount();
         var teamPasswords = await this.teamPasswords.getAll();
-        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'random_eniac_words', 'lastbox_google_drive_url', 'eniac_state', 'lastbox_state', 'admin_passwords', 'mapping_points']);
-        var teamTimers = await this.timer.getAll();
-        var postInfos = await this.postInfo.getAll();
+        var metas = await this.metas.get(['laptime', 'companyImage', 'map', 'puzzleBoxCount', 'originalEniacWords', 'randomEniacWords', 'lastBoxUrl', 'eniacState', 'lastboxState', 'adminPasswords', 'mappingPoints']);
+        var teamTimers = await this.timers.getAll();
+        var postInfos = await this.postInfos.getAll();
         return {
           ...metas,
           teamPasswords,
@@ -38,31 +38,31 @@ class DCQuery {
         };
 
       case 'user':
-        var metas = await this.meta.get(['laptime', 'company_image', 'map', 'puzzlebox_count', 'original_eniac_words', 'random_eniac_words', 'lastbox_google_drive_url', 'lastbox_state', 'mapping_points']);
+        var metas = await this.meta.get(['laptime', 'companyImage', 'map', 'puzzleBoxCount', 'originalEniacWords', 'randomEniacWords', 'lastBoxUrl', 'lastboxState', 'mappingPoints']);
         var teamCount = await this.teamPasswords.getTeamCount();
         var points = await this.points.get('useable');
-        var puzzleColonInfo = await this.puzzle.getAll();
-        var postInfos = await this.postInfo.getAll();
+        var puzzleColonInfoss = await this.puzzles.getAll();
+        var postInfos = await this.postInfos.getAll();
         return {
           ...metas,
           teamCount,
           points,
-          puzzleColonInfo,
+          puzzleColonInfoss,
           postInfos
         };
 
       case 'assist':
-        var metas = await this.meta.get(['map', 'random_eniac_words', 'puzzlebox_count', 'lastbox_google_drive_url', 'lastbox_state']);
+        var metas = await this.meta.get(['map', 'randomEniacWords', 'puzzleBoxCount', 'lastBoxUrl', 'lastboxState']);
         var teamCount = await this.teamPasswords.getTeamCount();
         var useablePoints = await this.points.get('useable');
-        var postInfos = await this.postInfo.getAll();
-        var puzzleColonInfo = await this.puzzle.getAll();
+        var postInfos = await this.postInfos.getAll();
+        var puzzleColonInfoss = await this.puzzles.getAll();
         return {
           ...metas,
           teamCount,
           useablePoints,
           postInfos,
-          puzzleColonInfo
+          puzzleColonInfoss
         };
         
       default:
@@ -71,7 +71,7 @@ class DCQuery {
   }
   async resultData(teamCount, puzzleBoxCount) {
     let points = await this.points.getAll(teamCount);
-    let puzzles = await this.puzzle.getAll(teamCount);
+    let puzzles = await this.puzzles.getAll(teamCount);
 
     var rows = [];
 
@@ -97,8 +97,8 @@ class DCQuery {
         eniac: points[i].eniac,
         puzzle: points[i].puzzle,
         bingo: points[i].bingo,
-        emptyPuzzleBoxOpenCount: puzzles[i].empty_puzzle_box_open_count,
-        wordPuzzleBoxOpenCount: puzzles[i].word_puzzle_box_open_count,
+        emptyBoxOpenCount: puzzles[i].emptyBoxOpenCount,
+        wordBoxOpenCount: puzzles[i].wordBoxOpenCount,
         puzzleBoxOpenRate,
         totalPoint: points[i].useable + points[i].timer + points[i].eniac + points[i].puzzle + points[i].bingo,
         rank: teamCount
@@ -118,17 +118,17 @@ class DCQuery {
     return rows;
   }
   async reset() {
-    this.meta.reset();
+    this.metas.reset();
     this.points.reset();
-    this.puzzle.reset();
+    this.puzzles.reset();
     this.teamPasswords.reset();
-    this.timer.reset();
-    this.postInfo.reset();
+    this.timers.reset();
+    this.postInfos.reset();
     this.uploads.reset();
   }
 }
 
-class Meta {
+class Metas {
   constructor(table, mysql) {
     this.table = table;
     this.mysql = mysql;
@@ -137,9 +137,9 @@ class Meta {
   async get(key) {
     // get single value
     if ( ! (key instanceof Array) ) {
-      const sql = `SELECT meta_value FROM ${this.table} WHERE meta_key = '${key}'`;
+      const sql = `SELECT metaValue FROM ${this.table} WHERE metaKey = '${key}'`;
       const result = await this.mysql.query(sql);
-      return result[0].meta_value;
+      return result[0].metaValue;
     } 
     // get multi value
     else {
@@ -150,35 +150,35 @@ class Meta {
         ""
       );
 
-      const sql = `SELECT meta_key,meta_value FROM ${this.table} WHERE meta_key IN (${keys})`;
+      const sql = `SELECT metaKey,metaValue FROM ${this.table} WHERE metaKey IN (${keys})`;
       var rows = await this.mysql.query(sql);
       var results = {};
       rows.forEach((obj) => {
-        Object.assign(results, {[obj.meta_key]: obj.meta_value});
+        Object.assign(results, {[obj.metaKey]: obj.metaValue});
       });
 
       return results;
     }
   }
   async update(key, value) {
-    let sql = `UPDATE ${this.table} SET meta_value = '${value}' WHERE meta_key = '${key}'`;
+    let sql = `UPDATE ${this.table} SET metaValue = '${value}' WHERE metaKey = '${key}'`;
     if ( value == null ) {
-      sql = `UPDATE ${this.table} SET meta_value = NULL WHERE meta_key = '${key}'`;
+      sql = `UPDATE ${this.table} SET metaValue = NULL WHERE metaKey = '${key}'`;
     }
     const result = await this.mysql.query(sql);
     return result;
   }
   async reset() {
-    var sql = `UPDATE ${this.table} SET meta_value = 0 WHERE meta_key IN ('total_team_count', 'game_state', 'posts_count', 'eniac_state', 'lastbox_state', 'laptime', 'puzzlebox_count')`;
+    var sql = `UPDATE ${this.table} SET metaValue = 0 WHERE metaKey IN ('eniacState', 'lastboxState', 'laptime', 'puzzleBoxCount')`;
     var result = await this.mysql.query(sql);
 
-    sql = `UPDATE ${this.table} SET meta_value = NULL WHERE meta_key IN ('company_image', 'map', 'original_eniac_words', 'eniac_success_teams', 'random_eniac_words', 'lastbox_google_drive_url')`;
+    sql = `UPDATE ${this.table} SET metaValue = NULL WHERE metaKey IN ('companyImage', 'map', 'originalEniacWords', 'eniacSuccessTeams', 'randomEniacWords', 'lastBoxUrl')`;
     result = await this.mysql.query(sql);
 
     // mapping point
     const mappingPoints = {
-      timer_plus: 100,
-      timer_minus: 100,
+      timerPlus: 100,
+      timerMinus: 100,
       upload: 1000,
       boxOpenGetEmpty: 2000,
       boxOpenGetWord: 4000,
@@ -186,7 +186,7 @@ class Meta {
       eniac: 10000,
       bingo: 3000
     }
-    sql = `UPDATE ${this.table} SET meta_value='${JSON.stringify(mappingPoints)}' WHERE meta_key='mapping_points'`;
+    sql = `UPDATE ${this.table} SET metaValue='${JSON.stringify(mappingPoints)}' WHERE metaKey='mappingPoints'`;
     result = await this.mysql.query(sql);
 
     // admin passwords
@@ -194,11 +194,11 @@ class Meta {
       admin: '1234',
       assist: '4321'
     }
-    sql = `UPDATE ${this.table} SET meta_value='${JSON.stringify(adminPasswords)}' WHERE meta_key='admin_passwords'`;
+    sql = `UPDATE ${this.table} SET metaValue='${JSON.stringify(adminPasswords)}' WHERE metaKey='adminPasswords'`;
     result = await this.mysql.query(sql);
 
     // laptime
-    sql = `UPDATE ${this.table} SET meta_value=480 WHERE meta_key='laptime'`;
+    sql = `UPDATE ${this.table} SET metaValue=480 WHERE metaKey='laptime'`;
     result = await this.mysql.query(sql);
 
     return result;
@@ -241,7 +241,7 @@ class TeamPasswords {
   }
 }
 
-class Timer {
+class Timers {
   constructor(table, mysql) {
     this.table = table;
     this.mysql = mysql;
@@ -368,7 +368,7 @@ class Points {
   }
 }
 
-class Puzzle {
+class Puzzles {
 
   constructor(table, mysql) {
     this.table = table;
@@ -392,7 +392,7 @@ class Puzzle {
   }
 
   async update(team, boxNumber, type) {
-    let puzzleColonInfo = await this.get(team);
+    let puzzleColonInfos = await this.get(team);
     let puzzleNumbers = (function(raw) {
       try {
         if ( raw == null ) {
@@ -402,41 +402,41 @@ class Puzzle {
       } catch (err) {
           return [];
       }
-    })(puzzleColonInfo[0].numbers);
+    })(puzzleColonInfos[0].numbers);
 
     puzzleNumbers.push(boxNumber);
 
     const emptyBox = ( type == constants.EMPTY ? 1 : 0 );
     const wordBox = ( type == constants.WORD ? 1 : 0 );
     
-    const sql = `UPDATE ${this.table} SET numbers='${JSON.stringify(puzzleNumbers)}', empty_puzzle_box_open_count = empty_puzzle_box_open_count + ${emptyBox}, word_puzzle_box_open_count = word_puzzle_box_open_count + ${wordBox} WHERE team=${team}`;
+    const sql = `UPDATE ${this.table} SET numbers='${JSON.stringify(puzzleNumbers)}', emptyBoxOpenCount = emptyBoxOpenCount + ${emptyBox}, wordBoxOpenCount = wordBoxOpenCount + ${wordBox} WHERE team=${team}`;
     const result = await this.mysql.query(sql);
     return result;
   }
 
   async reset() {
-    let sql = `UPDATE ${this.table} SET numbers = NULL, empty_puzzle_box_open_count = 0, word_puzzle_box_open_count = 0`;
+    let sql = `UPDATE ${this.table} SET numbers = NULL, emptyBoxOpenCount = 0, wordBoxOpenCount = 0`;
     let result = await this.mysql.query(sql);
     return result;
   }
 
 }
 
-class PostInfo {
+class PostInfos {
   constructor(table, mysql) {
     this.table = table;
     this.mysql = mysql;
   }
   async getAll() {
-    const sql = `SELECT post, mission, google_drive_url as googleDriveURL FROM ${this.table} ORDER BY post`;
+    const sql = `SELECT post, mission, url FROM ${this.table} ORDER BY post`;
     const result = await this.mysql.query(sql);
     return result;
   }
   async insert(postInfo) {
-    postInfo.googleDriveURL = encodeURI(postInfo.googleDriveURL);
+    postInfo.url = encodeURI(postInfo.url);
     let sql = `INSERT INTO ${this.table}
-              (post, mission, google_drive_url)
-              VALUES(${postInfo.post}, '${postInfo.mission}', '${postInfo.googleDriveURL}')`;
+              (post, mission, url)
+              VALUES(${postInfo.post}, '${postInfo.mission}', '${postInfo.url}')`;
     let result = await this.mysql.query(sql);
     return result;
   }

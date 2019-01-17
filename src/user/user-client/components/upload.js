@@ -313,7 +313,7 @@ class Upload extends Component {
 function mapStateToProps(state, ownProps) {
   return {
     ourTeam: ( state.loginData ? state.loginData.team : false ),
-    mappingPoints: state.mapping_points,
+    mappingPoints: state.mappingPoints,
     fileInfo: state.fileInfo,
     progressVal: state.progressVal,
     laptime: state.laptime

@@ -9,8 +9,8 @@ export default function configureStore(initialSettings) {
 
   if ( initialSettings.postInfos && initialSettings.postInfos.length > 0 ) {
     for ( var i = 0; i < initialSettings.postInfos.length; i++ ) {
-      let decodedURL = decodeURI(initialSettings.postInfos[i].google_drive_url);
-      initialSettings.postInfos[i].google_drive_url = decodedURL;
+      let decodedURL = decodeURI(initialSettings.postInfos[i].url);
+      initialSettings.postInfos[i].url = decodedURL;
     }
   }
 
@@ -26,21 +26,21 @@ export default function configureStore(initialSettings) {
     timer: {
       laptime: parseInt(initialSettings.laptime),
       teamTimers: initialSettings.teamTimers,
-      eniacState: parseInt(initialSettings.eniac_state),
+      eniacState: parseInt(initialSettings.eniacState),
     },
     uploads: {
-      companyImage: initialSettings.company_image,
+      companyImage: initialSettings.companyImage,
       map: initialSettings.map
     },
     puzzleSettings: {
-      puzzleBoxCount: parseInt(initialSettings.puzzlebox_count),
-      eniacWords: initialSettings.original_eniac_words,
-      randomEniacWords: JSON.parse(initialSettings.random_eniac_words),
-      lastBoxGoogleDriveUrl: decodeURI(initialSettings.lastbox_google_drive_url),
-      lastBoxState: parseInt(initialSettings.lastbox_state)
+      puzzleBoxCount: parseInt(initialSettings.puzzleBoxCount),
+      eniacWords: initialSettings.originalEniacWords,
+      randomEniacWords: JSON.parse(initialSettings.randomEniacWords),
+      lastBoxUrl: decodeURI(initialSettings.lastBoxUrl),
+      lastBoxState: parseInt(initialSettings.lastboxState)
     },
-    adminPasswords: JSON.parse(initialSettings.admin_passwords),
-    mappingPoints: JSON.parse(initialSettings.mapping_points),
+    adminPasswords: JSON.parse(initialSettings.adminPasswords),
+    mappingPoints: JSON.parse(initialSettings.mappingPoints),
     postInfos: initialSettings.postInfos
   };
 

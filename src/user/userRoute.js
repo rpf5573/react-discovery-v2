@@ -96,13 +96,13 @@ module.exports = (app, DCQuery, upload) => {
   app.post('/user/eniac', async (req, res) => {
     try {
       // 1. eniac state check
-      var result = await DCQuery.meta.get('eniac_state');
+      var result = await DCQuery.metas.get('eniacState');
       result = parseInt(result);
       if ( isNaN(result) || !result ) {
         return res.status(201).json({ error: '현재 문장해독이 불가능한 상태입니다' });
       }
 
-      var result = await DCQuery.meta.get('eniac_success_teams');
+      var result = await DCQuery.metas.get('eniacSuccessTeams');
       result = JSON.parse(result);
       if ( ! Array.isArray(result) ) {
         result = [];
@@ -143,7 +143,7 @@ module.exports = (app, DCQuery, upload) => {
       result.push(req.body.team);
 
       await DCQuery.points.updateOneRow({ team: req.body.team, eniac: point });
-      await DCQuery.meta.update('eniac_success_teams', JSON.stringify(result));
+      await DCQuery.metas.update('eniacSuccessTeams', JSON.stringify(result));
 
       res.status(201).json({
         point,
@@ -191,7 +191,7 @@ module.exports = (app, DCQuery, upload) => {
 
   app.post('/user/timer-check', async (req, res) => {
     try {
-      let result = await DCQuery.timer.check(req.body.team, req.body.laptime);
+      let result = await DCQuery.timers.check(req.body.team, req.body.laptime);
       if ( ! result.state ) {
         return res.status(201).json({
           error: "교육 진행 전입니다"
@@ -231,7 +231,7 @@ module.exports = (app, DCQuery, upload) => {
 
   app.get('/user/open-lastbox', async (req, res) => {
     try {
-      let result = await DCQuery.meta.get('lastbox_state');
+      let result = await DCQuery.metas.get('lastboxState');
       result = parseInt(result);
       if ( result ) {
         return res.sendStatus(201);

@@ -113,15 +113,15 @@ function boxNumberToLocation(number, maxLocation) {
   return [x, y];
 }
 
-function makeGrid(maxLocation, puzzleColonInfo = []) {
+function makeGrid(maxLocation, puzzleColonInfos = []) {
   var grid = [...Array(maxLocation[0])].map(e => Array(maxLocation[1]).fill(0));
   
-  for ( var i = 0; i < puzzleColonInfo.length; i++ ) {
-    if ( Array.isArray(puzzleColonInfo[i].numbers) ) {
-      for ( var z = 0; z < puzzleColonInfo[i].numbers.length; z++ ) {
-        const number = puzzleColonInfo[i].numbers[z];
+  for ( var i = 0; i < puzzleColonInfos.length; i++ ) {
+    if ( Array.isArray(puzzleColonInfos[i].numbers) ) {
+      for ( var z = 0; z < puzzleColonInfos[i].numbers.length; z++ ) {
+        const number = puzzleColonInfos[i].numbers[z];
         const location = boxNumberToLocation(number, maxLocation);
-        grid[location[0]][location[1]] = puzzleColonInfo[i].team;
+        grid[location[0]][location[1]] = puzzleColonInfos[i].team;
       }  
     }
   }

@@ -14,11 +14,11 @@ export default function configureStore(initialSettings = {}) {
     teamCount : initialSettings.teamCount,
     useablePoints : initialSettings.useablePoints,
     postInfos : initialSettings.postInfos,
-    puzzleColonInfo : initialSettings.puzzleColonInfo,
-    randomEniacWords : JSON.parse(initialSettings.random_eniac_words), // 실패할일 없음 어차피 null도 받으니까
-    lastBoxGoogleDriveUrl : decodeURI(initialSettings.lastbox_google_drive_url),
-    lastBoxState : parseInt(initialSettings.lastbox_state),
-    puzzleBoxCount: parseInt(initialSettings.puzzlebox_count),
+    puzzleColonInfos : initialSettings.puzzleColonInfos,
+    randomEniacWords : JSON.parse(initialSettings.randomEniacWords), // 실패할일 없음 어차피 null도 받으니까
+    lastBoxUrl : decodeURI(initialSettings.lastBoxUrl),
+    lastBoxState : parseInt(initialSettings.lastboxState),
+    puzzleBoxCount: parseInt(initialSettings.puzzleBoxCount),
   };
 
   console.log( 'initialState : ', initialState );

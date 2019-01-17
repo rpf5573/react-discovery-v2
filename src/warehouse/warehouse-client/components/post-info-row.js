@@ -12,12 +12,12 @@ class PostInfoRow extends React.Component {
       isEditing: false,
       id: this.props.postInfo.id,
       mission: this.props.postInfo.mission,
-      googleDriveURL: this.props.postInfo.googleDriveURL,  // naming 지못미...
+      url: this.props.postInfo.url,  // naming 지못미...
       isNew: (this.props.onCancelAdd ? true : false),
     }
 
     this.missionInput = React.createRef();
-    this.googleDriveURLInput = React.createRef();
+    this.urlInput = React.createRef();
 
     this.handleEditBtnClick = this.handleEditBtnClick.bind(this);
     this.handleRemoveBtnClick = this.handleRemoveBtnClick.bind(this);
@@ -45,7 +45,7 @@ class PostInfoRow extends React.Component {
     });
 
     this.missionInput.current.value = '';
-    this.googleDriveURLInput.current.value = '';
+    this.urlInput.current.value = '';
   }
 
   async handleRemoveBtnClick(e) {
@@ -121,18 +121,18 @@ class PostInfoRow extends React.Component {
       return false;
     }
 
-    let googleDriveURL = this.googleDriveURLInput.current.value;
-    if ( !googleDriveURL ) {
+    let url = this.urlInput.current.value;
+    if ( !url ) {
       alert( 'ERROR : 구글드라이브 주소를 입력해 주시기 바랍니다' );
       return false;
     }
 
-    if ( ! utils.isValidURL(googleDriveURL) ) {
+    if ( ! utils.isValidURL(url) ) {
       alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
       return false;
     }
 
-    return { mission, googleDriveURL };
+    return { mission, url };
   }
 
   render() {
@@ -146,11 +146,11 @@ class PostInfoRow extends React.Component {
           })} ref={this.missionInput} defaultValue={this.state.isEditing ? this.state.mission : ''}></input>
         </td>
         <td>
-          <span className={ cn({ 'd-none': (this.state.isEditing || this.state.isNew) }) }>{this.state.googleDriveURL}</span>
+          <span className={ cn({ 'd-none': (this.state.isEditing || this.state.isNew) }) }>{this.state.url}</span>
           <input className={cn({
             'form-control': true,
             'd-block': (this.state.isEditing || this.state.isNew)
-          })} ref={this.googleDriveURLInput} defaultValue={this.state.isEditing ? this.state.googleDriveURL : ''}></input>
+          })} ref={this.urlInput} defaultValue={this.state.isEditing ? this.state.url : ''}></input>
         </td>
         <td>
           <Button size="sm" outline color="success" className={cn({ 'mr-2': true, 'd-none': (this.state.isEditing || this.state.isNew) })} onClick={this.handleEditBtnClick}>수정</Button>

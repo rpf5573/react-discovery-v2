@@ -39,13 +39,13 @@ class TimerModal extends React.Component {
 
     const config = {
       method: 'POST',
-      url: '/admin/timer/update-team-timers',
+      url: '/admin/timers/update-team-timers',
       data: {
         newState, 
         team,
         mappingPoints: {
-          timer_plus: this.props.mappingPoints.timer_plus,
-          timer_minus: this.props.mappingPoints.timer_minus,
+          timerPlus: this.props.mappingPoints.timerPlus,
+          timerMinus: this.props.mappingPoints.timerMinus,
         },
         laptime: this.props.laptime
       }
@@ -60,7 +60,7 @@ class TimerModal extends React.Component {
   async allTimerStart(e) {
     const config = {
       method: 'POST',
-      url: '/admin/timer/update-team-timers',
+      url: '/admin/timers/update-team-timers',
       data: {
         team: 0,
         newState: constants.ON,
@@ -86,7 +86,7 @@ class TimerModal extends React.Component {
 
     const config = {
       method: 'POST',
-      url: '/admin/timer/laptime',
+      url: '/admin/timers/laptime',
       data: {
         laptime: laptime
       }
@@ -106,7 +106,7 @@ class TimerModal extends React.Component {
 
     const config = {
       method: 'POST',
-      url: '/admin/timer/eniac-state',
+      url: '/admin/timers/eniac-state',
       data: {
         eniacState: val
       }

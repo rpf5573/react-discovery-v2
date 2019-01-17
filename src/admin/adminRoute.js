@@ -25,11 +25,6 @@ module.exports = (app, DCQuery, upload) => {
     }
   });
 
-  app.get('/admin/state', async (req, res) => {
-    let initialState = await DCQuery.getInitialState();
-    return res.json(initialState);
-  });
-
   app.post('/admin/upload', async (req, res) => {
     upload(req, res, (err) => {
       if ( err ) {
@@ -42,10 +37,10 @@ module.exports = (app, DCQuery, upload) => {
           });
         } else {
           if ( req.files.companyImage !== undefined ) {
-            DCQuery.meta.update('company_image', req.files.companyImage[0].originalname);
+            DCQuery.metas.update('companyImage', req.files.companyImage[0].originalname);
           }
           if ( req.files.map !== undefined ) {
-            DCQuery.meta.update('map', req.files.map[0].originalname);
+            DCQuery.metas.update('map', req.files.map[0].originalname);
           }
           res.sendStatus(201);
         }
@@ -53,7 +48,7 @@ module.exports = (app, DCQuery, upload) => {
     });
   });
 
-  app.post('/admin/team-setting/passwords', async (req, res) => {
+  app.post('/admin/team-settings/passwords', async (req, res) => {
     let teamPasswords = req.body.teamPasswords;
     if ( teamPasswords.length > 0 ) {
       let result = await DCQuery.teamPasswords.update(teamPasswords);
@@ -74,8 +69,8 @@ module.exports = (app, DCQuery, upload) => {
   });
 
   // timer
-  app.post('/admin/timer/laptime', async (req, res) => {
-    let result = await DCQuery.meta.update('laptime', req.body.laptime);
+  app.post('/admin/timers/laptime', async (req, res) => {
+    let result = await DCQuery.metas.update('laptime', req.body.laptime);
     if ( result.err ) {
       return res.status(201).json({
         error: result.err
@@ -84,17 +79,17 @@ module.exports = (app, DCQuery, upload) => {
     res.sendStatus(201);
     return;
   });
-  app.post('/admin/timer/update-team-timers', async (req, res) => {
+  app.post('/admin/timers/update-team-timers', async (req, res) => {
     try {
       var td = 0;
       // 만약에 타이머를 끄는거라면, 시간에 맞게 포인트를 주거나 빼야지
       // 다행이도 끄는거는 한번에 끄는게 없다 !
       if ( req.body.newState == 0 ) {
-        let result = await DCQuery.timer.get(req.body.team);
+        let result = await DCQuery.timers.get(req.body.team);
         const startTime = result[0].startTime;
         const currentTime = utils.getCurrentTimeInSeconds();
         td = req.body.laptime - ( currentTime - startTime );
-        var point = Math.floor(td/30) * ( td > 0 ? req.body.mappingPoints.timer_plus : req.body.mappingPoints.timer_minus );
+        var point = Math.floor(td/30) * ( td > 0 ? req.body.mappingPoints.timerPlus : req.body.mappingPoints.timerMinus );
         await DCQuery.points.updateOneRow({team: req.body.team, timer: point});
 
         // move temp to original
@@ -107,26 +102,26 @@ module.exports = (app, DCQuery, upload) => {
         }
       }
       
-      await DCQuery.timer.updateState(req.body.team, req.body.newState, td, req.body.isAll);
-      let newTeamTimers = await DCQuery.timer.getAll();
+      await DCQuery.timers.updateState(req.body.team, req.body.newState, td, req.body.isAll);
+      let newTeamTimers = await DCQuery.timers.getAll();
       return res.status(201).json(newTeamTimers);
     } catch (e) {
       console.log( 'e : ', e );
       return res.sendStatus(401);
     }
   });
-  app.post('/admin/timer/eniac-state', async (req, res) => {
+  app.post('/admin/timers/eniac-state', async (req, res) => {
     try {
-      await DCQuery.meta.update('eniac_state', req.body.eniacState);
+      await DCQuery.metas.update('eniacState', req.body.eniacState);
       return res.sendStatus(201);
     } catch (e) {
       console.log( 'error : ', e );
       return res.sendStatus(404);
     }
   });
-  app.post('/admin/timer/get-team-timers', async (req, res) => {
+  app.post('/admin/timers/get-team-timers', async (req, res) => {
     try {
-      let teamTimers = await DCQuery.timer.getAll(req.body.teamCount);
+      let teamTimers = await DCQuery.timers.getAll(req.body.teamCount);
       return res.status(201).json(teamTimers);
     } catch (e) {
       console.log( 'e : ', e );
@@ -137,10 +132,10 @@ module.exports = (app, DCQuery, upload) => {
   // puzzle settings
   app.post('/admin/puzzle-settings/puzzlebox-count', async (req, res) => {
     try {
-      await DCQuery.meta.update('puzzlebox_count', req.body.puzzleBoxCount);
+      await DCQuery.metas.update('puzzleBoxCount', req.body.puzzleBoxCount);
       // reset eniac words
-      await DCQuery.meta.update('original_eniac_words', null);
-      await DCQuery.meta.update('random_eniac_words', null);
+      await DCQuery.metas.update('originalEniacWords', null);
+      await DCQuery.metas.update('randomEniacWords', null);
       return res.sendStatus(201);
     } catch (e) {
       return res.status(201).json({
@@ -149,13 +144,13 @@ module.exports = (app, DCQuery, upload) => {
     }
   });
   app.post('/admin/puzzle-settings/eniac-words', async (req, res) => {
-    var result = await DCQuery.meta.update('original_eniac_words', req.body.originalEniacWords);
+    var result = await DCQuery.metas.update('originalEniacWords', req.body.originalEniacWords);
     if ( result.err ) {
       return res.status(201).json({
         error: result.err
       });
     }
-    var result = await DCQuery.meta.update('random_eniac_words', req.body.randomEniacWords);
+    var result = await DCQuery.metas.update('randomEniacWords', req.body.randomEniacWords);
     if ( result.err ) {
       return res.status(201).json({
         error: result.err
@@ -164,8 +159,8 @@ module.exports = (app, DCQuery, upload) => {
     res.sendStatus(201);
     return;
   });
-  app.post('/admin/puzzle-settings/lastbox-google-drive-url', async (req, res) => {
-    let result = await DCQuery.meta.update('lastbox_google_drive_url', req.body.lastBoxGoogleDriveUrl);
+  app.post('/admin/puzzle-settings/lastBoxUrl', async (req, res) => {
+    let result = await DCQuery.metas.update('lastBoxUrl', req.body.lastBoxUrl);
     if ( result.err ) {
       return res.status(201).json({
         error: result.err
@@ -175,7 +170,7 @@ module.exports = (app, DCQuery, upload) => {
     return;
   });
   app.post('/admin/puzzle-settings/lastbox-state', async (req, res) => {
-    let result = await DCQuery.meta.update('lastbox_state', req.body.lastBoxState);
+    let result = await DCQuery.metas.update('lastboxState', req.body.lastBoxState);
     if ( result.err ) {
       return res.status(201).json({
         error: result.err
@@ -186,7 +181,7 @@ module.exports = (app, DCQuery, upload) => {
   });
 
   // points
-  app.post('/admin/point-reward/points', async (req, res) => {
+  app.post('/admin/points/reward', async (req, res) => {
     let result = await DCQuery.points.reward(req.body.points);
     if ( result.err ) {
       return res.status(201).json({
@@ -195,7 +190,7 @@ module.exports = (app, DCQuery, upload) => {
     }
     return res.sendStatus(201);
   });
-  app.post('/admin/point-reward/upload', async (req, res) => {
+  app.post('/admin/points/upload', async (req, res) => {
     try {
       // update point
       await DCQuery.points.updateOneRow({
@@ -217,7 +212,7 @@ module.exports = (app, DCQuery, upload) => {
 
   // admin passwords
   app.post('/admin/admin-passwords/passwords', async (req, res) => {
-    let result = await DCQuery.meta.update('admin_passwords', JSON.stringify(req.body.adminPasswords));
+    let result = await DCQuery.metas.update('adminPasswords', JSON.stringify(req.body.adminPasswords));
     if ( result.err ) {
       return res.status(201).json({
         error: result.err
@@ -228,10 +223,10 @@ module.exports = (app, DCQuery, upload) => {
 
   // mapping points
   app.post('/admin/mapping-points', async (req, res) => {
-    let json = await DCQuery.meta.get('mapping_points');
+    let json = await DCQuery.metas.get('mappingPoints');
     let mappingPoints = JSON.parse(json);
     let newMappingPoints = Object.assign(mappingPoints, req.body.mapping_point);
-    let result = await DCQuery.meta.update('mapping_points', JSON.stringify(newMappingPoints));
+    let result = await DCQuery.metas.update('mappingPoints', JSON.stringify(newMappingPoints));
     if ( result.err ) {
       return res.status(201).json({
         error: result.err
@@ -253,7 +248,7 @@ module.exports = (app, DCQuery, upload) => {
 
   // reset
   app.post('/admin/reset', async (req, res) => {
-    let pw = req.body.reset_password;
+    let pw = req.body.resetPassword;
     if ( pw && pw == 'discovery_reset' ) {
       try {
         await DCQuery.reset(); // DB reset
@@ -271,26 +266,26 @@ module.exports = (app, DCQuery, upload) => {
   });
 
   // post info
-  app.post('/admin/post-info/add', async (req, res) => {
+  app.post('/admin/post-infos/add', async (req, res) => {
     try {
-      await DCQuery.postInfo.insert(req.body.postInfo);
+      await DCQuery.postInfos.insert(req.body.postInfo);
       return res.sendStatus(201);
     } catch (e){
       console.error(e);
       return res.sendStatus(401);
     }
   });
-  app.post('/admin/post-info/edit', async (req, res) => {
+  app.post('/admin/post-infos/edit', async (req, res) => {
     try {
-      await DCQuery.postInfo.remove(req.body.postInfo.originalPost);
-      await DCQuery.postInfo.insert(req.body.postInfo);
+      await DCQuery.postInfos.remove(req.body.postInfo.originalPost);
+      await DCQuery.postInfos.insert(req.body.postInfo);
       return res.sendStatus(201);
     } catch(e) {
       return res.sendStatus(401);
     }
   });
-  app.post('/admin/post-info/remove', async (req, res) => {
-    let result = await DCQuery.postInfo.remove(req.body.post);
+  app.post('/admin/post-infos/remove', async (req, res) => {
+    let result = await DCQuery.postInfos.remove(req.body.post);
     if ( result.err ) {
       return res.status(201).json({
         error: result.err

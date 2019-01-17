@@ -9,7 +9,7 @@ export default (state = {}, action) => {
 
     case UPDATE_PUZZLE_COLON_INFO:
       return Object.assign({}, state, {
-        puzzleColonInfo: action.payload
+        puzzleColonInfos: action.payload
       });
 
     case UPDATE_FILE_INFO:

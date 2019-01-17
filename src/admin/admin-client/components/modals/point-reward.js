@@ -53,7 +53,7 @@ class PointReward extends React.Component {
 
       const config = {
         method: 'POST',
-        url: '/admin/point-reward/points',
+        url: '/admin/points/reward',
         data: {
           points
         }

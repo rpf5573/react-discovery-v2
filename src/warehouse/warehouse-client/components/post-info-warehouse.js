@@ -45,7 +45,7 @@ class PostInfoWarehouse extends React.Component {
     var newRows= [];
     let emptyPostInfo = {
       mission: null,
-      googleDriveURL: null
+      url: null
     }
     for ( var i = 0; i < count; i++ ) {
       newRows.push(

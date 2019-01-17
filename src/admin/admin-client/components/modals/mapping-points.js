@@ -129,13 +129,13 @@ class MappingPointModal extends React.Component {
               <tr>
                 <td>시간점수 +30초</td>
                 <td>
-                  <PointPart mapping_key="timer_plus" point={this.props.mappingPoints.timer_plus} onPointUpdate={this.props.updateMappingPoints}></PointPart>
+                  <PointPart mapping_key="timerPlus" point={this.props.mappingPoints.timerPlus} onPointUpdate={this.props.updateMappingPoints}></PointPart>
                 </td>
               </tr>
               <tr>
                 <td>시간점수 -30초</td>
                 <td>
-                  <PointPart mapping_key="timer_minus" point={this.props.mappingPoints.timer_minus} onPointUpdate={this.props.updateMappingPoints}></PointPart>
+                  <PointPart mapping_key="timerMinus" point={this.props.mappingPoints.timerMinus} onPointUpdate={this.props.updateMappingPoints}></PointPart>
                 </td>
               </tr>
               <tr>

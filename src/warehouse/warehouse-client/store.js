@@ -9,8 +9,8 @@ export default function configureStore(initialSettings) {
 
   if ( initialSettings.postInfos && initialSettings.postInfos.length > 0 ) {
     for ( var i = 0; i < initialSettings.postInfos.length; i++ ) {
-      let decodedURL = decodeURI(initialSettings.postInfos[i].google_drive_url);
-      initialSettings.postInfos[i].google_drive_url = decodedURL;
+      let decodedURL = decodeURI(initialSettings.postInfos[i].url);
+      initialSettings.postInfos[i].url = decodedURL;
     }
   }
 

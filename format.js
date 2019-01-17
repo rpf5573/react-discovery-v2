@@ -25,7 +25,7 @@ async loadFiles(e) {
   }
 }
 
-app.post('/admin/point-reward/point', async (req, res) => {
+app.post('/admin/points/point', async (req, res) => {
   try {
     await DCQuery.points.updateOneRow({
       team: req.body.team,
@@ -45,7 +45,7 @@ async rewardPoint(team, point, filename) {
   try {
     let response = await axios({
       method: 'POST',
-      url: '/admin/point-reward/upload',
+      url: '/admin/points/upload',
       data: {
         team,
         point,

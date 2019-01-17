@@ -26,7 +26,7 @@ class PuzzleSettings extends React.Component {
     this.updateEniacWords = this.updateEniacWords.bind(this);
     this.eniacWordInput = React.createRef();
 
-    this.lastBoxGoogleDriveUrlInput = React.createRef();
+    this.lastBoxUrlInput = React.createRef();
     this.updateLastBoxGoogleDriveUrl = this.updateLastBoxGoogleDriveUrl.bind(this);
 
     this.updateLastBoxState = this.updateLastBoxState.bind(this);
@@ -92,7 +92,7 @@ class PuzzleSettings extends React.Component {
   }
 
   async updateLastBoxGoogleDriveUrl() {
-    let url = this.lastBoxGoogleDriveUrlInput.current.value;
+    let url = this.lastBoxUrlInput.current.value;
     if ( ! utils.isValidURL(url) ) {
       alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
       return;
@@ -100,16 +100,16 @@ class PuzzleSettings extends React.Component {
 
     const config = {
       method: 'POST',
-      url: '/admin/puzzle-settings/lastbox-google-drive-url',
+      url: '/admin/puzzle-settings/lastBoxUrl',
       data: {
-        lastBoxGoogleDriveUrl: encodeURI(url)
+        lastBoxUrl: encodeURI(url)
       }
     };
 
     utils.simpleAxios(axios, config).then(() => {
       this.props.updateLastBoxGoogleDriveUrl(url);
       alert("성공");
-      this.lastBoxGoogleDriveUrlInput.current.value = '';
+      this.lastBoxUrlInput.current.value = '';
     });
   }
 
@@ -182,7 +182,7 @@ class PuzzleSettings extends React.Component {
             </Col>
             <Col xs="12">
               <InputGroup>
-                <input className={"form-control"} placeholder={this.props.lastBoxGoogleDriveUrl} ref={this.lastBoxGoogleDriveUrlInput}></input>
+                <input className={"form-control"} placeholder={this.props.lastBoxUrl} ref={this.lastBoxUrlInput}></input>
                 <Button color="primary" className={"ml-2"} onClick={this.updateLastBoxGoogleDriveUrl}>확인</Button>
               </InputGroup>
             </Col>
@@ -219,7 +219,7 @@ function mapStateToProps(state, ownProps) {
     puzzleBoxCount: state.puzzleSettings.puzzleBoxCount,
     eniacWords: state.puzzleSettings.eniacWords,
     eniacState: state.puzzleSettings.eniacState,
-    lastBoxGoogleDriveUrl: state.puzzleSettings.lastBoxGoogleDriveUrl,
+    lastBoxUrl: state.puzzleSettings.lastBoxUrl,
     lastBoxState: state.puzzleSettings.lastBoxState
   };
 }

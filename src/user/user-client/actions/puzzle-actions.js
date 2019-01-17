@@ -1,8 +1,8 @@
 import { UPDATE_PUZZLE_COLON_INFO } from './types';
 
-export const updatePuzzleColonInfo = (puzzleColonInfo) => dispatch => {
+export const updatePuzzleColonInfo = (puzzleColonInfos) => dispatch => {
   dispatch({
     type: UPDATE_PUZZLE_COLON_INFO,
-    payload: puzzleColonInfo
+    payload: puzzleColonInfos
   });
 }

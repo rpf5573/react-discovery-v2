@@ -13,22 +13,22 @@ class WHQuery {
     };
   }
   async getAll() {
-    const sql = `SELECT id, mission, google_drive_url as googleDriveURL FROM ${this.table} ORDER BY id`;
+    const sql = `SELECT id, mission, url as url FROM ${this.table} ORDER BY id`;
     const result = await this.mysql.query(sql);
     return result;
   }
   async insert(postInfo) {
-    postInfo.googleDriveURL = encodeURI(postInfo.googleDriveURL);
+    postInfo.url = encodeURI(postInfo.url);
     let sql = `INSERT INTO ${this.table} 
-              (mission, google_drive_url)
-              VALUES('${postInfo.mission}', '${postInfo.googleDriveURL}')`;
+              (mission, url)
+              VALUES('${postInfo.mission}', '${postInfo.url}')`;
     let result = await this.mysql.query(sql);
     return result;
   }
   async update(postInfo) {
-    postInfo.googleDriveURL = encodeURI(postInfo.googleDriveURL);
+    postInfo.url = encodeURI(postInfo.url);
     let sql = `UPDATE ${this.table}
-              SET google_drive_url='${postInfo.googleDriveURL}', mission='${postInfo.mission}'
+              SET url='${postInfo.url}', mission='${postInfo.mission}'
               WHERE id=${postInfo.id}`;
     let result = await this.mysql.query(sql);
     return result;
