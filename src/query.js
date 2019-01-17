@@ -485,7 +485,6 @@ class Uploads {
     }
     sql += ` WHERE team = ${team}`;
     result = await this.mysql.query(sql);
-
     return result;
   }
 
@@ -518,8 +517,23 @@ class Uploads {
     return result;
   }
 
+  // stack과 관련된 함수는 따로 설정
+  async getStack(team) {
+    let sql = `SELECT files, temp, uploadTime, stack FROM ${this.table} WHERE team = ${team}`;
+    let result = await this.mysql.query(sql);
+    return result;
+  }
+
+  async getAllStack(until) {
+
+  }
+
+  async addStack() {
+
+  }
+
   async reset(col = null, team = null) {
-    let sql = `UPDATE ${this.table} SET files = NULL, temp = NULL, uploadTime = 0`;
+    let sql = `UPDATE ${this.table} SET files = NULL, temp = NULL, uploadTime = 0, stack = NULL`;
     if ( col && team ) {
       sql = `UPDATE ${this.table} SET ${col} = NULL WHERE team = ${team}`;
     }
