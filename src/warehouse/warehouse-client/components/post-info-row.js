@@ -44,14 +44,14 @@ class PostInfoRow extends React.Component {
       isEditing: false
     });
 
-    this.missionInput.current.value = '';
-    this.urlInput.current.value = '';
+    this.missionInput.current.value = this.state.mission;
+    this.urlInput.current.value = this.state.url;
   }
 
   async handleRemoveBtnClick(e) {
     const config = {
       method: 'POST',
-      url: '/warehouse/post-info/remove',
+      url: '/warehouse/post-infos/remove',
       data: {
         id: this.state.id
       }
@@ -81,7 +81,7 @@ class PostInfoRow extends React.Component {
     }
     const config = {
       method: 'POST',
-      url: '/warehouse/post-info/add',
+      url: '/warehouse/post-infos/add',
       data: {
         postInfo
       }
@@ -102,7 +102,7 @@ class PostInfoRow extends React.Component {
     postInfo.id = this.state.id;
     const config = {
       method: 'POST',
-      url: '/warehouse/post-info/edit',
+      url: '/warehouse/post-infos/edit',
       data: {
         postInfo
       }

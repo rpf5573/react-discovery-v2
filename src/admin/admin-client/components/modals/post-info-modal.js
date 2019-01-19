@@ -1,11 +1,8 @@
 import * as utils from '../../../../utils/client';
-import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label, ButtonGroup, Table } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, Row, Col, Table } from 'reactstrap';
 import { closeModal, updatePostInfo, addPostInfo, removePostInfo } from '../../actions';
-import axios from 'axios';
-import cn from 'classnames';
 import PostInfoRow from './post-info-row';
 
 class PostInfoModal extends React.Component {

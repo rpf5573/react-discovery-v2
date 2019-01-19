@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import * as utils from '../../../../utils/client';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal } from '../../actions';
 import axios from 'axios';
 
-class PointReward extends React.Component {
+class PointRewardModal extends React.Component {
 
   constructor(props) {
     super(props);
@@ -122,4 +121,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { closeModal })(PointReward);
+export default connect(mapStateToProps, { closeModal })(PointRewardModal);

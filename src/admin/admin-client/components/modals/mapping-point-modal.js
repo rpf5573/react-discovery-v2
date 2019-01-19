@@ -1,5 +1,4 @@
 import * as utils from '../../../../utils/client';
-import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, Table, Alert } from 'reactstrap';
@@ -157,7 +156,7 @@ class MappingPointModal extends React.Component {
                 </td>
               </tr>
               <tr>
-                <td>구역점수시 필요한 점수</td>
+                <td>구역오픈시 필요한 점수</td>
                 <td>
                   <PointPart mapping_key="boxOpenUse" point={this.props.mappingPoints.boxOpenUse} onPointUpdate={this.props.updateMappingPoints}></PointPart>
                 </td>

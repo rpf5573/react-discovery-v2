@@ -26,7 +26,7 @@ class DCQuery {
       case 'admin':
         var teamCount = await this.teamPasswords.getTeamCount();
         var teamPasswords = await this.teamPasswords.getAll();
-        var metas = await this.metas.get(['laptime', 'companyImage', 'map', 'puzzleBoxCount', 'originalEniacWords', 'randomEniacWords', 'lastBoxUrl', 'eniacState', 'lastboxState', 'adminPasswords', 'mappingPoints']);
+        var metas = await this.metas.get(['laptime', 'companyImage', 'map', 'puzzleBoxCount', 'originalEniacWords', 'randomEniacWords', 'lastBoxUrl', 'eniacState', 'lastBoxState', 'adminPasswords', 'mappingPoints']);
         var teamTimers = await this.timers.getAll();
         var postInfos = await this.postInfos.getAll();
         return {
@@ -38,31 +38,31 @@ class DCQuery {
         };
 
       case 'user':
-        var metas = await this.meta.get(['laptime', 'companyImage', 'map', 'puzzleBoxCount', 'originalEniacWords', 'randomEniacWords', 'lastBoxUrl', 'lastboxState', 'mappingPoints']);
+        var metas = await this.metas.get(['laptime', 'companyImage', 'map', 'puzzleBoxCount', 'originalEniacWords', 'randomEniacWords', 'lastBoxUrl', 'lastBoxState', 'mappingPoints']);
         var teamCount = await this.teamPasswords.getTeamCount();
         var points = await this.points.get('useable');
-        var puzzleColonInfoss = await this.puzzles.getAll();
+        var puzzleColonInfos = await this.puzzles.getAll();
         var postInfos = await this.postInfos.getAll();
         return {
           ...metas,
           teamCount,
           points,
-          puzzleColonInfoss,
+          puzzleColonInfos,
           postInfos
         };
 
       case 'assist':
-        var metas = await this.meta.get(['map', 'randomEniacWords', 'puzzleBoxCount', 'lastBoxUrl', 'lastboxState']);
+        var metas = await this.metas.get(['map', 'randomEniacWords', 'puzzleBoxCount', 'lastBoxUrl', 'lastBoxState']);
         var teamCount = await this.teamPasswords.getTeamCount();
         var useablePoints = await this.points.get('useable');
         var postInfos = await this.postInfos.getAll();
-        var puzzleColonInfoss = await this.puzzles.getAll();
+        var puzzleColonInfos = await this.puzzles.getAll();
         return {
           ...metas,
           teamCount,
           useablePoints,
           postInfos,
-          puzzleColonInfoss
+          puzzleColonInfos
         };
         
       default:
@@ -77,7 +77,7 @@ class DCQuery {
 
     for( var i = 0; i < teamCount; i++ ) {
 
-      const puzzleNumbers = (function(raw) {
+      const boxNumbers = (function(raw) {
         if ( raw == null ) {
           return [];
         }
@@ -86,9 +86,9 @@ class DCQuery {
         } catch (err) {
             return [];
         }
-      })(puzzles[i].numbers);
+      })(puzzles[i].boxNumbers);
 
-      const puzzleBoxOpenRate =  Math.floor( ( puzzleNumbers.length / puzzleBoxCount ) * 100 );
+      const puzzleBoxOpenRate =  Math.floor( ( boxNumbers.length / puzzleBoxCount ) * 100 );
 
       let row = {
         team: i+1,
@@ -169,7 +169,7 @@ class Metas {
     return result;
   }
   async reset() {
-    var sql = `UPDATE ${this.table} SET metaValue = 0 WHERE metaKey IN ('eniacState', 'lastboxState', 'laptime', 'puzzleBoxCount')`;
+    var sql = `UPDATE ${this.table} SET metaValue = 0 WHERE metaKey IN ('eniacState', 'lastBoxState', 'laptime', 'puzzleBoxCount')`;
     var result = await this.mysql.query(sql);
 
     sql = `UPDATE ${this.table} SET metaValue = NULL WHERE metaKey IN ('companyImage', 'map', 'originalEniacWords', 'eniacSuccessTeams', 'randomEniacWords', 'lastBoxUrl')`;
@@ -323,19 +323,18 @@ class Points {
     const result = await this.mysql.query(sql);
     return result;
   }
-  // 이건 관리자페이지에서 한번에 주는거니까 temp option이 필요 없음
-  async reward(points) {
+  async updateAll(points) {
     var result = false;
     if ( Array.isArray(points) ) {
       for ( var i = 0; i < points.length; i++ ) {
-        result = await this.updateOneRow(points[i]);
+        result = await this.update(points[i]);
       }
     } else {
-      result = await this.updateOneRow(points);
+      result = await this.update(points);
     }
     return result;
   }
-  async updateOneRow(obj) {
+  async update(obj) {
     let team = obj.team;
     let useable = obj.hasOwnProperty('useable') ? obj.useable : 0;
     let timer = obj.hasOwnProperty('timer') ? obj.timer : 0;
@@ -351,7 +350,7 @@ class Points {
   async move(team) {
     let result = await this.get('temp', team);
     let temp = result[0].temp;
-    result = await this.updateOneRow({
+    result = await this.update({
       team,
       useable: temp,
       temp: -temp // 가져온 만큼 빼면 0이 되겠지 !
@@ -393,7 +392,7 @@ class Puzzles {
 
   async update(team, boxNumber, type) {
     let puzzleColonInfos = await this.get(team);
-    let puzzleNumbers = (function(raw) {
+    let boxNumbers = (function(raw) {
       try {
         if ( raw == null ) {
           return [];
@@ -402,20 +401,20 @@ class Puzzles {
       } catch (err) {
           return [];
       }
-    })(puzzleColonInfos[0].numbers);
+    })(puzzleColonInfos[0].boxNumbers);
 
-    puzzleNumbers.push(boxNumber);
+    boxNumbers.push(boxNumber);
 
     const emptyBox = ( type == constants.EMPTY ? 1 : 0 );
     const wordBox = ( type == constants.WORD ? 1 : 0 );
     
-    const sql = `UPDATE ${this.table} SET numbers='${JSON.stringify(puzzleNumbers)}', emptyBoxOpenCount = emptyBoxOpenCount + ${emptyBox}, wordBoxOpenCount = wordBoxOpenCount + ${wordBox} WHERE team=${team}`;
+    const sql = `UPDATE ${this.table} SET boxNumbers='${JSON.stringify(boxNumbers)}', emptyBoxOpenCount = emptyBoxOpenCount + ${emptyBox}, wordBoxOpenCount = wordBoxOpenCount + ${wordBox} WHERE team=${team}`;
     const result = await this.mysql.query(sql);
     return result;
   }
 
   async reset() {
-    let sql = `UPDATE ${this.table} SET numbers = NULL, emptyBoxOpenCount = 0, wordBoxOpenCount = 0`;
+    let sql = `UPDATE ${this.table} SET boxNumbers = NULL, emptyBoxOpenCount = 0, wordBoxOpenCount = 0`;
     let result = await this.mysql.query(sql);
     return result;
   }
@@ -517,23 +516,52 @@ class Uploads {
     return result;
   }
 
-  // stack과 관련된 함수는 따로 설정
-  async getStack(team) {
-    let sql = `SELECT files, temp, uploadTime, stack FROM ${this.table} WHERE team = ${team}`;
+  async getStackFiles(team) {
+    let sql = `SELECT team, stackFiles FROM ${this.table} WHERE team = ${team}`;
     let result = await this.mysql.query(sql);
     return result;
   }
 
-  async getAllStack(until) {
-
+  async getAllStackFiles(until = false) {
+    let sql = `SELECT team, stackFiles FROM ${this.table} ORDER BY team`;
+    if ( until ) {
+      sql = `SELECT team, stackFiles FROM ${this.table} WHERE team <= ${until} ORDER BY team`;
+    }
+    let result = await this.mysql.query(sql);
+    return result;
   }
 
-  async addStack() {
+  async addStackFile(team, filename) {
+    let result = await this.getStackFiles(team);
+    let files = (result[0].stackFiles ? JSON.parse(result[0].stackFiles) : []);
+    files.push({
+      filename,
+      downloaded: false
+    });
 
+    let sql = `UPDATE ${this.table} SET stackFiles = '${JSON.stringify(files)}' WHERE team = ${team}`;
+    result = await this.mysql.query(sql);
+    return result;
+  }
+
+  async makeStackFileDownloaded(team, filename) {
+    let result = await this.getStackFiles(team);
+    let stackFiles = JSON.parse(result[0].stackFiles);
+    if ( Array.isArray(stackFiles) ) {
+      for ( var i = 0; i < stackFiles.length; i++ ) {
+        if ( stackFiles[i].filename == filename ) {
+          stackFiles[i].downloaded = true;
+        }
+      }
+    }
+
+    let sql = `UPDATE ${this.table} SET stackFiles = '${JSON.stringify(stackFiles)}' WHERE team = ${team}`;
+    result = await this.mysql.query(sql);
+    return result;
   }
 
   async reset(col = null, team = null) {
-    let sql = `UPDATE ${this.table} SET files = NULL, temp = NULL, uploadTime = 0, stack = NULL`;
+    let sql = `UPDATE ${this.table} SET files = NULL, temp = NULL, uploadTime = 0, stackFiles = NULL`;
     if ( col && team ) {
       sql = `UPDATE ${this.table} SET ${col} = NULL WHERE team = ${team}`;
     }

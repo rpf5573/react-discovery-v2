@@ -1,10 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import * as utils from '../../../utils/client';
 import * as constants from '../../../utils/constants';
 import cn from 'classnames';
-import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import { updateFileInfo, updateProgressVal } from '../actions';
 import Camera from '@material-ui/icons/CameraAltOutlined';
@@ -19,8 +17,6 @@ class Upload extends Component {
 
   constructor(props) {
     super(props);
-
-    console.log( 'loadImage : ', loadImage );
 
     this.state = {
       progressVal: null

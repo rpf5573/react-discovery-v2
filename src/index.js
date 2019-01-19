@@ -53,6 +53,9 @@ require('./assist/init')(app, DCQuery);
 // warehouse
 require('./warehouse/init')(app, WHQuery);
 
+// media-files
+require('./media-files/init')(app, DCQuery);
+
 app.use(express.static('public'));
 
 let PORT = process.env.NODE_PORT || 8081;

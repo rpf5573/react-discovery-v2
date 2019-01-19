@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import cn from 'classnames';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
 

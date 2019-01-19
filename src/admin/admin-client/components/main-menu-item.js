@@ -29,7 +29,7 @@ class MainMenuItem extends Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return { activeMenuBtnClassName : state.modalControl.activeMenuBtnClassName };
 }
 

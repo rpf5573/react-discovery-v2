@@ -17,7 +17,7 @@ export default function configureStore(initialSettings = {}) {
     puzzleColonInfos : initialSettings.puzzleColonInfos,
     randomEniacWords : JSON.parse(initialSettings.randomEniacWords), // 실패할일 없음 어차피 null도 받으니까
     lastBoxUrl : decodeURI(initialSettings.lastBoxUrl),
-    lastBoxState : parseInt(initialSettings.lastboxState),
+    lastBoxState : parseInt(initialSettings.lastBoxState),
     puzzleBoxCount: parseInt(initialSettings.puzzleBoxCount),
   };
 

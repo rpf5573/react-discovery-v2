@@ -2,15 +2,14 @@ import * as utils from '../../../../utils/client';
 import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
-import { Button, Modal, ModalHeader, ModalBody, Alert, Row, Col, InputGroup, Label, Dropdown, DropdownToggle, DropdownItem, DropdownMenu, Table } from 'reactstrap';
-import { closeModal, updatePuzzleBoxCount, updateEniacWords, updateRandomEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState } from '../../actions';
+import { Button, Modal, ModalHeader, ModalBody, Row, Col, InputGroup, Label, Dropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
+import { closeModal, updatePuzzleBoxCount, updateEniacWords, updateRandomEniacWords, updateLastBoxUrl, updateLastBoxState } from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import 'awesome-bootstrap-checkbox';
 
-class PuzzleSettings extends React.Component {
+class PuzzleSettingModal extends React.Component {
 
   constructor(props) {
     super(props);
@@ -27,7 +26,7 @@ class PuzzleSettings extends React.Component {
     this.eniacWordInput = React.createRef();
 
     this.lastBoxUrlInput = React.createRef();
-    this.updateLastBoxGoogleDriveUrl = this.updateLastBoxGoogleDriveUrl.bind(this);
+    this.updateLastBoxUrl = this.updateLastBoxUrl.bind(this);
 
     this.updateLastBoxState = this.updateLastBoxState.bind(this);
   }
@@ -91,7 +90,7 @@ class PuzzleSettings extends React.Component {
     }
   }
 
-  async updateLastBoxGoogleDriveUrl() {
+  async updateLastBoxUrl() {
     let url = this.lastBoxUrlInput.current.value;
     if ( ! utils.isValidURL(url) ) {
       alert( "ERROR : 입력한 구글드라이브 주소를 다시한번 확인해 주세요" );
@@ -107,7 +106,7 @@ class PuzzleSettings extends React.Component {
     };
 
     utils.simpleAxios(axios, config).then(() => {
-      this.props.updateLastBoxGoogleDriveUrl(url);
+      this.props.updateLastBoxUrl(url);
       alert("성공");
       this.lastBoxUrlInput.current.value = '';
     });
@@ -183,7 +182,7 @@ class PuzzleSettings extends React.Component {
             <Col xs="12">
               <InputGroup>
                 <input className={"form-control"} placeholder={this.props.lastBoxUrl} ref={this.lastBoxUrlInput}></input>
-                <Button color="primary" className={"ml-2"} onClick={this.updateLastBoxGoogleDriveUrl}>확인</Button>
+                <Button color="primary" className={"ml-2"} onClick={this.updateLastBoxUrl}>확인</Button>
               </InputGroup>
             </Col>
           </Row>
@@ -224,4 +223,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { closeModal, updatePuzzleBoxCount, updateEniacWords, updateRandomEniacWords, updateLastBoxGoogleDriveUrl, updateLastBoxState })(PuzzleSettings);
+export default connect(mapStateToProps, { closeModal, updatePuzzleBoxCount, updateEniacWords, updateRandomEniacWords, updateLastBoxUrl, updateLastBoxState })(PuzzleSettingModal);

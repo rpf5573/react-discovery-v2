@@ -1,9 +1,5 @@
-// utils
-import axios from 'axios';
-
 // react & redux
 import React, { Component } from 'react';
-import { Provider } from 'react-redux';
 
 // components
 import MainMenu from './main-menu';

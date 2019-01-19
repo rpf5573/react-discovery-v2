@@ -37,7 +37,7 @@ export default function configureStore(initialSettings) {
       eniacWords: initialSettings.originalEniacWords,
       randomEniacWords: JSON.parse(initialSettings.randomEniacWords),
       lastBoxUrl: decodeURI(initialSettings.lastBoxUrl),
-      lastBoxState: parseInt(initialSettings.lastboxState)
+      lastBoxState: parseInt(initialSettings.lastBoxState)
     },
     adminPasswords: JSON.parse(initialSettings.adminPasswords),
     mappingPoints: JSON.parse(initialSettings.mappingPoints),

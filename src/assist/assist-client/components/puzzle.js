@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as utils from '../../../utils/client';
 import cn from 'classnames';
 import axios from 'axios';
-import { updatePuzzleColonInfo } from '../actions';
+import { updatePuzzleColonInfos } from '../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import NotReady from './not-ready';
@@ -90,8 +90,8 @@ class Puzzle extends Component {
       const word = ( randomEniacWords ? (randomEniacWords[i] ? randomEniacWords[i] : false) : false );
       var team = false;
       for ( var z = 0; z < teamCount; z++ ) {
-        for ( var m = 0; m < puzzleColonInfos[z].numbers.length; m++ ) {
-          if ( boxNumber == puzzleColonInfos[z].numbers[m] ) {
+        for ( var m = 0; m < puzzleColonInfos[z].boxNumbers.length; m++ ) {
+          if ( boxNumber == puzzleColonInfos[z].boxNumbers[m] ) {
             team = puzzleColonInfos[z].team;
           }
         }
@@ -133,13 +133,13 @@ class Puzzle extends Component {
     }
     const config = {
       method: 'POST',
-      url: '/user/get-puzzle-colon-info',
+      url: '/user/get-puzzle-colon-infos',
       data: {
         teamCount: this.props.teamCount
       }
     }
     utils.simpleAxios(axios, config).then(response => {
-      this.props.updatePuzzleColonInfo(response.data);
+      this.props.updatePuzzleColonInfos(response.data);
     });
   }
 
@@ -165,10 +165,10 @@ function mapStateToProps(state, ownProps) {
   // (2)위에서 axios로 가져올때, teamCount가 없으면 아예 가져오는거 자체를 안하기 때문이지 !
   // 햇갈리면 안되는게 puzzleColonInfos가 있어야 박스를 그리는건 아니야 !! 둘은 별개야 별개 !
   for ( var i = 0; i < state.puzzleColonInfos.length; i++ ) {
-    const parsed = JSON.parse(state.puzzleColonInfos[i].numbers);
+    const parsed = JSON.parse(state.puzzleColonInfos[i].boxNumbers);
     puzzleColonInfos.push({
       team: state.puzzleColonInfos[i].team,
-      numbers: (parsed ? parsed : [] )
+      boxNumbers: (parsed ? parsed : [] )
     });
   }
 
@@ -181,4 +181,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { updatePuzzleColonInfo })(Puzzle);
+export default connect(mapStateToProps, { updatePuzzleColonInfos })(Puzzle);

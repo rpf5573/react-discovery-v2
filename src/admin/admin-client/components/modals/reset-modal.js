@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import * as utils from '../../../../utils/client';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, Label, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Row, Col } from 'reactstrap';
 import { closeModal } from '../../actions';
 import axios from 'axios';
 

@@ -27,7 +27,7 @@ async loadFiles(e) {
 
 app.post('/admin/points/point', async (req, res) => {
   try {
-    await DCQuery.points.updateOneRow({
+    await DCQuery.points.update({
       team: req.body.team,
       useable: req.body.point
     });

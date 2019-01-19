@@ -11,14 +11,14 @@ export default class MainMenu extends Component {
   createMenu() {
     let menuList = [
       {label: "팀설정", className: "team-settings"},
-      {label: "타이머", className: "timer"},
+      {label: "타이머", className: "timers"},
       {label: "이미지설정", className: "uploads"},
       {label: "구역설정", className: "puzzle-settings"},
       {label: "구역점유현황", className: "puzzle-status"},
-      {label: "본부 점수 제공", className: "point-reward"},
+      {label: "본부 점수 제공", className: "point-rewards"},
       {label: "최종결과", className: "result"},
       {label: "점수배정표", className: "mapping-points"},
-      {label: "포스트 정보", className: "post-info"},
+      {label: "포스트 정보", className: "post-infos"},
       {label: "관리자 비밀번호", className: "admin-passwords"},
       {label: "초기화", className: "reset"},
     ];

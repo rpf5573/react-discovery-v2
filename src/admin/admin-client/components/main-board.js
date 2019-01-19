@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import cn from 'classnames';
 import * as utils from '../../../utils/client';
 import * as constants from '../../../utils/constants';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faList } from '@fortawesome/free-solid-svg-icons';
-import { Button, Input, Row, Col, InputGroup, Card, Dropdown, DropdownToggle, DropdownItem, DropdownMenu, } from 'reactstrap';
+import { Button, Row, Col, InputGroup, Card, } from 'reactstrap';
 // import FileDownloadDropDown from './file-download-dropdown';
 
 class FileItem extends Component {
@@ -16,7 +12,6 @@ class FileItem extends Component {
 
     this.input = React.createRef();
     this.onClickBtn = this.onClickBtn.bind(this);
-    console.log( 'props : ', props );
   }
 
   onClickBtn(e) {
@@ -86,8 +81,6 @@ class MainBoard extends Component {
   }
 
   async loadUploadInfos(e) {
-    console.log( 'loadUploadInfos', ' is called' );
-
     if ( ! this.props.teamCount ) {
       return alert("아직 파일을 불러올 수 없습니다.먼저 팀설정을 해주시기 바랍니다");
     }
@@ -136,13 +129,15 @@ class MainBoard extends Component {
     return (
       <Row>
         { (this.props.teamCount && Array.isArray(this.state.uploadInfos)) ? this.renderUploadInfos(this.state.uploadInfos) : '' }
+        <a href="/media-files" target="_blank" className="btn btn-success open-media-files-page">
+          미션자료 갤러리
+        </a>
         <a href="/warehouse" target="_blank" className="btn btn-primary open-post-info-warehouse">
           포스트 창고
         </a>
         <Button className="load-files-btn" color="danger" onClick={this.loadUploadInfos}>
           미션자료 불러오기
-        </Button>
-        
+        </Button>        
       </Row>
     );
   }

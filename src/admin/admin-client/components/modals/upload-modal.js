@@ -1,13 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import * as utils from '../../../../utils/client';
-import * as constants from '../../../../utils/constants';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText, FormGroup, Label } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, Row, Col, FormGroup, Label } from 'reactstrap';
 import { closeModal, uploadImageFile } from '../../actions';
 import axios from 'axios';
 
-class Uploads extends React.Component {
+class UploadModal extends React.Component {
 
   constructor(props) {
     super(props);
@@ -31,7 +29,7 @@ class Uploads extends React.Component {
 
     const config = {
       method: 'POST',
-      url: '/admin/upload',
+      url: '/admin/uploads',
       data: fd
     };
 
@@ -52,7 +50,7 @@ class Uploads extends React.Component {
 
     const config = {
       method: 'POST',
-      url: '/admin/upload',
+      url: '/admin/uploads',
       data: fd
     };
 
@@ -117,4 +115,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { closeModal, uploadImageFile })(Uploads);
+export default connect(mapStateToProps, { closeModal, uploadImageFile })(UploadModal);

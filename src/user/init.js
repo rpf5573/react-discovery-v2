@@ -5,7 +5,7 @@ module.exports = (app, path, multer, DCQuery) => {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       let team = (req.body.team ? req.body.team : req.session.loginData.team );
-      let uploadPath = `public/user/uploads/${process.env.DCV}/${req.body.team}`;
+      let uploadPath = `public/user/uploads/${process.env.DCV}/${team}`;
       
       fs.ensureDirSync(uploadPath);
       cb(null, uploadPath);

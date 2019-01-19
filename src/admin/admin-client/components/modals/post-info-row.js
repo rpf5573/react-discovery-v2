@@ -44,9 +44,10 @@ class PostInfoRow extends React.Component {
     this.setState({
       isEditing: false
     });
-    this.postInput.current.value = '';
-    this.missionInput.current.value = '';
-    this.urlInput.current.value = '';
+
+    this.postInput.current.value = this.state.post;
+    this.missionInput.current.value = this.state.mission;
+    this.urlInput.current.value = this.state.url;
   }
 
   async handleRemoveBtnClick(e) {

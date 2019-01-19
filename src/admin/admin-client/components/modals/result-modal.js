@@ -1,12 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import * as utils from '../../../../utils/client';
-import * as constants from '../../../../utils/constants';
 import { Modal, ModalHeader, ModalBody, Table, Alert } from 'reactstrap';
 import { closeModal } from '../../actions';
 import axios from 'axios';
-import { runInThisContext } from 'vm';
 
 function TableRow(props) {
   return (
@@ -19,8 +16,8 @@ function TableRow(props) {
       <td colSpan="2">{props.obj.eniac}</td>
       <td colSpan="2">{props.obj.bingo}</td>
 
-      <td colSpan="2">{props.obj.emptyPuzzleBoxOpenCount}</td>
-      <td colSpan="2">{props.obj.wordPuzzleBoxOpenCount}</td>
+      <td colSpan="2">{props.obj.emptyBoxOpenCount}</td>
+      <td colSpan="2">{props.obj.wordBoxOpenCount}</td>
       <td colSpan="2">{props.obj.puzzleBoxOpenRate}%</td>
 
       <td colSpan="2">{props.obj.totalPoint}</td>

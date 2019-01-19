@@ -122,7 +122,6 @@ class TimerModal extends React.Component {
     var btnList = [];
     for ( var i = 1; i <= count; i++ ) {
       let teamTimer = this.props.teamTimers[i-1] // 이게 1팀부터 15팀까지 순서대로 정리되어있으니까,,,그냥 이렇게 찾아도 문제없음
-      console.log( 'teamTimer : ', teamTimer );
       let color = cn({
         basic: !teamTimer.state,
         danger: teamTimer.state

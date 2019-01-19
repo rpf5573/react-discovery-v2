@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import teamSettingReducer from './team-settings-reducer';
+import teamSettingReducer from './team-setting-reducer';
 import modalControlReducer from './modal-control-reducer';
 import timerReducer from './timer-reducer';
 import uploadReducer from './upload-reducer';

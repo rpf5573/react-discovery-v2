@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Row, Col, Table } from 'reactstrap';
 import { updatePostInfo, addPostInfo, removePostInfo } from '../actions';
-import cn from 'classnames';
 import PostInfoRow from './post-info-row';
 
 class PostInfoWarehouse extends React.Component {

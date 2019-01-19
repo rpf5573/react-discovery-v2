@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import NotReady from './not-ready';
 
@@ -7,13 +7,9 @@ class Map extends Component {
     super(props);
   }
   render() {
-
-    console.log( 'this.props.map : ', this.props.map );
-
     if ( !this.props.map) {
       return ( <NotReady></NotReady> );
     }
-
     return (
       <div className="map-page full-container">
         <div className="wrapper">

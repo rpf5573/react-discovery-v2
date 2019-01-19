@@ -1,4 +1,4 @@
-import { UPDATE_PUZZLE_BOX_COUNT, UPDATE_ENIAC_WORDS, UPDATE_RANDOM_ENIAC_WORDS, UPDATE_LASTBOX_GOOGLEDRIVE_URL, UPDATE_LASTBOX_STATE } from '../actions/types';
+import { UPDATE_PUZZLE_BOX_COUNT, UPDATE_ENIAC_WORDS, UPDATE_RANDOM_ENIAC_WORDS, UPDATE_LASTBOX_URL, UPDATE_LASTBOX_STATE } from '../actions/types';
 
 export default function(state = {
   puzzleBoxCount: 20
@@ -19,7 +19,7 @@ export default function(state = {
         randomEniacWords: action.payload
       });
 
-    case UPDATE_LASTBOX_GOOGLEDRIVE_URL :
+    case UPDATE_LASTBOX_URL :
       return Object.assign({}, state, {
         lastBoxUrl: action.payload
       });

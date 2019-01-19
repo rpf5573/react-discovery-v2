@@ -1,4 +1,4 @@
-import { UPDATE_POINTS, UPDATE_PUZZLE_COLON_INFO } from './actions/types';
+import { UPDATE_POINTS, UPDATE_PUZZLE_COLON_INFOS } from './actions/types';
 
 export default (state = {}, action) => {
   switch(action.type) {
@@ -7,7 +7,7 @@ export default (state = {}, action) => {
         useablePoints: action.payload
       });
 
-    case UPDATE_PUZZLE_COLON_INFO:
+    case UPDATE_PUZZLE_COLON_INFOS:
       return Object.assign({}, state, {
         puzzleColonInfos: action.payload
       });

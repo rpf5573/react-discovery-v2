@@ -25,7 +25,7 @@ module.exports = (app, DCQuery, upload) => {
     }
   });
 
-  app.post('/admin/upload', async (req, res) => {
+  app.post('/admin/uploads', async (req, res) => {
     upload(req, res, (err) => {
       if ( err ) {
         console.log( 'upload err : ', err );
@@ -90,7 +90,7 @@ module.exports = (app, DCQuery, upload) => {
         const currentTime = utils.getCurrentTimeInSeconds();
         td = req.body.laptime - ( currentTime - startTime );
         var point = Math.floor(td/30) * ( td > 0 ? req.body.mappingPoints.timerPlus : req.body.mappingPoints.timerMinus );
-        await DCQuery.points.updateOneRow({team: req.body.team, timer: point});
+        await DCQuery.points.update({team: req.body.team, timer: point});
 
         // move temp to original
         if ( td >= 0 ) {
@@ -170,7 +170,7 @@ module.exports = (app, DCQuery, upload) => {
     return;
   });
   app.post('/admin/puzzle-settings/lastbox-state', async (req, res) => {
-    let result = await DCQuery.metas.update('lastboxState', req.body.lastBoxState);
+    let result = await DCQuery.metas.update('lastBoxState', req.body.lastBoxState);
     if ( result.err ) {
       return res.status(201).json({
         error: result.err
@@ -182,7 +182,7 @@ module.exports = (app, DCQuery, upload) => {
 
   // points
   app.post('/admin/points/reward', async (req, res) => {
-    let result = await DCQuery.points.reward(req.body.points);
+    let result = await DCQuery.points.updateAll(req.body.points);
     if ( result.err ) {
       return res.status(201).json({
         error: result.err
@@ -193,7 +193,7 @@ module.exports = (app, DCQuery, upload) => {
   app.post('/admin/points/upload', async (req, res) => {
     try {
       // update point
-      await DCQuery.points.updateOneRow({
+      await DCQuery.points.update({
         team: req.body.team,
         useable: req.body.point
       });

@@ -2,13 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import * as utils from '../../../../utils/client';
-import * as constants from '../../../../utils/constants';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Input, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, TabContent, TabPane, Nav, NavItem, NavLink, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { closeModal, updateTeamPasswords, updateTeamCount } from '../../actions';
 import axios from 'axios';
-import { number } from 'prop-types';
 
-class TeamSetting extends React.Component {
+class TeamSettingModal extends React.Component {
 
   constructor(props) {
     super(props);
@@ -20,7 +18,6 @@ class TeamSetting extends React.Component {
     this.close = this.close.bind(this);
     this.toggle = this.toggle.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.handleInput = this.handleInput.bind(this);
     this.getNumberFromInput = this.getNumberFromInput.bind(this);
     this.validate = this.validate.bind(this);
   }
@@ -178,10 +175,6 @@ class TeamSetting extends React.Component {
     }
   }
 
-  handleInput(e) {
-
-  }
-
   renderPasswordInputs(passwords) {
     var inputList = [];
     if ( typeof passwords !== 'undefined' ) {
@@ -247,4 +240,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { closeModal, updateTeamPasswords, updateTeamCount })(TeamSetting);
+export default connect(mapStateToProps, { closeModal, updateTeamPasswords, updateTeamCount })(TeamSettingModal);

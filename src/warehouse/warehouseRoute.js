@@ -27,7 +27,7 @@ module.exports = (app, WHQuery) => {
       return res.redirect('/?message=' + encodeURIComponent('관리자 페이지에서 다시 접속해 주세요'));
     }
   });
-  app.post('/warehouse/post-info/add', async (req, res) => {
+  app.post('/warehouse/post-infos/add', async (req, res) => {
     try {
       let result = await WHQuery.insert(req.body.postInfo);
       return res.status(201).json({
@@ -38,7 +38,7 @@ module.exports = (app, WHQuery) => {
       return res.sendStatus(401);
     }
   });
-  app.post('/warehouse/post-info/edit', async (req, res) => {
+  app.post('/warehouse/post-infos/edit', async (req, res) => {
     try {
       await WHQuery.update(req.body.postInfo);
       return res.sendStatus(201);
@@ -47,7 +47,7 @@ module.exports = (app, WHQuery) => {
       return res.sendStatus(401);
     }
   });
-  app.post('/warehouse/post-info/remove', async (req, res) => {
+  app.post('/warehouse/post-infos/remove', async (req, res) => {
     try {
       await WHQuery.remove(req.body.id);
       return res.sendStatus(201);

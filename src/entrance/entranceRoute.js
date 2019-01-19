@@ -1,10 +1,7 @@
-const path = require('path');
 const template = require('./entrance-client/template');
 
 module.exports = (app, DCQuery) => {
   app.get('/', (req, res) => {
-    console.log( 'HERE IS ' + process.env.NODE_PORT );
-
     let document = template(process.env.DCV, req.query.message);
     return res.set('Content-Type', 'text/html').end(document);
   });

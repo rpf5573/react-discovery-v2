@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import socketIOClient from "socket.io-client";
@@ -7,12 +7,11 @@ import * as constants from '../../../utils/constants';
 import cn from 'classnames';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import { updatePuzzleColonInfo } from '../actions';
+import { updatePuzzleColonInfos } from '../actions';
 import Modal from '@material-ui/core/Modal';
 import TextField from '@material-ui/core/TextField';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import NotReady from './not-ready';
-import { withMobileDialog } from '@material-ui/core';
 
 class PuzzleBox extends Component {
   constructor(props) {
@@ -65,8 +64,6 @@ class Puzzle extends Component {
       isModalOpen: false,
       eniacSentance: false
     };
-
-    console.log( 'puzzle component constructor : ' );
 
     // 이걸 굳이 state에 넣을 필요는 없지 ! View에 반영되는건 아니니께~
     this.grid = (this.props.count > 0 ? utils.makeGrid(this.props.maxLocation, this.props.puzzleColonInfos) : false);
@@ -121,8 +118,8 @@ class Puzzle extends Component {
       const word = ( randomEniacWords ? (randomEniacWords[i] ? randomEniacWords[i] : false) : false );
       var team = false;
       for ( var z = 0; z < teamCount; z++ ) {
-        for ( var m = 0; m < puzzleColonInfos[z].numbers.length; m++ ) {
-          if ( boxNumber == puzzleColonInfos[z].numbers[m] ) {
+        for ( var m = 0; m < puzzleColonInfos[z].boxNumbers.length; m++ ) {
+          if ( boxNumber == puzzleColonInfos[z].boxNumbers[m] ) {
             team = puzzleColonInfos[z].team;
           }
         }
@@ -199,10 +196,8 @@ class Puzzle extends Component {
     let puzzlePoint = this.props.mappingPoints.boxOpenGetEmpty;
 
     this.updateGrid(boxNumber, this.props.ourTeam);
-    console.log( 'updated grid : ', this.grid );
 
     let totalCount = this.checkBingo( boxNumber, this.props.ourTeam );
-    console.log( 'totalCount : ', totalCount );
     let bingoPoint = totalCount * this.props.mappingPoints.bingo;
 
     if ( hasWord == 'true' ) {
@@ -225,7 +220,7 @@ class Puzzle extends Component {
       // grid update하구요
       this.socket.emit('open_puzzle_box', response.data);
       if ( bingoPoint > 0 ) {
-        alert( `성공 - ${totalCount}개의 구역연결을 해서 ${bingoPoint}를 추가로 획득하셨습니다` );
+        alert( `성공 - ${totalCount}개의 구역연결을 해서 ${bingoPoint}점을 추가로 획득하셨습니다` );
       } else {
         alert( "성공" );
       }
@@ -245,13 +240,13 @@ class Puzzle extends Component {
   async componentDidMount() {
     const config = {
       method: 'POST',
-      url: '/user/get-puzzle-colon-info',
+      url: '/user/get-puzzle-colon-infos',
       data: {
         teamCount: this.props.teamCount
       }
     }
     utils.simpleAxios(axios, config).then(response => {
-      this.props.updatePuzzleColonInfo(response.data);
+      this.props.updatePuzzleColonInfos(response.data);
     });
   }
 
@@ -448,10 +443,10 @@ function mapStateToProps(state, ownProps) {
   let puzzleColonInfos = [];
   // puzzleColonInfos는 없을 수가 없다
   for ( var i = 0; i < state.puzzleColonInfos.length; i++ ) {
-    const parsed = JSON.parse(state.puzzleColonInfos[i].numbers);
+    const parsed = JSON.parse(state.puzzleColonInfos[i].boxNumbers);
     puzzleColonInfos.push({
       team: state.puzzleColonInfos[i].team,
-      numbers: (parsed ? parsed : [] )
+      boxNumbers: (parsed ? parsed : [] )
     });
   }
 
@@ -494,4 +489,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { updatePuzzleColonInfo })(Puzzle);
+export default connect(mapStateToProps, { updatePuzzleColonInfos })(Puzzle);

@@ -1,4 +1,3 @@
-const path = require('path');
 const template = require('./user-client/template');
 const utils = require('../utils/server');
 const constants = require('../utils/constants');
@@ -42,20 +41,20 @@ module.exports = (app, DCQuery, upload) => {
     return res.status(201).json(result);
   });
 
-  app.post('/user/get-puzzle-colon-info', async (req, res) => {
-    let result = await DCQuery.puzzle.getAll(req.body.teamCount);
+  app.post('/user/get-puzzle-colon-infos', async (req, res) => {
+    let result = await DCQuery.puzzles.getAll(req.body.teamCount);
     return res.status(201).json(result);
   });
 
   app.post('/user/openBox', async (req, res) => {
     try {
       // 다른 팀이 이미 점령했는지 체크해야지
-      var result = await DCQuery.puzzle.getAll(req.body.teamCount);
+      var result = await DCQuery.puzzles.getAll(req.body.teamCount);
       for ( var i = 0; i < result.length; i++ ) {
-        let numbers = JSON.parse( result[i].numbers );
-        if ( Array.isArray(numbers) ) {
-          for ( var z = 0; z < numbers.length; z++ ) {
-            if ( numbers[z] == req.body.boxNumber ) {
+        let boxNumbers = JSON.parse( result[i].boxNumbers );
+        if ( Array.isArray(boxNumbers) ) {
+          for ( var z = 0; z < boxNumbers.length; z++ ) {
+            if ( boxNumbers[z] == req.body.boxNumber ) {
               return res.status(201).json({
                 error: "이미 다른팀에의해 점령당했습니다"
               });
@@ -71,10 +70,10 @@ module.exports = (app, DCQuery, upload) => {
       }
 
       // 퍼즐 먼저 업데이트 하즈아 !
-      await DCQuery.puzzle.update( req.body.team, req.body.boxNumber, req.body.type );
+      await DCQuery.puzzles.update( req.body.team, req.body.boxNumber, req.body.type );
 
       // 포인트 업데이트
-      await DCQuery.points.updateOneRow({ 
+      await DCQuery.points.update({ 
         team: req.body.team, 
         useable: -(req.body.boxOpenUse),
         puzzle: req.body.puzzlePoint,
@@ -142,7 +141,7 @@ module.exports = (app, DCQuery, upload) => {
 
       result.push(req.body.team);
 
-      await DCQuery.points.updateOneRow({ team: req.body.team, eniac: point });
+      await DCQuery.points.update({ team: req.body.team, eniac: point });
       await DCQuery.metas.update('eniacSuccessTeams', JSON.stringify(result));
 
       res.status(201).json({
@@ -159,7 +158,7 @@ module.exports = (app, DCQuery, upload) => {
   });
 
   app.post('/user/upload', async (req, res) => {
-    upload(req, res, (err) => {
+    upload(req, res, async (err) => {
       if ( err ) {
         console.log( 'upload err : ', err );
         res.status(201).json({
@@ -173,13 +172,19 @@ module.exports = (app, DCQuery, upload) => {
         } else {
           try {
             console.log( 'success upload !! ' );
+            const team = req.body.team;
+            const filename = req.files.userFile[0].filename;
+            const point  = req.body.point;
             const currentTime = utils.getCurrentTimeInSeconds();
-            DCQuery.points.updateOneRow({
-              team: req.body.team,
-              temp: req.body.point, // useable이 아니라 temp를 업데이트 한다,
+            await DCQuery.points.update({
+              team,
+              temp: point, // useable이 아니라 temp를 업데이트 한다,
             });
-            DCQuery.uploads.add(req.body.team, req.files.userFile[0].filename, currentTime, true);
-            res.sendStatus(201);
+            await DCQuery.uploads.add(team, filename, currentTime, true);
+            console.log( 'res.sendStatus : ' );
+            res.sendStatus(201); // 우선 보내고 그다음 할일을 하자. 아래꺼는 좀 오래걸리니까 !
+
+            await DCQuery.uploads.addStackFile(team, filename);
           } catch (e) {
             console.log( 'e : ', e );
             res.sendStatus(401);
@@ -217,6 +222,7 @@ module.exports = (app, DCQuery, upload) => {
       let result = await DCQuery.uploads.get(req.body.team);
       let currentTime = utils.getCurrentTimeInSeconds();
       let uploadTime = result[0].uploadTime;
+
       if ( (currentTime - uploadTime) < constants.UPLOAD_TIME_INTERVAL ) {
         return res.status(201).json({
           error: "연속적으로 업로드 할 수 없습니다. 잠시후 다시 시도해 주시기 바랍니다"
@@ -231,7 +237,7 @@ module.exports = (app, DCQuery, upload) => {
 
   app.get('/user/open-lastbox', async (req, res) => {
     try {
-      let result = await DCQuery.metas.get('lastboxState');
+      let result = await DCQuery.metas.get('lastBoxState');
       result = parseInt(result);
       if ( result ) {
         return res.sendStatus(201);

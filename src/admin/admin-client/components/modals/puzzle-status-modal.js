@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import * as utils from '../../../../utils/client';
-import * as constants from '../../../../utils/constants';
 import { Modal, ModalHeader, ModalBody, Alert } from 'reactstrap';
 import { closeModal } from '../../actions';
 import axios from 'axios';
@@ -96,8 +95,8 @@ class PuzzlePage extends Component {
       // 아래의 componeneDidMout에서 teamCount가 없는 경우에는 안가져 왔는데,
       // 여기서도 puzzleColonInfos가 어차피 teamCount안에서 루프를 도는거니까, 안전함
       for ( var z = 0; z < teamCount; z++ ) {
-        for ( var m = 0; m < puzzleColonInfos[z].numbers.length; m++ ) {
-          if ( boxNumber == puzzleColonInfos[z].numbers[m] ) {
+        for ( var m = 0; m < puzzleColonInfos[z].boxNumbers.length; m++ ) {
+          if ( boxNumber == puzzleColonInfos[z].boxNumbers[m] ) {
             team = puzzleColonInfos[z].team;
           }
         }
@@ -156,7 +155,7 @@ class PuzzleStatusModal extends React.Component {
 
     this.close = this.close.bind(this);
     this.onOpened = this.onOpened.bind(this);
-    this.getPuzzleColonInfo = this.getPuzzleColonInfo.bind(this);
+    this.getPuzzleColonInfos = this.getPuzzleColonInfos.bind(this);
   }
 
   close() {
@@ -180,17 +179,17 @@ class PuzzleStatusModal extends React.Component {
   }
 
   async onOpened() {
-    await this.getPuzzleColonInfo();
+    await this.getPuzzleColonInfos();
   }
 
-  async getPuzzleColonInfo() {
+  async getPuzzleColonInfos() {
     // 팀수가 있어야 뭘 가져오던가 하지
     if ( ! this.props.teamCount ) {
       return;
     }
     const config = {
       method: 'POST',
-      url: '/user/get-puzzle-colon-info',
+      url: '/user/get-puzzle-colon-infos',
       data: {
         teamCount: this.props.teamCount
       }
@@ -199,10 +198,10 @@ class PuzzleStatusModal extends React.Component {
     utils.simpleAxios(axios, config).then((response) => {
       let puzzleColonInfos = [];
       for ( var i = 0; i < response.data.length; i++ ) {
-        const parsed = JSON.parse(response.data[i].numbers);
+        const parsed = JSON.parse(response.data[i].boxNumbers);
         puzzleColonInfos.push({
           team: response.data[i].team,
-          numbers: (parsed ? parsed : [] )
+          boxNumbers: (parsed ? parsed : [] )
         });
       }
       

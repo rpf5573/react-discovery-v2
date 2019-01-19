@@ -1,6 +1,6 @@
 export * from './modal-control-actions';
 export * from './initial-state-actions';
-export * from './team-settings-actions';
+export * from './team-setting-actions';
 export * from './timer-actions';
 export * from './upload-actions';
 export * from './puzzle-setting-actions';
