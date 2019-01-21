@@ -1,14 +1,14 @@
 .load-files-btn {
   position: fixed;
   right: 20px;
-  bottom: 20px;
+  bottom: 70px;
 
   cursor: pointer;
 }
 
 .open-post-info-warehouse {
   @extend .load-files-btn ;
-  bottom: 70px;
+  bottom: 120px;
   color: white;
   &:hover {
     color: white;
@@ -18,5 +18,5 @@
 .open-media-files-page {
   position: fixed;
   right: 20px;
-  top: 20px;
+  bottom: 20px;
 }

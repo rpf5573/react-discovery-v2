@@ -66,7 +66,7 @@ module.exports = (app, DCQuery, upload) => {
       // 돈 체크 합니다잉~
       result = await DCQuery.points.get('useable', req.body.team);
       if ( result[0].useable < req.body.boxOpenUse ) {
-        return res.status(201).json({ error: '포인트가 부족합니다' });
+        return res.status(201).json({ error: '가용점수가 부족합니다' });
       }
 
       // 퍼즐 먼저 업데이트 하즈아 !
@@ -120,21 +120,21 @@ module.exports = (app, DCQuery, upload) => {
         // 등수에 맞게 포인트 지급
         switch( rank ) {
           case 2:
-            point = Math.floor( (point * 0.8) );
+            point = point - 2000;
             break;
           case 3:
-            point = Math.floor( (point * 0.6) );
+            point = point - 4000;
             break;
           case 4:
-            point = Math.floor( (point * 0.4) );
+            point = point - 6000;
             break;
           case 5:
-            point = Math.floor( (point * 0.2) );
+            point = point - 8000;
             break;
             
           // 6등부터는 같은 점수
           default:
-            point = Math.floor( (point * 0.2) );
+            point = point - 8000;
             break;
         }
       }

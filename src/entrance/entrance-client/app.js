@@ -34,7 +34,7 @@ class App extends Component {
         }
       };
       utils.simpleAxios(axios, config).then(response => {
-        alert('성공');
+        alert('입장');
         window.location.href = '/' + response.data.role + ( (response.data.role == 'user' || response.data.role == 'assist') ? '/page/map' : '' );
       });
     } else {

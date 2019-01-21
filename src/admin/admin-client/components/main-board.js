@@ -129,15 +129,15 @@ class MainBoard extends Component {
     return (
       <Row>
         { (this.props.teamCount && Array.isArray(this.state.uploadInfos)) ? this.renderUploadInfos(this.state.uploadInfos) : '' }
-        <a href="/media-files" target="_blank" className="btn btn-success open-media-files-page">
-          미션자료 갤러리
-        </a>
         <a href="/warehouse" target="_blank" className="btn btn-primary open-post-info-warehouse">
           포스트 창고
         </a>
         <Button className="load-files-btn" color="danger" onClick={this.loadUploadInfos}>
-          미션자료 불러오기
-        </Button>        
+          업로드자료 불러오기
+        </Button>
+        <a href="/media-files" target="_blank" className="btn btn-success open-media-files-page">
+          업로드자료 갤러리
+        </a>
       </Row>
     );
   }
