@@ -62,7 +62,6 @@ class Upload extends Component {
       // image인경우에는 이미지 돌려서 다시 해야함
       else if ( mediaType == constants.IMAGE ) {
         loadImage(file, (canvas) => {
-          console.dir( canvas );
           this.props.updateFileInfo({
             src: canvas.toDataURL(),
             type,
