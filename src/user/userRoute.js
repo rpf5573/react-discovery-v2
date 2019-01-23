@@ -199,13 +199,13 @@ module.exports = (app, DCQuery, upload) => {
       let result = await DCQuery.timers.check(req.body.team, req.body.laptime);
       if ( ! result.state ) {
         return res.status(201).json({
-          error: "교육 진행 전입니다"
+          error: "타이머 off상태입니다"
         });
       }
 
       if ( result.td <= 0 ) {
         return res.status(201).json({
-          error: "타이머 off상태입니다"
+          error: "타이머 시간을 초과하였습니다"
         });
       } 
     
