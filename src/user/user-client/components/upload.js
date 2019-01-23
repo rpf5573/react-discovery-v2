@@ -67,7 +67,7 @@ class Upload extends Component {
             type,
             mediaType
           });
-        }, { canvas: true });
+        }, { canvas: true, orientation: true });
       }
     } else {
       console.log( 'no file select');
