@@ -205,7 +205,7 @@ module.exports = (app, DCQuery, upload) => {
 
       if ( result.td <= 0 ) {
         return res.status(201).json({
-          error: "교육전입니다"
+          error: "타이머 off상태입니다"
         });
       } 
     

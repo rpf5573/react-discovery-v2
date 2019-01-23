@@ -194,7 +194,7 @@ class Puzzle extends Component {
     let boxNumber = parseInt(e.currentTarget.getAttribute('data-number'));
     let hasWord = e.currentTarget.getAttribute('data-hasword');
     let puzzlePoint = this.props.mappingPoints.boxOpenGetEmpty;
-    let pointMessage = `글자없는구역 - ${puzzlePoint}점 획득`;
+    let pointMessage = `글자없는구역 : ${puzzlePoint}점 획득`;
 
     this.updateGrid(boxNumber, this.props.ourTeam);
 
@@ -203,7 +203,7 @@ class Puzzle extends Component {
 
     if ( hasWord == 'true' ) {
       puzzlePoint = this.props.mappingPoints.boxOpenGetWord;
-      pointMessage = `글자있는구역 - ${puzzlePoint}점 획득`;
+      pointMessage = `글자있는구역 : ${puzzlePoint}점 획득`;
     }
 
     const config = {
@@ -223,7 +223,7 @@ class Puzzle extends Component {
       // grid update하구요
       this.socket.emit('open_puzzle_box', response.data);
       if ( bingoPoint > 0 ) {
-        alert( `성공 - ${totalCount*3}개의 구역을 연결 해서 ${bingoPoint}점을 추가로 획득하셨습니다` );
+        alert( `${pointMessage} + ${totalCount*3}개의 구역연결로 ${bingoPoint}점 획득` );
       } else {
         alert(pointMessage);
       }
