@@ -99,7 +99,6 @@ class ResultModal extends React.Component {
         }
       }
       utils.simpleAxios(axios, config).then((response) => {
-        console.log( 'response : ', response );
         this.setState({
           error: false,
           rows: response.data

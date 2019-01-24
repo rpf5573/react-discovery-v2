@@ -13,7 +13,6 @@ module.exports = (app, path, multer, DCQuery) => {
     filename: (req, file, cb) => {
       let date = utils.getYYYYMMDDHHMMSS();
       let filename = date + path.extname(file.originalname);
-      console.log( 'filename : ', filename );
       cb(null, filename);
     }
   });

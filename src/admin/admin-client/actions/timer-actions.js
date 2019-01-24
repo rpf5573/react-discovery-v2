@@ -15,7 +15,6 @@ export const updateTeamTimerState = (teamTimers) => dispatch => {
 }
 
 export const updateEniacState = (state) => dispatch => {
-  console.log( 'state in updateEniacState action: ', state );
   dispatch({
     type: UPDATE_ENIAC_STATE,
     payload: state

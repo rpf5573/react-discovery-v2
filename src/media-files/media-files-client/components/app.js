@@ -80,7 +80,6 @@ class App extends Component {
   }
 
   render() {
-    console.log( 'this.props.mediaFiles : ', this.props.mediaFiles );
     return (
       <div className="page container-fluid">
         <h2 className="title">미션 자료 다운로드</h2>

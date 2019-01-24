@@ -97,7 +97,6 @@ class PostInfoWarehouse extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  console.log( 'state in mapStateToProps : ', state );
   return {
     postInfos: state.postInfos
   };

@@ -80,7 +80,6 @@ function getRandomInteger(min, max) {
 async function simpleAxios(axios, config) {
   return new Promise(async function(resolve, reject) {
     try {
-      console.log( 'simpleAxios try', ' is called' );
       let response = await axios(config);
       if ( response.status == 201 ) {
         if ( response.data.error ) {
@@ -114,8 +113,8 @@ function boxNumberToLocation(number, maxLocation) {
 }
 
 function makeGrid(maxLocation, puzzleColonInfos = []) {
+
   var grid = [...Array(maxLocation[0])].map(e => Array(maxLocation[1]).fill(0));
-  
   for ( var i = 0; i < puzzleColonInfos.length; i++ ) {
     if ( Array.isArray(puzzleColonInfos[i].boxNumbers) ) {
       for ( var z = 0; z < puzzleColonInfos[i].boxNumbers.length; z++ ) {

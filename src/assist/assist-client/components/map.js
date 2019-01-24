@@ -7,8 +7,6 @@ class Map extends Component {
     super(props);
   }
   render() {
-    console.log( 'this.props.map : ', this.props.map );
-
     if ( ! this.props.map ) {
       return (<NotReady></NotReady>);
     }

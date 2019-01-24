@@ -67,11 +67,17 @@ class Puzzle extends Component {
 
     // 이걸 굳이 state에 넣을 필요는 없지 ! View에 반영되는건 아니니께~
     this.grid = (this.props.count > 0 ? utils.makeGrid(this.props.maxLocation, this.props.puzzleColonInfos) : false);
+    console.log( 'constructor this.grid : ', this.grid );
 
     this.socket = socketIOClient(this.props.endPoint);
     this.socket.on("puzzle_box_opened", data => {
       // 여기서 말하는 boxes는 lastBox를 제외한거야
       if ( this.boxes.length == this.props.count - 1 ) {
+        // 다른 팀이 박스 열었으면 우리도 grid를 업데이트 해줘야징 !
+        if ( data.team != this.props.ourTeam ) {
+          this.updateGrid(data.boxNumber, data.team);
+        }
+        console.log( 'this.grid in socket : ', this.grid );
         var node = ReactDOM.findDOMNode(this.boxes[data.boxNumber-1]);
         node.classList.add('flipping', `owner-${data.team}`);
       } else {
@@ -197,8 +203,15 @@ class Puzzle extends Component {
     let pointMessage = `글자없는구역 : ${puzzlePoint}점 획득`;
 
     this.updateGrid(boxNumber, this.props.ourTeam);
+    
+    console.time("checkBingo - calculatingTime");
 
     let totalCount = this.checkBingo( boxNumber, this.props.ourTeam );
+
+    console.timeEnd("checkBingo - calculatingTime");
+
+    console.log( '구역 연결 개수 : ', totalCount );
+
     let bingoPoint = totalCount * this.props.mappingPoints.bingo;
 
     if ( hasWord == 'true' ) {
@@ -280,6 +293,8 @@ class Puzzle extends Component {
       if ( count == 3) {
         totalCount += 1;
       }
+
+      // 왜 3개에서 안끝내냐면, 3개 이상(4,5..)이면 안되니까 !
       if ( count == 4 ) {
         // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
         totalCount -= 1;
@@ -308,6 +323,8 @@ class Puzzle extends Component {
       if ( count == 3) {
         totalCount += 1;
       }
+
+      // 왜 3개에서 안끝내냐면, 3개 이상(4,5..)이면 안되니까 !
       if ( count == 4 ) {
         // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
         totalCount -= 1;
@@ -338,6 +355,8 @@ class Puzzle extends Component {
       if ( count == 3) {
         totalCount += 1;
       }
+
+      // 왜 3개에서 안끝내냐면, 3개 이상(4,5..)이면 안되니까 !
       if ( count == 4 ) {
         // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
         totalCount -= 1;
@@ -475,6 +494,9 @@ function mapStateToProps(state, ownProps) {
       break;
     case 60:
       maxLocation = [6,10];
+      break;
+    case 66:
+      maxLocation = [6,11];
       break;
   }
 

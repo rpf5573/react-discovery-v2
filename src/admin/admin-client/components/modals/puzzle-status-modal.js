@@ -163,7 +163,6 @@ class PuzzleStatusModal extends React.Component {
   }
 
   render() {
-    console.log( 'this.state.puzzleColonInfos : ', this.state.puzzleColonInfos );
 
     return (
       <Modal isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} onOpened={this.onOpened} size="md">

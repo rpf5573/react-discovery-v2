@@ -168,8 +168,6 @@ class Point extends Component {
   renderPointInputs(teamCount) {
     var inputList = [];
 
-    console.log( 'this.state.placeholders : ', this.state.placeholders );
-
     for( var i = 1; i <= teamCount; i++ ) {
       const placeholder = this.state.placeholders.find(el => {return el.team == i});
       let hasError = this.state.errorTeams.filter(team => {return (team === i)}).length > 0;

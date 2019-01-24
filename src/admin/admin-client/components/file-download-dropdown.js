@@ -46,7 +46,6 @@ class FileDownloadDropDown extends Component {
       }
     }
     utils.simpleAxios(axios, config).then((response) => {
-      console.log( 'response : ', response );
     }).catch(e => {
       this.setState({
         waiting: false,

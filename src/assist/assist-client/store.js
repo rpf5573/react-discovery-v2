@@ -7,8 +7,6 @@ let middleWare = [thunk];
 
 export default function configureStore(initialSettings = {}) {
 
-  console.log( 'initialSettings : ', initialSettings );
-
   var initialState = {
     map: initialSettings.map,
     teamCount : initialSettings.teamCount,

@@ -15,8 +15,6 @@ export default function(state, action) {
       });
 
     case ADD_POST_INFO:
-      console.log( 'action.payload : ', action.payload );
-      console.log( 'state : ', state );
       var newPostInfos = [
         ...state.postInfos,
         action.payload
