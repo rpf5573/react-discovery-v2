@@ -58,6 +58,8 @@ require('./media-files/init')(app, DCQuery);
 
 app.use(express.static('public'));
 
+console.log( 'process.env.NODE_PORT : ', process.env.NODE_PORT );
+
 let PORT = process.env.NODE_PORT || 8081;
 server.listen(PORT, 'localhost');
 
