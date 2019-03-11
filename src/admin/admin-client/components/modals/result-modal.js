@@ -61,7 +61,7 @@ class ResultModal extends React.Component {
               </tr>
               <tr> 
                 <th colSpan="2">가용점수</th>
-                <th colSpan="2">이동시간</th>
+                <th colSpan="2">이동\n시간</th>
                 <th colSpan="2">구역점유</th>
                 <th colSpan="2">문장해독</th>
                 <th colSpan="2">구역연결점수</th>
