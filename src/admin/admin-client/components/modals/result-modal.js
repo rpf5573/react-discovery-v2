@@ -46,7 +46,7 @@ class ResultModal extends React.Component {
 
   render() {
     return (
-      <Modal style={{maxWidth: '1400px'}} isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} onOpened={this.onOpened}>
+      <Modal style={{maxWidth: '1000px'}} isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} onOpened={this.onOpened}>
         <ModalBody>
           <ModalHeader toggle={this.close}>
             최종결과표
@@ -56,7 +56,7 @@ class ResultModal extends React.Component {
               <tr>
                 <th rowSpan="2" colSpan="1">TEAM</th>
                 <th colSpan="10">평가점수</th>
-                <th colSpan="6">구역 점유</th>
+                <th colSpan="6">구역점유</th>
                 <th colSpan="4">결과</th>
               </tr>
               <tr> 
