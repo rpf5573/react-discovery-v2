@@ -46,7 +46,7 @@ class ResultModal extends React.Component {
 
   render() {
     return (
-      <Modal style={{maxWidth: '1300px'}} isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} onOpened={this.onOpened}>
+      <Modal style={{maxWidth: '1400px'}} isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} onOpened={this.onOpened}>
         <ModalBody>
           <ModalHeader toggle={this.close}>
             최종결과표
@@ -61,7 +61,7 @@ class ResultModal extends React.Component {
               </tr>
               <tr> 
                 <th colSpan="2">가용점수</th>
-                <th colSpan="2">이동\n시간</th>
+                <th colSpan="2">이동시간</th>
                 <th colSpan="2">구역점유</th>
                 <th colSpan="2">문장해독</th>
                 <th colSpan="2">구역연결점수</th>
