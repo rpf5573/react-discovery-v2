@@ -56,7 +56,7 @@ class PointInput extends Component {
             {this.props.team}
           </InputGroupText>
         </InputGroupAddon>
-        <input type="number" value={this.state.point} min="0" className={inputCN} placeholder={this.props.placeholder} onChange={this.handleOnInputChange}/>
+        <input type="number" value={this.state.point} className={inputCN} placeholder={this.props.placeholder} onChange={this.handleOnInputChange}/>
       </InputGroup>
     );
   }

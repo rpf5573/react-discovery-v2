@@ -82,7 +82,7 @@ class PointRewardModal extends React.Component {
                 {i}
               </InputGroupText>
             </InputGroupAddon>
-            <input type="number" min="0" className="form-control point-input" />
+            <input type="number" className="form-control point-input" />
           </InputGroup>
         </Col>
       );
