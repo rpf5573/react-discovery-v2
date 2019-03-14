@@ -107,6 +107,8 @@ class Point extends Component {
     let response = await utils.simpleAxios(axios, config);
     let teamTimers = response.data;
 
+    console.log( 'Number.isInteger(obj.point) : ', Number.isInteger(obj.point) );
+
     // 전체 값이 비어있는지 체크
     let allEmpty = this.teamPoints.filter(obj => {return (Number.isInteger(obj.point) ? true : false)}).length < 1;
     if ( allEmpty ) {
