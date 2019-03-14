@@ -120,14 +120,14 @@ class Point extends Component {
     for( var i = 0; i < this.teamPoints.length; i++ ) {
       const point = this.teamPoints[i].point;
       // timer가 켜져있는 팀만 점수 제공
-      if ( teamTimers[i].state && point ) {
+      if ( teamTimers[i].state && Number.isInteger(point) ) {
         points.push({
           team: (i+1),
           temp: point // 무족권 temp에 넣는다리 !
         });
       } 
       // 단순이 타이머가 꺼져있어서 넣는게 아니라, 꺼져있는데 포인트를 줬을때 문제가 되는거지 !
-      else if (point > 0) {
+      else if (Number.isInteger(point)) {
         errorTeams.push(i+1);
       }
     }
