@@ -90,7 +90,7 @@ class Point extends Component {
   handlePointInputChange(team, point) {
     // 일부로 이렇게 했다. 굳이 계속 setState를 하면 계속 다시 그려지니까 비효율적이야 !
     this.teamPoints[team-1].team = team;
-    this.teamPoints[team-1].point = point;
+    this.teamPoints[team-1].point = parseInt(point);
   }
 
   async handleFormSubmit(e) {
@@ -107,7 +107,7 @@ class Point extends Component {
     let response = await utils.simpleAxios(axios, config);
     let teamTimers = response.data;
 
-    console.log( 'Number.isInteger(obj.point) : ', Number.isInteger(obj.point) );
+    console.log( 'this.teamPoints : ', this.teamPoints );
 
     // 전체 값이 비어있는지 체크
     let allEmpty = this.teamPoints.filter(obj => {return (Number.isInteger(obj.point) ? true : false)}).length < 1;
