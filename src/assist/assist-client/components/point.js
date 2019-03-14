@@ -108,7 +108,7 @@ class Point extends Component {
     let teamTimers = response.data;
 
     // 전체 값이 비어있는지 체크
-    let allEmpty = this.teamPoints.filter(obj => {return (obj.point > 0 ? true : false)}).length < 1;
+    let allEmpty = this.teamPoints.filter(obj => {return (Number.isInteger(obj.point) ? true : false)}).length < 1;
     if ( allEmpty ) {
       return alert("포인트를 입력해 주시기 바랍니다");
     }

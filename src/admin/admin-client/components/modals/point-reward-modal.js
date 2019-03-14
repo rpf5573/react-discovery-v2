@@ -37,7 +37,7 @@ class PointRewardModal extends React.Component {
       var points = [];
       for( var i = 0; i < this.pointInputFields.length; i++ ) {
         let val = parseInt(this.pointInputFields[i].value);
-        if ( !isNaN(val) && val > 0 ) { // 0이 들어와도 되기는 한다
+        if ( !isNaN(val) && (Number.isInteger(val) ) ) { // 0이 들어와도 되기는 한다
           allEmpty = false;
           points.push({
             team: (i+1),
