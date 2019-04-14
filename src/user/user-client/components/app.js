@@ -22,9 +22,6 @@ class App extends Component {
             <Switch>
               <Route exact path={"/user"} component={Map} />
               <Route path={"/user/page/map"} component={Map} />
-              <Route path="/user/page/point" render={(props) => <Point {...props} chartData={[]}></Point>} />
-              <Route path="/user/page/puzzle" component={Puzzle} />
-              <Route path="/user/page/upload"  component={Upload} />
               <Route path="/user/page/post-info" component={PostInfo} />
             </Switch>
           </div>
