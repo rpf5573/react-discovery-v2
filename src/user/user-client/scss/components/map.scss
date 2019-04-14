@@ -1,9 +1,7 @@
 .map-page {
-  // display: flex;
-  // align-items: center;
+  overflow: scroll;
   .wrapper {
     width: 100%;
-    overflow: scroll;
   }
   img{
     width: 100%;
