@@ -57,7 +57,7 @@ class App extends Component {
           <div className="l-top">
             <div className="text-container">
               <ReactRevealText transitionTime={2000} show={this.state.show}>
-                DISCOVERY
+                미르어드벤쳐
               </ReactRevealText>
             </div>
           </div>
