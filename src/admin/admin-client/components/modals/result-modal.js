@@ -55,21 +55,6 @@ class ResultModal extends React.Component {
             <thead>
               <tr>
                 <th rowSpan="2" colSpan="1">TEAM</th>
-                <th colSpan="10">평가점수</th>
-                <th colSpan="6">구역점유</th>
-                <th colSpan="4">결과</th>
-              </tr>
-              <tr> 
-                <th colSpan="2">가용점수</th>
-                <th colSpan="2">이동시간</th>
-                <th colSpan="2">구역점유</th>
-                <th colSpan="2">문장해독</th>
-                <th colSpan="2">구역연결점수</th>
-
-                <th colSpan="2">일반구역</th>
-                <th colSpan="2">글자구역</th>
-                <th colSpan="2">점유율</th>
-
                 <th colSpan="2">평가점수 합산</th>
                 <th colSpan="2">기여도순위</th>
               </tr>
