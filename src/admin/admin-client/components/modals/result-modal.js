@@ -9,19 +9,8 @@ function TableRow(props) {
   return (
     <tr>
       <td colSpan="1">{props.obj.team}</td>
-
-      <td colSpan="2">{props.obj.useable}</td>
-      <td colSpan="2">{props.obj.timer}</td>
-      <td colSpan="2">{props.obj.puzzle}</td>
-      <td colSpan="2">{props.obj.eniac}</td>
-      <td colSpan="2">{props.obj.bingo}</td>
-
-      <td colSpan="2">{props.obj.emptyBoxOpenCount}</td>
-      <td colSpan="2">{props.obj.wordBoxOpenCount}</td>
-      <td colSpan="2">{props.obj.puzzleBoxOpenRate}%</td>
-
-      <td colSpan="2">{props.obj.totalPoint}</td>
-      <td colSpan="2">{props.obj.rank}</td>
+      <td colSpan="1">{props.obj.totalPoint}</td>
+      <td colSpan="1">{props.obj.rank}</td>
     </tr>
   );
 }
@@ -54,9 +43,9 @@ class ResultModal extends React.Component {
           <Table bordered={true}>
             <thead>
               <tr>
-                <th rowSpan="2" colSpan="1">TEAM</th>
-                <th colSpan="2">평가점수 합산</th>
-                <th colSpan="2">기여도순위</th>
+                <th colSpan="1">TEAM</th>
+                <th colSpan="1">평가점수 합산</th>
+                <th colSpan="1">기여도순위</th>
               </tr>
             </thead>
             <tbody>
