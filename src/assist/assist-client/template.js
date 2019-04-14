@@ -7,7 +7,7 @@ module.exports = function (initialState = {}, srcPath = { style: 'style.css', js
                 <meta http-equiv="X-UA-Compatible" content="ie=edge">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-                <title> 미르어드벤처 </title>
+                <title> MIR ADVENTURE </title>
                 <link href="${srcPath.style}" rel="stylesheet">
               </head>
               <body>
