@@ -32,16 +32,6 @@ class BottomNavigation extends Component {
           <div className="text">포인트</div>
           <div className={rippleCN}></div>
         </NavLink>
-        <NavLink to="/assist/page/puzzle">
-          <div className="icon"><FontAwesomeIcon icon={faChessBoard} /></div>
-          <div className="text">구역</div>
-          <div className={rippleCN}></div>
-        </NavLink>
-        <NavLink to="/assist/page/result">
-          <div className="icon"><FontAwesomeIcon icon={faChartPie} /></div>
-          <div className="text">진행상황</div>
-          <div className={rippleCN}></div>
-        </NavLink>
         <NavLink to="/assist/page/post-info">
           <div className="icon"><FontAwesomeIcon icon={faInfo} /></div>
           <div className="text">포스트</div>

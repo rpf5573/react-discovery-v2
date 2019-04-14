@@ -24,8 +24,6 @@ class App extends Component {
               <Route exact path={"/assist"} component={Map} />
               <Route path={"/assist/page/map"} component={Map} />
               <Route path="/assist/page/point" render={(props) => <Point {...props} chartData={[]}></Point>} />
-              <Route path={"/assist/page/puzzle"} component={Puzzle} />
-              <Route path="/assist/page/result" component={Result} />
               <Route path="/assist/page/post-info" component={PostInfo} />
             </Switch>
           </div>
