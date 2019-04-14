@@ -93,14 +93,14 @@ class DCQuery {
       let row = {
         team: i+1,
         useable: points[i].useable,
-        timer: points[i].timer,
-        eniac: points[i].eniac,
-        puzzle: points[i].puzzle,
-        bingo: points[i].bingo,
-        emptyBoxOpenCount: puzzles[i].emptyBoxOpenCount,
-        wordBoxOpenCount: puzzles[i].wordBoxOpenCount,
-        puzzleBoxOpenRate,
-        totalPoint: points[i].useable + points[i].timer + points[i].eniac + points[i].puzzle + points[i].bingo,
+        timer: 0,
+        eniac: 0,
+        puzzle: 0,
+        bingo: 0,
+        emptyBoxOpenCount: 0,
+        wordBoxOpenCount: 0,
+        puzzleBoxOpenRate: 0,
+        totalPoint: points[i].useable,
         rank: teamCount
       }
       rows.push(row);
