@@ -8,8 +8,7 @@ module.exports = {
         targets: {
           browsers: ["since 2015"]
         },
-        corejs: "2",
-        useBuiltIns: "usage"
+        useBuiltIns: "usage",
       }
     ],
     "@babel/preset-react"
