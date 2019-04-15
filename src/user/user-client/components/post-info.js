@@ -11,7 +11,6 @@ import NotReady from './not-ready';
 class PostInfo extends Component {
   constructor(props) {
     super(props);
-
     this.renderPostInfoListItems = this.renderPostInfoListItems.bind(this);
   }
 
