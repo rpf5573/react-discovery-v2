@@ -59,7 +59,7 @@ class App extends Component {
               <ReactRevealText transitionTime={2000} show={this.state.show}>
                 MIR
               </ReactRevealText>
-              <ReactRevealText transitionTime={3000} show={this.state.show}>
+              <ReactRevealText transitionTime={4000} show={this.state.show}>
                 ADVENTURE
               </ReactRevealText>
             </div>
