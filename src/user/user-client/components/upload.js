@@ -106,7 +106,9 @@ class Upload extends Component {
     };
 
     utils.simpleAxios(axios, config).then(() => {
-      alert(`성공 !`);
+      setTimeout(function(){
+        alert(`성공 !`);
+      }, 3000);
       this.reset();
     });
   }
