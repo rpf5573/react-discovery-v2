@@ -102,7 +102,6 @@ class Upload extends Component {
         if ( val%10 == 0 || val > 97 ) {
           this.props.updateProgressVal(val);
         }
-        this.props.updateProgressVal(val);
       }
     };
 
