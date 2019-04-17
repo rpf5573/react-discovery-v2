@@ -99,7 +99,9 @@ class Upload extends Component {
       data: fd,
       onUploadProgress: (progressEvent) => {
         let val = Math.floor( (progressEvent.loaded / progressEvent.total) * 100 );
-        console.log( 'val : ', val );
+        if ( val%10 == 0 || val > 97 ) {
+          this.props.updateProgressVal(val);
+        }
         this.props.updateProgressVal(val);
       }
     };
