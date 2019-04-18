@@ -73,10 +73,7 @@ class Puzzle extends Component {
     this.socket.on("puzzle_box_opened", data => {
       // 여기서 말하는 boxes는 lastBox를 제외한거야
       if ( this.boxes.length == this.props.count - 1 ) {
-        // 다른 팀이 박스 열었으면 우리도 grid를 업데이트 해줘야징 !
-        if ( data.team != this.props.ourTeam ) {
-          this.updateGrid(data.boxNumber, data.team);
-        }
+        this.updateGrid(data.boxNumber, data.team);
         console.log( 'this.grid in socket : ', this.grid );
         var node = ReactDOM.findDOMNode(this.boxes[data.boxNumber-1]);
         node.classList.add('flipping', `owner-${data.team}`);
