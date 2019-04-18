@@ -179,7 +179,7 @@ class Metas {
     const mappingPoints = {
       timerPlus: 100,
       timerMinus: 100,
-      upload: 1000,
+      upload: 0,
       boxOpenGetEmpty: 2000,
       boxOpenGetWord: 4000,
       boxOpenUse: 1000,
