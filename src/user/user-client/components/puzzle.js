@@ -203,16 +203,11 @@ class Puzzle extends Component {
     let pointMessage = `글자없는구역 : ${puzzlePoint}점 획득`;
 
     this.updateGrid(boxNumber, this.props.ourTeam);
-    
-    console.time("checkBingo - calculatingTime");
 
     let totalCount = this.checkBingo( boxNumber, this.props.ourTeam );
 
-    console.timeEnd("checkBingo - calculatingTime");
-
-    console.log( '구역 연결 개수 : ', totalCount );
-
     let bingoPoint = totalCount * this.props.mappingPoints.bingo;
+    console.log( 'bingo count : ', totalCount );
 
     if ( hasWord == 'true' ) {
       puzzlePoint = this.props.mappingPoints.boxOpenGetWord;
