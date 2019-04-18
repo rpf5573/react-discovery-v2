@@ -63,13 +63,13 @@ class ResultModal extends React.Component {
   }
   
   async getResultData() {
-    if ( this.props.teamCount > 0 && this.props.puzzleBoxCount > 0 ) {
+    if ( this.props.teamCount > 0 ) {
       const config = {
         method: 'POST',
         url: '/admin/result',
         data: {
           teamCount: this.props.teamCount,
-          puzzleBoxCount: this.props.puzzleBoxCount
+          puzzleBoxCount: 0
         }
       }
       utils.simpleAxios(axios, config).then((response) => {
