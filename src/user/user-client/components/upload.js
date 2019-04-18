@@ -261,6 +261,7 @@ class Upload extends Component {
     this.player = videojs(this.videoNode, config, function onPlayerReady() {
     });
   }
+  
 }
 
 function mapStateToProps(state, ownProps) {

@@ -120,21 +120,21 @@ module.exports = (app, DCQuery, upload) => {
         // 등수에 맞게 포인트 지급
         switch( rank ) {
           case 2:
-            point = point - 2000;
-            break;
-          case 3:
             point = point - 4000;
             break;
+          case 3:
+            point = point - 7000;
+            break;
           case 4:
-            point = point - 6000;
+            point = point - 9000;
             break;
           case 5:
-            point = point - 8000;
+            point = point - 10000;
             break;
             
           // 6등부터는 같은 점수
           default:
-            point = point - 8000;
+            point = point - 11000;
             break;
         }
       }
