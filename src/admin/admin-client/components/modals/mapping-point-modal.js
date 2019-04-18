@@ -175,7 +175,7 @@ class MappingPointModal extends React.Component {
               </tr>
             </tbody>
           </Table>
-          <Alert color="info"> 문장해독 점수는 늦게 맞출수록 기본점수에서 2000점 감소된 점수가 지급되고, 5등부터는 같은 점수가 지급됩니다. <br></br> EX) 1등: 20000(기본점수), 2등: 18000, 3등: 16000, 4등: 14000, 5등: 12000, 6등: 10000, 7등: 10000... </Alert>
+          <Alert color="info"> 문장해독 점수 1등: 20000(기본점수), 2등: 16000, 3등: 13000, 4등: 11000, 5등: 10000, 6등: 9000, 7등: 9000...(동일) </Alert>
         </ModalBody>
       </Modal>
     );
