@@ -94,7 +94,7 @@ module.exports = (app, DCQuery, upload) => {
     }
   });
 
-  app.get('/user/point-check', async (req, res) => {
+  app.post('/user/point-check', async (req, res) => {
     // 돈 체크 합니다잉~
     let result = await DCQuery.points.get('useable', req.body.team);
     if ( result[0].useable < req.body.boxOpenUse ) {
