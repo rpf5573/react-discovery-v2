@@ -63,7 +63,6 @@ class Puzzle extends Component {
     this.state = {
       isModalOpen: false,
       eniacSentance: false,
-      freeze: false
     };
 
     // 이걸 굳이 state에 넣을 필요는 없지 ! View에 반영되는건 아니니께~
@@ -199,9 +198,6 @@ class Puzzle extends Component {
     if ( this.state.freeze ) {
       return false;
     }
-    this.setState({
-      freeze: true
-    });
 
     let pointCheckResult = await this.checkPoint();
     console.log( 'pointCheckResult : ', pointCheckResult );
@@ -242,11 +238,6 @@ class Puzzle extends Component {
       } else {
         alert(pointMessage);
       }
-      setTimeout(function(){
-        this.setState({
-          freeze: false
-        });
-      }, 1000);
     });
   }
 
