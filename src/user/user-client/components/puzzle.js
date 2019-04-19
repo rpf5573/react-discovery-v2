@@ -82,6 +82,8 @@ class Puzzle extends Component {
       }
     });
 
+    this.freeze = false;
+
     this.renderPuzzleBoxes = this.renderPuzzleBoxes.bind(this);
     this.openBox = this.openBox.bind(this);
     this.openLastBox = this.openLastBox.bind(this);
@@ -195,14 +197,22 @@ class Puzzle extends Component {
   }
 
   async openBox(e) {
-
-    let pointCheckResult = await this.checkPoint();
-    console.log( 'pointCheckResult : ', pointCheckResult );
+    if ( this.freeze ) {
+      return;
+    }
+    this.freeze = true;
+    let that = this;
+    setTimeout(function(){
+      that.freeze = false;
+    }, 1000);
 
     let boxNumber = parseInt(e.currentTarget.getAttribute('data-number'));
     let hasWord = e.currentTarget.getAttribute('data-hasword');
     let puzzlePoint = this.props.mappingPoints.boxOpenGetEmpty;
     let pointMessage = `글자없는구역 : ${puzzlePoint}점 획득`;
+
+    let pointCheckResult = await this.checkPoint();
+    console.log( 'pointCheckResult : ', pointCheckResult );
 
     this.updateGrid(boxNumber, this.props.ourTeam);
 
