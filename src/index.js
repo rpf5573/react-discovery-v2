@@ -65,9 +65,8 @@ server.listen(PORT, 'localhost');
 
 // for real time puzzle update
 io.on('connection', function(socket) {
-  console.log( 'socket is connected !' );
   socket.on('open_puzzle_box', function(data) {
-    console.log( 'data : ', data );
+    console.log( 'on open_puzzle_box data : ', data );
     io.emit('puzzle_box_opened', data);
   });
   
