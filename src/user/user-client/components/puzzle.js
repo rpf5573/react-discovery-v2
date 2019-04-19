@@ -195,9 +195,6 @@ class Puzzle extends Component {
   }
 
   async openBox(e) {
-    if ( this.state.freeze ) {
-      return false;
-    }
 
     // let pointCheckResult = await this.checkPoint();
     // console.log( 'pointCheckResult : ', pointCheckResult );
