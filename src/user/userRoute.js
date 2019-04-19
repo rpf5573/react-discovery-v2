@@ -28,7 +28,7 @@ module.exports = (app, DCQuery, upload) => {
         let document = template(initialSettings, srcPath, process.env.DCV);
         return res.set('Content-Type', 'text/html').end(document);
       } catch (err) {
-        console.log( 'err : ', err );
+        console.error( 'err : ', err );
         return res.sendStatus(404);
       }
     } else {
@@ -87,7 +87,7 @@ module.exports = (app, DCQuery, upload) => {
         boxNumber: req.body.boxNumber
       });
     } catch (err) {
-      console.log( 'err : ', err );
+      console.error( 'err : ', err );
       return res.status(201).json({
         error: '데이터베이스 통신중 에러가 발생하였습니다'
       })
@@ -152,7 +152,7 @@ module.exports = (app, DCQuery, upload) => {
       });
 
     } catch (err) {
-      console.log( 'err : ', err );
+      console.error( 'err : ', err );
       return res.status(201).json({
         error: '데이터베이스 통신중 에러가 발생하였습니다'
       })

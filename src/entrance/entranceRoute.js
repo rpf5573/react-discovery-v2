@@ -61,7 +61,7 @@ module.exports = (app, DCQuery) => {
         }
       }
     } catch (err) {
-      console.log( 'err : ', err );
+      console.error( 'err : ', err );
       return res.sendStatus(401);
     }
 

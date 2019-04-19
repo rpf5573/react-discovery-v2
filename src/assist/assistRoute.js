@@ -26,7 +26,7 @@ module.exports = (app, DCQuery) => {
         let document = template(initialSettings, srcPath, process.env.DCV);
         return res.set('Content-Type', 'text/html').end(document);
       } catch (err) {
-        console.log( 'err : ', err );
+        console.error( 'err : ', err );
         return res.sendStatus(404);
       }
     } else {
