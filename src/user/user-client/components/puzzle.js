@@ -62,7 +62,8 @@ class Puzzle extends Component {
     super(props);
     this.state = {
       isModalOpen: false,
-      eniacSentance: false
+      eniacSentance: false,
+      freeze: false
     };
 
     // 이걸 굳이 state에 넣을 필요는 없지 ! View에 반영되는건 아니니께~
@@ -194,6 +195,12 @@ class Puzzle extends Component {
   }
 
   async openBox(e) {
+    if ( this.state.freeze ) {
+      return false;
+    }
+    this.setState({
+      freeze: true
+    });
     let boxNumber = parseInt(e.currentTarget.getAttribute('data-number'));
     let hasWord = e.currentTarget.getAttribute('data-hasword');
     let puzzlePoint = this.props.mappingPoints.boxOpenGetEmpty;
@@ -202,9 +209,7 @@ class Puzzle extends Component {
     this.updateGrid(boxNumber, this.props.ourTeam);
 
     let totalCount = this.checkBingo( boxNumber, this.props.ourTeam );
-
     let bingoPoint = totalCount * this.props.mappingPoints.bingo;
-    console.log( 'bingo count : ', totalCount );
 
     if ( hasWord == 'true' ) {
       puzzlePoint = this.props.mappingPoints.boxOpenGetWord;
@@ -232,6 +237,11 @@ class Puzzle extends Component {
       } else {
         alert(pointMessage);
       }
+      setTimeout(function(){
+        this.setState({
+          freeze: false
+        });
+      }, 1000);
     });
   }
 

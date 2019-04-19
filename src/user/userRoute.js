@@ -71,6 +71,7 @@ module.exports = (app, DCQuery, upload) => {
 
       // 퍼즐 먼저 업데이트 하즈아 !
       await DCQuery.puzzles.update( req.body.team, req.body.boxNumber, req.body.type );
+      console.log( `/user/openBox - after puzzles.update / team : ${req.body.team} / bingo : ${req.body.bingoPoint}` );
 
       // 포인트 업데이트
       await DCQuery.points.update({ 
@@ -79,6 +80,7 @@ module.exports = (app, DCQuery, upload) => {
         puzzle: req.body.puzzlePoint,
         bingo: req.body.bingoPoint
       });
+      console.log( '/user/openBox - after puzzle update' );
 
       res.status(201).json({
         team: req.body.team,
@@ -171,8 +173,8 @@ module.exports = (app, DCQuery, upload) => {
           });
         } else {
           try {
-            console.log( 'success upload !! ' );
             const team = req.body.team;
+            console.log( `team : ${team} success upload !!` );
             const filename = req.files.userFile[0].filename;
             const point  = req.body.point;
             const currentTime = utils.getCurrentTimeInSeconds();
@@ -181,7 +183,6 @@ module.exports = (app, DCQuery, upload) => {
               temp: point, // useable이 아니라 temp를 업데이트 한다,
             });
             await DCQuery.uploads.add(team, filename, currentTime, true);
-            console.log( 'res.sendStatus : ' );
             res.sendStatus(201); // 우선 보내고 그다음 할일을 하자. 아래꺼는 좀 오래걸리니까 !
 
             await DCQuery.uploads.addStackFile(team, filename);
