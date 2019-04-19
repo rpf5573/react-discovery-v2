@@ -94,6 +94,16 @@ module.exports = (app, DCQuery, upload) => {
     }
   });
 
+  app.get('/user/point-check', async (req, res) => {
+    // 돈 체크 합니다잉~
+    let result = await DCQuery.points.get('useable', req.body.team);
+    if ( result[0].useable < req.body.boxOpenUse ) {
+      return res.status(201).json({ error: '가용점수가 부족합니다' });
+    }
+
+    return res.sendStatus(201);
+  });
+
   app.post('/user/eniac', async (req, res) => {
     try {
       // 1. eniac state check
@@ -252,4 +262,5 @@ module.exports = (app, DCQuery, upload) => {
       return res.sendStatus(404);
     }
   });
+
 }

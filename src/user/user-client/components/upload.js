@@ -77,6 +77,7 @@ class Upload extends Component {
 
     // 타이머 시간이 경과했는지 체크
     await this.timerCheck(this.props.ourTeam, this.props.laptime);
+    
     // 업로드 한지 1분이 지났는지 안지났는지 체크
     await this.uploadTimeIntervalCheck(this.props.ourTeam);
 

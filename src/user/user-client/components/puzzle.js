@@ -92,6 +92,7 @@ class Puzzle extends Component {
     this.handleEniacSentanceInput = this.handleEniacSentanceInput.bind(this);
     this.checkBingo = this.checkBingo.bind(this);
     this.updateGrid = this.updateGrid.bind(this);
+    this.checkPoint = this.checkPoint.bind(this);
 
     this.hiddenAnchorForNewTab = React.createRef();
   }
@@ -201,6 +202,10 @@ class Puzzle extends Component {
     this.setState({
       freeze: true
     });
+
+    let pointCheckResult = await this.checkPoint();
+    console.log( 'pointCheckResult : ', pointCheckResult );
+
     let boxNumber = parseInt(e.currentTarget.getAttribute('data-number'));
     let hasWord = e.currentTarget.getAttribute('data-hasword');
     let puzzlePoint = this.props.mappingPoints.boxOpenGetEmpty;
@@ -266,6 +271,19 @@ class Puzzle extends Component {
     utils.simpleAxios(axios, config).then(response => {
       this.props.updatePuzzleColonInfos(response.data);
     });
+  }
+
+  async checkPoint() {
+    const config = {
+      url: '/user/point-check',
+      method: 'POST',
+      data: {
+        team: this.props.ourTeam,
+        boxOpenUse: this.props.mappingPoints.boxOpenUse,
+      }
+    };
+    let result = await utils.simpleAxios(axios, config);
+    return result;
   }
 
   checkBingo(boxNumber, team) {
