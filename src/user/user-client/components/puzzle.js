@@ -199,8 +199,8 @@ class Puzzle extends Component {
       return false;
     }
 
-    let pointCheckResult = await this.checkPoint();
-    console.log( 'pointCheckResult : ', pointCheckResult );
+    // let pointCheckResult = await this.checkPoint();
+    // console.log( 'pointCheckResult : ', pointCheckResult );
 
     let boxNumber = parseInt(e.currentTarget.getAttribute('data-number'));
     let hasWord = e.currentTarget.getAttribute('data-hasword');
