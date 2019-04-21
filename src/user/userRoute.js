@@ -262,5 +262,4 @@ module.exports = (app, DCQuery, upload) => {
       return res.sendStatus(404);
     }
   });
-
 }
