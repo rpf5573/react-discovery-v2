@@ -191,7 +191,7 @@ class Metas {
 
     // admin passwords
     const adminPasswords = {
-      admin: '1234',
+      admin: '5911',
       assist: '4321'
     }
     sql = `UPDATE ${this.table} SET metaValue='${JSON.stringify(adminPasswords)}' WHERE metaKey='adminPasswords'`;
