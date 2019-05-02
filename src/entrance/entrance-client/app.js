@@ -16,7 +16,7 @@ import './scss/style.scss';
 
 Modal.setAppElement('#app');
 Modal.defaultStyles.content = {};
-Modal.defaultStyles.backgroundColor = '';
+Modal.defaultStyles.overlay.backgroundColor = '';
 class App extends Component {
 
   constructor(props) {
@@ -94,8 +94,8 @@ class App extends Component {
   renderModal() {
     const header = this.state.modal.header ? <h3>{this.state.modal.header}</h3> : '';
     const body = this.state.modal.body ? <p>{this.state.modal.body}</p> : '';
-    const positiveBtn = this.state.modal.onPositive ? <button onClick={this.state.modal.onPositive}>확인</button> : '';
-    const negativeBtn = this.state.modal.onNegative ? <button onClick={this.state.modal.onNegative}>취소</button> : '';
+    const positiveBtn = this.state.modal.onPositive ? <button class="alertModal__positiveBtn" onClick={this.state.modal.onPositive}>확인</button> : '';
+    const negativeBtn = this.state.modal.onNegative ? <button class="alertModal__negativeBtn" onClick={this.state.modal.onNegative}>취소</button> : '';
 
     return (
       <Modal
