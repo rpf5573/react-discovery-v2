@@ -13,6 +13,10 @@ import Modal from 'react-modal';
 import 'bootstrap/dist/css/bootstrap.css';
 import './scss/style.scss';
 
+
+Modal.setAppElement('#app');
+Modal.defaultStyles.content = {};
+Modal.defaultStyles.backgroundColor = '';
 class App extends Component {
 
   constructor(props) {
@@ -20,10 +24,20 @@ class App extends Component {
     this.state = {
       companyImageURL: 'http://unsplash.it/1200x800',
       show: false,
-      password: null
+      password: null,
+      modal: {
+        isOpen: false,
+        header: '',
+        body: '',
+        onPositive: false,
+        onNegative: false
+      }
     }
     this.handlePasswordInput = this.handlePasswordInput.bind(this);
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.renderModal = this.renderModal.bind(this);
   }
 
   async handleLoginSubmit(e) {
@@ -37,11 +51,19 @@ class App extends Component {
         }
       };
       utils.simpleAxios(axios, config).then(response => {
-        alert('입장');
-        window.location.href = '/' + response.data.role + ( (response.data.role == 'user' || response.data.role == 'assist') ? '/page/map' : '' );
+        // alert('입장');
+        this.openModal(false, '성공', ()=>{
+          window.location.href = '/' + response.data.role + ( (response.data.role == 'user' || response.data.role == 'assist') ? '/page/map' : '' );
+        }, false);
+      }).catch((e) => {
+        this.openModal('Error', e, false, ()=>{
+          this.closeModal();
+        });
       });
     } else {
-      alert('비밀번호를 입력해 주세요');
+      this.openModal('Error', '비밀번호를 입력해주세요', false, ()=>{
+        this.closeModal();
+      });
     }
   }
 
@@ -50,6 +72,45 @@ class App extends Component {
     this.setState({
       password: val
     });
+  }
+
+  openModal(header=false, body=false, onPositive=false, onNegative=false) {
+    const modalState = {
+      isOpen: true,
+      header,
+      body,
+      onPositive,
+      onNegative
+    };
+    this.setState({modal: modalState});
+  }
+
+  closeModal() {
+    const modalState = {...this.state.modal};
+    modalState.isOpen = false;
+    this.setState({modal: modalState});
+  }
+
+  renderModal() {
+    const header = this.state.modal.header ? <h3>{this.state.modal.header}</h3> : '';
+    const body = this.state.modal.body ? <p>{this.state.modal.body}</p> : '';
+    const positiveBtn = this.state.modal.onPositive ? <button onClick={this.state.modal.onPositive}>확인</button> : '';
+    const negativeBtn = this.state.modal.onNegative ? <button onClick={this.state.modal.onNegative}>취소</button> : '';
+
+    return (
+      <Modal
+        isOpen={this.state.modal.isOpen}
+        onRequestClose={this.closeModal}>
+        <div className="alertModal">
+          {header}
+          {body}
+          <div className="alertModal__btnContainer">
+            {positiveBtn}
+            {negativeBtn}
+          </div>
+        </div>
+      </Modal>
+    );
   }
 
   render() {
@@ -71,6 +132,7 @@ class App extends Component {
             </form>
           </div>
         </div>
+        {this.renderModal()}
       </div>
     );
   }
