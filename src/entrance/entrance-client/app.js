@@ -6,17 +6,17 @@ import * as utils from '../../utils/client';
 import React, { Component } from 'react';
 import ReactRevealText from 'react-reveal-text';
 
-// React Modal
-import Modal from 'react-modal';
+// React AlertModal
+import AlertModal from 'react-modal';
 
 // css
 import 'bootstrap/dist/css/bootstrap.css';
 import './scss/style.scss';
 
 
-Modal.setAppElement('#app');
-Modal.defaultStyles.content = {};
-Modal.defaultStyles.overlay.backgroundColor = '';
+AlertModal.setAppElement('#app');
+AlertModal.defaultStyles.content = {};
+AlertModal.defaultStyles.overlay.backgroundColor = '';
 class App extends Component {
   constructor(props) {
     super(props);
@@ -24,8 +24,9 @@ class App extends Component {
       companyImageURL: 'http://unsplash.it/1200x800',
       show: false,
       password: null,
-      modal: {
+      alertModal: {
         isOpen: false,
+        somethingWrong: false,
         header: '',
         body: '',
         onPositive: false,
@@ -34,9 +35,9 @@ class App extends Component {
     }
     this.handlePasswordInput = this.handlePasswordInput.bind(this);
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.renderModal = this.renderModal.bind(this);
+    this.openAlertModal = this.openAlertModal.bind(this);
+    this.closeAlertModal = this.closeAlertModal.bind(this);
+    this.renderAlertModal = this.renderAlertModal.bind(this);
   }
 
   async handleLoginSubmit(e) {
@@ -49,21 +50,21 @@ class App extends Component {
           password: this.state.password
         }
       };
-      utils.simpleAxios(axios, config, false).then(response => {
-        if ( response.data.error ) {
-          this.openModal(false, response.data.error, false, ()=>{ this.closeModal() });
+      axios.post(config).then((response) => {
+        if ( response.status != 201 ) {
+          this.openAlertModal(true, 'error', response.data.error, false, this.closeAlertModal);
           return;
         }
-        this.openModal(false, '성공', ()=>{
+
+        this.openAlertModal(false, false, '성공', ()=>{
           window.location.href = '/' + response.data.role + ( (response.data.role == 'user' || response.data.role == 'assist') ? '/page/map' : '' );
         }, false);
+
       }).catch((e) => {
-        this.openModal(false, e, false, ()=>{ this.closeModal(); });
+        this.openAlertModal(true, 'error', e, false, this.closeAlertModal);
       });
     } else {
-      this.openModal(false, '비밀번호를 입력해주세요', false, ()=>{
-        this.closeModal();
-      });
+      this.openAlertModal(true, 'error', '비밀번호를 입력해주세요', false, this.closeAlertModal);
     }
   }
 
@@ -74,33 +75,38 @@ class App extends Component {
     });
   }
 
-  openModal(header=false, body=false, onPositive=false, onNegative=false) {
-    const modalState = {
+  openAlertModal(somethingWrong=false, header=false, body=false, onPositive=false, onNegative=false) {
+    const alertModalState = {
       isOpen: true,
+      somethingWrong,
       header,
       body,
       onPositive,
       onNegative
     };
-    this.setState({modal: modalState});
+    this.setState({alertModal: alertModalState});
   }
 
-  closeModal() {
-    const modalState = {...this.state.modal};
-    modalState.isOpen = false;
-    this.setState({modal: modalState});
+  closeAlertModal() {
+    const alertModalState = {...this.state.alertModal};
+    alertModalState.isOpen = false;
+    this.setState({alertModal: alertModalState});
   }
 
-  renderModal() {
-    const header = this.state.modal.header ? <h3>{this.state.modal.header}</h3> : '';
-    const body = this.state.modal.body ? <p>{this.state.modal.body}</p> : '';
-    const positiveBtn = this.state.modal.onPositive ? <button class="alertModal__positiveBtn" onClick={this.state.modal.onPositive}>확인</button> : '';
-    const negativeBtn = this.state.modal.onNegative ? <button class="alertModal__negativeBtn" onClick={this.state.modal.onNegative}>취소</button> : '';
+  renderAlertModal() {
+    let header = '';
+    if ( this.state.alertModal.header ) {
+      const className = this.state.alertModal.somethingWrong ? 'alertModal__header alertModal__header--error' : 'alertModal__header';
+      header = <h3 className={className}>{this.state.alertModal.header}</h3>;
+    }
+    const body = this.state.alertModal.body ? <p>{this.state.alertModal.body}</p> : '';
+    const positiveBtn = this.state.alertModal.onPositive ? <button className="alertModal__positiveBtn" onClick={this.state.alertModal.onPositive}>확인</button> : '';
+    const negativeBtn = this.state.alertModal.onNegative ? <button className="alertModal__negativeBtn" onClick={this.state.alertModal.onNegative}>취소</button> : '';
 
     return (
-      <Modal
-        isOpen={this.state.modal.isOpen}
-        onRequestClose={this.closeModal}>
+      <AlertModal
+        isOpen={this.state.alertModal.isOpen}
+        onRequestClose={this.closeAlertModal}>
         <div className="alertModal">
           {header}
           {body}
@@ -109,7 +115,7 @@ class App extends Component {
             {negativeBtn}
           </div>
         </div>
-      </Modal>
+      </AlertModal>
     );
   }
 
@@ -132,7 +138,7 @@ class App extends Component {
             </form>
           </div>
         </div>
-        {this.renderModal()}
+        {this.renderAlertModal()}
       </div>
     );
   }
@@ -140,7 +146,7 @@ class App extends Component {
   async componentDidMount() {
     utils.simpleAxios(axios, '/entrance/companyImage', false).then(response => {
       if ( response.data.error ) {
-        this.openModal(false, response.data.error, false, ()=>{ this.closeModal() });
+        this.openAlertModal(false, response.data.error, false, ()=>{ this.closeAlertModal() });
         return;
       }
       let result = response.data;
