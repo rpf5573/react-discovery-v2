@@ -82,11 +82,10 @@ async function simpleAxios(axios, config) {
     try {
       let response = await axios(config);
       if ( response.status == 201 ) {
-        if ( response.data.error ) {
-          reject(response.data.error);
-        }
         resolve(response);
       } else {
+        alert(constants.ERROR.unknown);
+        console.errir( constants.ERROR.unknown );
         reject( constants.ERROR.unknown );
       }
     } catch(e) {

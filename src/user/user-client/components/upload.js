@@ -13,13 +13,26 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import * as loadImage from 'blueimp-load-image';
 
+// React Modal
+import Modal from 'react-modal';
+
+Modal.setAppElement('#app');
+Modal.defaultStyles.content = {};
+Modal.defaultStyles.overlay.backgroundColor = '';
 class Upload extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      progressVal: null
+      progressVal: null,
+      modal: {
+        isOpen: false,
+        header: '',
+        body: '',
+        onPositive: false,
+        onNegative: false
+      }
     }
 
     this.fileUploadInput = React.createRef();
@@ -30,6 +43,9 @@ class Upload extends Component {
     this.timerCheck = this.timerCheck.bind(this);
     this.changeVideoSrc = this.changeVideoSrc.bind(this);
     this.uploadTimeIntervalCheck = this.uploadTimeIntervalCheck.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.renderModal = this.renderModal.bind(this);
   }
 
   async fileSelectHandler(e) {
@@ -76,10 +92,11 @@ class Upload extends Component {
   async uploadFile(e) {
 
     // 타이머 시간이 경과했는지 체크
-    // await this.timerCheck(this.props.ourTeam, this.props.laptime);
+    let result = await this.timerCheck(this.props.ourTeam, this.props.laptime);
+    console.log( 'result after await: ', result );
     
     // 업로드 한지 1분이 지났는지 안지났는지 체크
-    // await this.uploadTimeIntervalCheck(this.props.ourTeam);
+    await this.uploadTimeIntervalCheck(this.props.ourTeam);
 
     // 이제 업로드 시작
     const file = this.fileUploadInput.current.files[0];
@@ -106,11 +123,14 @@ class Upload extends Component {
       }
     };
 
-    utils.simpleAxios(axios, config).then(() => {
-      setTimeout(function(){
-        alert(`성공 !`);
-      }, 2000);
-      this.reset();
+    utils.simpleAxios(axios, config).then((response) => {
+      this.openModal(false, '성공', ()=>{
+        this.reset();
+      }, false);
+    }).catch((e) => {
+      this.openModal(false, e, false, ()=>{
+        this.closeModal();
+      });
     });
   }
 
@@ -127,7 +147,7 @@ class Upload extends Component {
         laptime
       }
     };
-    let result = await utils.simpleAxios(axios, config);
+    let result = utils.simpleAxios(axios, config);
     return result;
   }
 
@@ -147,6 +167,23 @@ class Upload extends Component {
 
   changeVideoSrc(src, type) {
     this.player.src([{src, type}]);
+  }
+
+  openModal(header=false, body=false, onPositive=false, onNegative=false) {
+    const modalState = {
+      isOpen: true,
+      header,
+      body,
+      onPositive,
+      onNegative
+    };
+    this.setState({modal: modalState});
+  }
+
+  closeModal() {
+    const modalState = {...this.state.modal};
+    modalState.isOpen = false;
+    this.setState({modal: modalState});
   }
 
   reset() {
@@ -169,6 +206,27 @@ class Upload extends Component {
     if ( this.player ) {
       this.player.reset();
     }
+  }
+
+  renderModal() {
+    const header = this.state.modal.header ? <h3>{this.state.modal.header}</h3> : '';
+    const body = this.state.modal.body ? <p>{this.state.modal.body}</p> : '';
+    const positiveBtn = this.state.modal.onPositive ? <button className="alertModal__positiveBtn" onClick={this.state.modal.onPositive}>확인</button> : '';
+    const negativeBtn = this.state.modal.onNegative ? <button className="alertModal__negativeBtn" onClick={this.state.modal.onNegative}>취소</button> : '';
+
+    return (
+      <Modal
+        isOpen={this.state.modal.isOpen}>
+        <div className="alertModal">
+          {header}
+          {body}
+          <div className="alertModal__btnContainer">
+            {positiveBtn}
+            {negativeBtn}
+          </div>
+        </div>
+      </Modal>
+    );
   }
 
   render() {
@@ -232,6 +290,7 @@ class Upload extends Component {
           </div>
           { this.props.progressVal > 0 ? <LinearProgress className="progress-bar" variant="determinate" value={this.props.progressVal} /> : '' }
         </div>
+        {this.renderModal()}
       </div>
     );
   }
@@ -262,7 +321,7 @@ class Upload extends Component {
     this.player = videojs(this.videoNode, config, function onPlayerReady() {
     });
   }
-  
+
 }
 
 function mapStateToProps(state, ownProps) {
