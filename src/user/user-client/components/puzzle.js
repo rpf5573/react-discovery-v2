@@ -211,7 +211,7 @@ class Puzzle extends Component {
     let that = this;
     setTimeout(function(){
       that.freeze = false;
-    }, 1000);
+    }, 2000);
 
     let boxNumber = parseInt(e.currentTarget.getAttribute('data-number'));
     let hasWord = e.currentTarget.getAttribute('data-hasword');
