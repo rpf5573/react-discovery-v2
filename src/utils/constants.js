@@ -24,7 +24,7 @@ const IMAGE = 'image';
 const VIDEO = 'video';
 const EMPTY = 'empty';
 const WORD = 'word';
-const UPLOAD_TIME_INTERVAL = 180;
+const UPLOAD_TIME_INTERVAL = 3;
 const ERROR = {
   unknown: 'ERROR : 알수없는 에러가 발생했습니다'
 }

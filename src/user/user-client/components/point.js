@@ -15,9 +15,9 @@ class Point extends Component {
   }
 
   async componentDidMount() {
-    utils.simpleAxios(axios, '/user/get-updated-points', false).then(response => {
+    axios('/user/get-updated-points').then(response => {
       if ( response.data.error ) {
-        this.openModal(false, response.data.error, false, ()=>{ this.closeModal() });
+        this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
         return;
       }
       this.props.updatePoints(response.data);
@@ -47,9 +47,10 @@ class Point extends Component {
           }
         }
       });
+    }).catch(e => {
+      this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     });
   }
-
   render() {
     let chart;
     if ( this.state.chartSize ) {

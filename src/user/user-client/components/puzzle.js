@@ -93,7 +93,6 @@ class Puzzle extends Component {
     this.handleEniacSentanceInput = this.handleEniacSentanceInput.bind(this);
     this.checkBingo = this.checkBingo.bind(this);
     this.updateGrid = this.updateGrid.bind(this);
-    this.checkPoint = this.checkPoint.bind(this);
 
     this.hiddenAnchorForNewTab = React.createRef();
   }
@@ -182,18 +181,22 @@ class Puzzle extends Component {
           point: this.props.mappingPoints.eniac
         }
       };
-      utils.simpleAxios(axios, config, false).then(response => {
+      axios(config).then(response => {
         if ( response.data.error ) {
-          this.openModal(false, response.data.error, false, ()=>{ this.closeModal() });
+          this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
           return;
         }
-        alert(`성공 : ${response.data.rank}등으로 맞춰, ${response.data.point} 점을 획득하셨습니다 !`);
-        this.setState({ isModalOpen: false });
+        const message = `성공 : ${response.data.rank}등으로 맞춰, ${response.data.point} 점을 획득하셨습니다 !`;
+        this.props.openAlertModal(false, false, message, ()=>{
+          this.props.closeAlertModal();
+          this.setState({ isModalOpen: false });
+        }, false);
+      }).catch(e => {
+        this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
       });
     } else {
-      alert("다시 확인해 주시기 바랍니다");
+      this.props.openAlertModal(true, 'error', '다시 확인해 주시기 바랍니다', false, this.props.closeAlertModal);
     }
-    
   }
 
   handleEniacSentanceInput(e) {
@@ -215,50 +218,74 @@ class Puzzle extends Component {
     let puzzlePoint = this.props.mappingPoints.boxOpenGetEmpty;
     let pointMessage = `글자없는구역 : ${puzzlePoint}점 획득`;
 
-    let pointCheckResult = await this.checkPoint();
-    console.log( 'pointCheckResult : ', pointCheckResult );
-
-    this.updateGrid(boxNumber, this.props.ourTeam);
-
-    let totalCount = this.checkBingo( boxNumber, this.props.ourTeam );
-    let bingoPoint = totalCount * this.props.mappingPoints.bingo;
-
-    if ( hasWord == 'true' ) {
-      puzzlePoint = this.props.mappingPoints.boxOpenGetWord;
-      pointMessage = `글자있는구역 : ${puzzlePoint}점 획득`;
-    }
-
-    const config = {
-      url: '/user/openBox',
+    // point check
+    let config = {
+      url: '/user/point-check',
       method: 'POST',
       data: {
         team: this.props.ourTeam,
-        boxNumber,
-        type: (hasWord == 'true' ? constants.WORD : constants.EMPTY),
-        puzzlePoint,
-        bingoPoint,
         boxOpenUse: this.props.mappingPoints.boxOpenUse,
-        teamCount: this.props.teamCount
       }
     };
-    utils.simpleAxios(axios, config).then(response => {
-      // grid update하구요
-      this.socket.emit('open_puzzle_box', response.data);
-      if ( bingoPoint > 0 ) {
-        alert( `${pointMessage} + ${totalCount*3}개의 구역연결로 ${bingoPoint}점 획득` );
-      } else {
-        alert(pointMessage);
+    axios(config).then(response => {
+      if ( response.data.error ) {
+        this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
+        return;
       }
+
+      this.updateGrid(boxNumber, this.props.ourTeam);
+
+      let totalCount = this.checkBingo( boxNumber, this.props.ourTeam );
+      let bingoPoint = totalCount * this.props.mappingPoints.bingo;
+
+      if ( hasWord == 'true' ) {
+        puzzlePoint = this.props.mappingPoints.boxOpenGetWord;
+        pointMessage = `글자있는구역 : ${puzzlePoint}점 획득`;
+      }
+
+      config = {
+        url: '/user/openBox',
+        method: 'POST',
+        data: {
+          team: this.props.ourTeam,
+          boxNumber,
+          type: (hasWord == 'true' ? constants.WORD : constants.EMPTY),
+          puzzlePoint,
+          bingoPoint,
+          boxOpenUse: this.props.mappingPoints.boxOpenUse,
+          teamCount: this.props.teamCount
+        }
+      };
+      axios(config).then(response => {
+        if ( response.data.error ) {
+          this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
+          return;
+        }
+
+        // grid update하구요
+        this.socket.emit('open_puzzle_box', response.data);
+        if ( bingoPoint > 0 ) {
+          pointMessage = `${pointMessage} + ${totalCount*3}개의 구역연결로 ${bingoPoint}점 획득`;
+        }
+        this.props.openAlertModal(false, false, pointMessage, this.props.closeAlertModal, false);
+      }).catch(e => {
+        this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
+      });
+    }).catch(e => {
+      this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     });
   }
 
   async openLastBox(e) {
-    utils.simpleAxios(axios, '/user/open-lastbox').then(() => {
+    axios('/user/open-lastbox').then(() => {
       if ( ! this.props.lastBoxUrl ) {
-        return alert( "현재 영상이 설정되어있지 않습니다. 새로고침 하거나, 관리자에게 문의 해주시기 바랍니다" );
+        const message = "현재 영상이 설정되어있지 않습니다. 새로고침 하거나, 관리자에게 문의 해주시기 바랍니다";
+        this.props.openAlertModal(true, 'error', message, false, this.props.closeAlertModal);
       } else {
         this.hiddenAnchorForNewTab.current.click();
       }
+    }).catch(e => {
+      this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     });
   }
 
@@ -270,22 +297,11 @@ class Puzzle extends Component {
         teamCount: this.props.teamCount
       }
     }
-    utils.simpleAxios(axios, config).then(response => {
+    axios(config).then(response => {
       this.props.updatePuzzleColonInfos(response.data);
+    }).catch(e => {
+      this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     });
-  }
-
-  async checkPoint() {
-    const config = {
-      url: '/user/point-check',
-      method: 'POST',
-      data: {
-        team: this.props.ourTeam,
-        boxOpenUse: this.props.mappingPoints.boxOpenUse,
-      }
-    };
-    let result = await utils.simpleAxios(axios, config);
-    return result;
   }
 
   checkBingo(boxNumber, team) {
@@ -479,6 +495,7 @@ class Puzzle extends Component {
       </div>
     );
   }
+  
 }
 
 function mapStateToProps(state, ownProps) {

@@ -13,7 +13,6 @@ import AlertModal from 'react-modal';
 import 'bootstrap/dist/css/bootstrap.css';
 import './scss/style.scss';
 
-
 AlertModal.setAppElement('#app');
 AlertModal.defaultStyles.content = {};
 AlertModal.defaultStyles.overlay.backgroundColor = '';
@@ -50,8 +49,9 @@ class App extends Component {
           password: this.state.password
         }
       };
-      axios.post(config).then((response) => {
-        if ( response.status != 201 ) {
+      axios(config).then((response) => {
+        console.log( 'response : ', response );
+        if ( response.data.error ) {
           this.openAlertModal(true, 'error', response.data.error, false, this.closeAlertModal);
           return;
         }
@@ -144,7 +144,7 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    utils.simpleAxios(axios, '/entrance/companyImage', false).then(response => {
+    axios('/entrance/companyImage').then(response => {
       if ( response.data.error ) {
         this.openAlertModal(false, response.data.error, false, ()=>{ this.closeAlertModal() });
         return;
@@ -162,6 +162,8 @@ class App extends Component {
           show: true
         });
       }
+    }).catch(e => {
+      this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     });
   }
 

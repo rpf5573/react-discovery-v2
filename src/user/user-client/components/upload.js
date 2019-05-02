@@ -13,12 +13,6 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import * as loadImage from 'blueimp-load-image';
 
-// React Modal
-import Modal from 'react-modal';
-
-Modal.setAppElement('#app');
-Modal.defaultStyles.content = {};
-Modal.defaultStyles.overlay.backgroundColor = '';
 class Upload extends Component {
 
   constructor(props) {
@@ -40,12 +34,7 @@ class Upload extends Component {
     this.uploadFile = this.uploadFile.bind(this);
     this.cancelPreview = this.cancelPreview.bind(this);
     this.reset = this.reset.bind(this);
-    this.timerCheck = this.timerCheck.bind(this);
     this.changeVideoSrc = this.changeVideoSrc.bind(this);
-    this.uploadTimeIntervalCheck = this.uploadTimeIntervalCheck.bind(this);
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.renderModal = this.renderModal.bind(this);
   }
 
   async fileSelectHandler(e) {
@@ -73,7 +62,7 @@ class Upload extends Component {
         });
 
         this.changeVideoSrc(src, type);
-      } 
+      }
       // image인경우에는 이미지 돌려서 다시 해야함
       else if ( mediaType == constants.IMAGE ) {
         loadImage(file, (canvas) => {
@@ -92,55 +81,79 @@ class Upload extends Component {
   async uploadFile(e) {
 
     // 타이머 시간이 경과했는지 체크
-    let result = await this.timerCheck(this.props.ourTeam, this.props.laptime);
-    if ( result.data.error ) {
-      this.openModal(false, result.data.error, false, ()=>{
-        this.closeModal();
-      });
-      return;
-    }
-    
-    // 업로드 한지 1분이 지났는지 안지났는지 체크
-    result = await this.uploadTimeIntervalCheck(this.props.ourTeam);
-    if ( result.data.error ) {
-      this.openModal(false, result.data.error, false, ()=>{
-        this.closeModal();
-      });
-      return;
-    }
-
-    // 이제 업로드 시작
-    const file = this.fileUploadInput.current.files[0];
-    if ( ! file ) {
-      return alert( "ERROR : 업로드할 파일이 없습니다" );
-    }
-    // 이제 여기서 업로드 함.
-    const fd = new FormData();
-    // 이거를 먼저 써주는게 중요하다. 왜냐하면 서버입장에서는 userFile을 다 받기 전에는 team을 못읽을 수 가 있거든. 
-    // http body부분이 엄청 길거 아니냐 ! 근데 team정보가 맨 마지막에 있으면 좀 곤란하지 !
-    fd.append('team', this.props.ourTeam);
-    fd.append('userFile', file, file.name);
-    fd.append('point', this.props.mappingPoints.upload);
-
-    var config = {
-      method: 'POST',
-      url: '/user/upload',
-      data: fd,
-      onUploadProgress: (progressEvent) => {
-        let val = Math.floor( (progressEvent.loaded / progressEvent.total) * 100 );
-        if ( val%10 == 0 || val > 97 ) {
-          this.props.updateProgressVal(val);
-        }
+    let config = {
+      method: "POST",
+      url: "/user/timer-check",
+      data: {
+        team: this.props.ourTeam,
+        laptime: this.props.laptime
       }
     };
-
-    utils.simpleAxios(axios, config, false).then((response) => {
+    axios(config).then(response => {
       if ( response.data.error ) {
-        this.openModal(false, response.data.error, false, ()=>{ this.closeModal(); });  
+        this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
+        return;
       }
-      this.openModal(false, '성공', ()=>{ this.reset(); }, false);
-    }).catch((e) => {
-      this.openModal(false, e, false, ()=>{ this.closeModal(); });
+
+      config = {
+        method: 'POST',
+        url: '/user/upload-interval-check',
+        data: {
+          team: this.props.ourTeam
+        },
+      };
+
+      // 업로드 한지 1분이 지났는지 안지났는지 체크
+      axios(config).then(response => {
+        if (response.data.error) {
+          this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
+          return;
+        }
+
+        // 이제 업로드 시작
+        const file = this.fileUploadInput.current.files[0];
+        if ( !file ) {
+          this.props.openAlertModal(true, 'error', '업로드할 파일이 없습니다', false, this.props.closeAlertModal);
+          return;
+        }
+        // 이제 여기서 업로드 함.
+        const fd = new FormData();
+        // 이거를 먼저 써주는게 중요하다. 왜냐하면 서버입장에서는 userFile을 다 받기 전에는 team을 못읽을 수 가 있거든. 
+        // http body부분이 엄청 길거 아니냐 ! 근데 team정보가 맨 마지막에 있으면 좀 곤란하지 !
+        fd.append('team', this.props.ourTeam);
+        fd.append('userFile', file, file.name);
+        fd.append('point', this.props.mappingPoints.upload);
+
+        config = {
+          method: 'POST',
+          url: '/user/upload',
+          data: fd,
+          onUploadProgress: (progressEvent) => {
+            let val = Math.floor( (progressEvent.loaded / progressEvent.total) * 100 );
+            if ( val%10 == 0 || val > 97 ) {
+              this.props.updateProgressVal(val);
+            }
+          }
+        };
+
+        axios(config).then(response => {
+          if ( response.data.error ) {
+            this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
+          }
+          this.props.openAlertModal(false, false, '업로드 성공',() => { 
+            this.props.closeAlertModal(); 
+            this.reset(); 
+          }, false);
+        }).catch(e => {
+          this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
+        });
+      
+      }).catch(e => {
+        this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
+      })
+
+    }).catch(e => {
+      this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     });
   }
 
@@ -148,52 +161,8 @@ class Upload extends Component {
     this.reset();
   }
 
-  async timerCheck(team, laptime) {
-    const config = {
-      method: "POST",
-      url: "/user/timer-check",
-      data: {
-        team,
-        laptime
-      }
-    };
-    let result = utils.simpleAxios(axios, config);
-    return result;
-  }
-
-  async uploadTimeIntervalCheck(team) {
-    // 업로드 한지 1분 지났는지 테스트
-    const config = {
-      method: 'POST',
-      url: '/user/upload-interval-check',
-      data: {
-        team
-      },
-    };
-
-    let result = await utils.simpleAxios(axios, config);
-    return result;
-  }
-
   changeVideoSrc(src, type) {
     this.player.src([{src, type}]);
-  }
-
-  openModal(header=false, body=false, onPositive=false, onNegative=false) {
-    const modalState = {
-      isOpen: true,
-      header,
-      body,
-      onPositive,
-      onNegative
-    };
-    this.setState({modal: modalState});
-  }
-
-  closeModal() {
-    const modalState = {...this.state.modal};
-    modalState.isOpen = false;
-    this.setState({modal: modalState});
   }
 
   reset() {
@@ -216,27 +185,6 @@ class Upload extends Component {
     if ( this.player ) {
       this.player.reset();
     }
-  }
-
-  renderModal() {
-    const header = this.state.modal.header ? <h3>{this.state.modal.header}</h3> : '';
-    const body = this.state.modal.body ? <p>{this.state.modal.body}</p> : '';
-    const positiveBtn = this.state.modal.onPositive ? <button className="alertModal__positiveBtn" onClick={this.state.modal.onPositive}>확인</button> : '';
-    const negativeBtn = this.state.modal.onNegative ? <button className="alertModal__negativeBtn" onClick={this.state.modal.onNegative}>취소</button> : '';
-
-    return (
-      <Modal
-        isOpen={this.state.modal.isOpen}>
-        <div className="alertModal">
-          {header}
-          {body}
-          <div className="alertModal__btnContainer">
-            {positiveBtn}
-            {negativeBtn}
-          </div>
-        </div>
-      </Modal>
-    );
   }
 
   render() {
@@ -300,7 +248,6 @@ class Upload extends Component {
           </div>
           { this.props.progressVal > 0 ? <LinearProgress className="progress-bar" variant="determinate" value={this.props.progressVal} /> : '' }
         </div>
-        {this.renderModal()}
       </div>
     );
   }
