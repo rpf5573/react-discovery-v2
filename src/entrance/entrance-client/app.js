@@ -18,7 +18,6 @@ Modal.setAppElement('#app');
 Modal.defaultStyles.content = {};
 Modal.defaultStyles.overlay.backgroundColor = '';
 class App extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -51,17 +50,16 @@ class App extends Component {
         }
       };
       utils.simpleAxios(axios, config).then(response => {
-        // alert('입장');
         this.openModal(false, '성공', ()=>{
           window.location.href = '/' + response.data.role + ( (response.data.role == 'user' || response.data.role == 'assist') ? '/page/map' : '' );
         }, false);
       }).catch((e) => {
-        this.openModal('Error', e, false, ()=>{
+        this.openModal(false, e, false, ()=>{
           this.closeModal();
         });
       });
     } else {
-      this.openModal('Error', '비밀번호를 입력해주세요', false, ()=>{
+      this.openModal(false, '비밀번호를 입력해주세요', false, ()=>{
         this.closeModal();
       });
     }

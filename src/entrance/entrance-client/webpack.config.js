@@ -57,9 +57,10 @@ module.exports = {
     })
   ],
   devServer: {
+    host: '0.0.0.0',
     proxy: {
       '/': {
-        target: 'http://localhost:8080',
+        target: 'http://0.0.0.0:8080',
         changeOrigin: true
       },
     }

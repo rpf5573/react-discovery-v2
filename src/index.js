@@ -61,7 +61,7 @@ app.use(express.static('public'));
 console.log( 'process.env.NODE_PORT : ', process.env.NODE_PORT );
 
 let PORT = process.env.NODE_PORT || 8081;
-server.listen(PORT, 'localhost');
+server.listen(PORT, '0.0.0.0');
 
 // for real time puzzle update
 io.on('connection', function(socket) {
