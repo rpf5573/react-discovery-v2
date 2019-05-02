@@ -15,7 +15,11 @@ class Point extends Component {
   }
 
   async componentDidMount() {
-    utils.simpleAxios(axios, '/user/get-updated-points').then(response => {
+    utils.simpleAxios(axios, '/user/get-updated-points', false).then(response => {
+      if ( response.data.error ) {
+        this.openModal(false, response.data.error, false, ()=>{ this.closeModal() });
+        return;
+      }
       this.props.updatePoints(response.data);
       this.setState({
         chartSize: {

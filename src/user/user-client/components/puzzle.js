@@ -182,7 +182,11 @@ class Puzzle extends Component {
           point: this.props.mappingPoints.eniac
         }
       };
-      utils.simpleAxios(axios, config).then(response => {
+      utils.simpleAxios(axios, config, false).then(response => {
+        if ( response.data.error ) {
+          this.openModal(false, response.data.error, false, ()=>{ this.closeModal() });
+          return;
+        }
         alert(`성공 : ${response.data.rank}등으로 맞춰, ${response.data.point} 점을 획득하셨습니다 !`);
         this.setState({ isModalOpen: false });
       });

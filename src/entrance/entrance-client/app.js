@@ -49,14 +49,16 @@ class App extends Component {
           password: this.state.password
         }
       };
-      utils.simpleAxios(axios, config).then(response => {
+      utils.simpleAxios(axios, config, false).then(response => {
+        if ( response.data.error ) {
+          this.openModal(false, response.data.error, false, ()=>{ this.closeModal() });
+          return;
+        }
         this.openModal(false, '성공', ()=>{
           window.location.href = '/' + response.data.role + ( (response.data.role == 'user' || response.data.role == 'assist') ? '/page/map' : '' );
         }, false);
       }).catch((e) => {
-        this.openModal(false, e, false, ()=>{
-          this.closeModal();
-        });
+        this.openModal(false, e, false, ()=>{ this.closeModal(); });
       });
     } else {
       this.openModal(false, '비밀번호를 입력해주세요', false, ()=>{
@@ -136,7 +138,11 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    utils.simpleAxios(axios, '/entrance/companyImage').then(response => {
+    utils.simpleAxios(axios, '/entrance/companyImage', false).then(response => {
+      if ( response.data.error ) {
+        this.openModal(false, response.data.error, false, ()=>{ this.closeModal() });
+        return;
+      }
       let result = response.data;
       if ( result.companyImage ) {
         this.setState({

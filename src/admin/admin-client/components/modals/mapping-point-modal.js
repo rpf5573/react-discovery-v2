@@ -51,7 +51,8 @@ class PointPart extends React.Component {
         mapping_point
       }
     };
-    utils.simpleAxios(axios, config).then(() => {
+    utils.simpleAxios(axios, config).then((response) => {
+
       alert("성공");
       this.setState({
         isEditing: false,

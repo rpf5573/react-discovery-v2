@@ -65,7 +65,7 @@ class MainBoard extends Component {
         filename
       }
     };
-    utils.simpleAxios(axios, config).then(() => {
+    utils.simpleAxios(axios, config).then((response) => {
       let newUploadInfos = [...this.state.uploadInfos];
       for ( var i = 0; i < newUploadInfos.length; i++ ) {
         if ( newUploadInfos[i].team == team && Array.isArray(newUploadInfos[i].files) ) {

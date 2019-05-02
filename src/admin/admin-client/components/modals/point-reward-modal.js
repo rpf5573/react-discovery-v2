@@ -57,7 +57,7 @@ class PointRewardModal extends React.Component {
           points
         }
       };
-      utils.simpleAxios(axios, config).then(() => {
+      utils.simpleAxios(axios, config).then((response) => {
         for( var i = 0; i < this.pointInputFields.length; i++ ) {
           let input = this.pointInputFields[i];
           let val = parseInt(input.value);

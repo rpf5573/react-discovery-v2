@@ -77,11 +77,15 @@ function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-async function simpleAxios(axios, config) {
+async function simpleAxios(axios, config, handleError=true) {
   return new Promise(async function(resolve, reject) {
     try {
       let response = await axios(config);
       if ( response.status == 201 ) {
+        if (handleError && response.data.error) {
+          alert(response.data.error);
+          reject(response.data.error);
+        }
         resolve(response);
       } else {
         alert(constants.ERROR.unknown);

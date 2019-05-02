@@ -93,10 +93,21 @@ class Upload extends Component {
 
     // 타이머 시간이 경과했는지 체크
     let result = await this.timerCheck(this.props.ourTeam, this.props.laptime);
-    console.log( 'result after await: ', result );
+    if ( result.data.error ) {
+      this.openModal(false, result.data.error, false, ()=>{
+        this.closeModal();
+      });
+      return;
+    }
     
     // 업로드 한지 1분이 지났는지 안지났는지 체크
-    await this.uploadTimeIntervalCheck(this.props.ourTeam);
+    result = await this.uploadTimeIntervalCheck(this.props.ourTeam);
+    if ( result.data.error ) {
+      this.openModal(false, result.data.error, false, ()=>{
+        this.closeModal();
+      });
+      return;
+    }
 
     // 이제 업로드 시작
     const file = this.fileUploadInput.current.files[0];
@@ -123,14 +134,13 @@ class Upload extends Component {
       }
     };
 
-    utils.simpleAxios(axios, config).then((response) => {
-      this.openModal(false, '성공', ()=>{
-        this.reset();
-      }, false);
+    utils.simpleAxios(axios, config, false).then((response) => {
+      if ( response.data.error ) {
+        this.openModal(false, response.data.error, false, ()=>{ this.closeModal(); });  
+      }
+      this.openModal(false, '성공', ()=>{ this.reset(); }, false);
     }).catch((e) => {
-      this.openModal(false, e, false, ()=>{
-        this.closeModal();
-      });
+      this.openModal(false, e, false, ()=>{ this.closeModal(); });
     });
   }
 
