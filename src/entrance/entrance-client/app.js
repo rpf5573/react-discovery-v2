@@ -6,6 +6,9 @@ import * as utils from '../../utils/client';
 import React, { Component } from 'react';
 import ReactRevealText from 'react-reveal-text';
 
+// React Modal
+import Modal from 'react-modal';
+
 // css
 import 'bootstrap/dist/css/bootstrap.css';
 import './scss/style.scss';

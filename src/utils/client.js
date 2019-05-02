@@ -83,15 +83,14 @@ async function simpleAxios(axios, config) {
       let response = await axios(config);
       if ( response.status == 201 ) {
         if ( response.data.error ) {
-          alert( response.data.error );
           reject(response.data.error);
         }
         resolve(response);
       } else {
-        alert( constants.ERROR.unknown );
+        reject( constants.ERROR.unknown );
       }
     } catch(e) {
-      alert( constants.ERROR.unknown );
+      console.error(e);
       reject(e);
     }
   });
