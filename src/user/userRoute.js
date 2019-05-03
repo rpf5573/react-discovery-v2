@@ -47,7 +47,6 @@ module.exports = (app, DCQuery, upload) => {
   });
 
   app.post('/user/openBox', async (req, res) => {
-    var hrstart = process.hrtime();
     const { team, teamCount, maxLocation, boxNumber, boxOpenUse, type, puzzlePoint, bingoPointPerLine } = req.body;
     try {
       // 다른 팀이 이미 점령했는지 체크해야지
@@ -73,18 +72,14 @@ module.exports = (app, DCQuery, upload) => {
 
       // 퍼즐 먼저 업데이트 하즈아 !
       await DCQuery.puzzles.update( team, boxNumber, type );
-      console.log( `/user/openBox - after puzzles.update / team : ${team} / bingo : ${req.body.bingoPoint}` );
 
+      // 
       result = await DCQuery.puzzles.get( team );
       let ourTeamBoxNumbers = JSON.parse(result[0].boxNumbers);
       console.log( 'ourTeamBoxNumbers : ', ourTeamBoxNumbers );
       let grid = utils.makeGrid(maxLocation, ourTeamBoxNumbers, team);
-      console.log( 'grid : ', grid );
       let bingoCount = utils.checkBingo(grid, maxLocation, boxNumber, team);
       let bingoPoint = bingoCount * bingoPointPerLine;
-
-      console.log( 'bingoCount : ', bingoCount );
-      console.log( 'bingoPoint : ', bingoPoint );
 
       // 포인트 업데이트
       await DCQuery.points.update({ 
@@ -93,10 +88,6 @@ module.exports = (app, DCQuery, upload) => {
         puzzle: puzzlePoint,
         bingo: bingoPoint
       });
-
-      let hrend = process.hrtime(hrstart);
-
-      console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
 
       res.status(201).json({
         team,
