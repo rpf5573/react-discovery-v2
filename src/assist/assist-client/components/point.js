@@ -107,12 +107,11 @@ class Point extends Component {
     let response = await utils.simpleAxios(axios, config);
     let teamTimers = response.data;
 
-    console.log( 'this.teamPoints : ', this.teamPoints );
-
     // 전체 값이 비어있는지 체크
     let allEmpty = this.teamPoints.filter(obj => {return (Number.isInteger(obj.point) ? true : false)}).length < 1;
     if ( allEmpty ) {
-      return alert("포인트를 입력해 주시기 바랍니다");
+      this.props.openAlertModal(true, 'error', '포인트를 입력해주시기 바랍니다', false, this.props.closeAlertModal);
+      return;
     }
 
     var errorTeams = [];
@@ -146,15 +145,18 @@ class Point extends Component {
         }
       };
 
-      utils.simpleAxios(axios, config).then(() => {
-        // 여기서 다시 그려지면서 에러 메세지가 보여지겠지 !
-        // 성공과 실패가 섞여있는거야
-        const message = (errorTeams.length > 0 ? '타이머문제로 점수를 받지못한 팀이 있습니다' : '성공');
+      axios(config).then(response => {
         this.setState({
           errorTeams,
           placeholders: points
         });
-        alert(message);
+        if ( errorTeams.length > 0 ) {
+          this.props.openAlertModal(true, 'error', '타이머문제로 점수를 받지못한 팀이 있습니다', false, this.props.closeAlertModal);
+        } else {
+          this.props.openAlertModal(false, '성공', false, this.props.closeAlertModal);
+        }
+      }).catch(e => {
+        this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
       });
     } 
     // 타이머 문제로 인해 아예 성공한게 없을때
@@ -163,7 +165,7 @@ class Point extends Component {
         errorTeams,
         placeholders: points
       });
-      alert('실패');
+      this.props.openAlertModal(true, 'error', '타이머문제로 점수를 지급할 수 없습니다', false, this.props.closeAlertModal);
     }
   }
 
@@ -195,11 +197,9 @@ class Point extends Component {
   }
 
   render() {
-
     if ( ! this.props.teamCount ) {
       return (<NotReady></NotReady>);
     }
-
     return (
       <div className="point-page full-container">
         <div className="point-page-inner">
