@@ -66,15 +66,10 @@ class Puzzle extends Component {
     };
 
     // 이걸 굳이 state에 넣을 필요는 없지 ! View에 반영되는건 아니니께~
-    this.grid = (this.props.count > 0 ? utils.makeGrid(this.props.maxLocation, this.props.puzzleColonInfos) : false);
-    console.log( 'constructor this.grid : ', this.grid );
-
     this.socket = socketIOClient(this.props.endPoint);
     this.socket.on("puzzle_box_opened", data => {
       // 여기서 말하는 boxes는 lastBox를 제외한거야
       if ( this.boxes.length == this.props.count - 1 ) {
-        this.updateGrid(data.boxNumber, data.team);
-        console.log( 'this.grid in socket : ', this.grid );
         var node = ReactDOM.findDOMNode(this.boxes[data.boxNumber-1]);
         node.classList.add('flipping', `owner-${data.team}`);
       } else {
@@ -91,8 +86,6 @@ class Puzzle extends Component {
     this.handleModalClose = this.handleModalClose.bind(this);
     this.handleEniacSubmit = this.handleEniacSubmit.bind(this);
     this.handleEniacSentanceInput = this.handleEniacSentanceInput.bind(this);
-    this.checkBingo = this.checkBingo.bind(this);
-    this.updateGrid = this.updateGrid.bind(this);
 
     this.hiddenAnchorForNewTab = React.createRef();
   }
@@ -233,11 +226,6 @@ class Puzzle extends Component {
         return;
       }
 
-      this.updateGrid(boxNumber, this.props.ourTeam);
-
-      let totalCount = this.checkBingo( boxNumber, this.props.ourTeam );
-      let bingoPoint = totalCount * this.props.mappingPoints.bingo;
-
       if ( hasWord == 'true' ) {
         puzzlePoint = this.props.mappingPoints.boxOpenGetWord;
         pointMessage = `글자있는구역 : ${puzzlePoint}점 획득`;
@@ -251,9 +239,10 @@ class Puzzle extends Component {
           boxNumber,
           type: (hasWord == 'true' ? constants.WORD : constants.EMPTY),
           puzzlePoint,
-          bingoPoint,
           boxOpenUse: this.props.mappingPoints.boxOpenUse,
-          teamCount: this.props.teamCount
+          teamCount: this.props.teamCount,
+          maxLocation: this.props.maxLocation,
+          bingoPointPerLine: this.props.mappingPoints.bingo
         }
       };
       axios(config).then(response => {
@@ -264,8 +253,9 @@ class Puzzle extends Component {
 
         // grid update하구요
         this.socket.emit('open_puzzle_box', response.data);
+        const { bingoPoint, bingoCount } = response.data;
         if ( bingoPoint > 0 ) {
-          pointMessage = `${pointMessage} + ${totalCount*3}개의 구역연결로 ${bingoPoint}점 획득`;
+          pointMessage = `${pointMessage} + ${parseInt(bingoCount)*3}개의 구역연결로 ${bingoPoint}점 획득`;
         }
         this.props.openAlertModal(false, false, pointMessage, this.props.closeAlertModal, false);
       }).catch(e => {
@@ -302,143 +292,6 @@ class Puzzle extends Component {
     }).catch(e => {
       this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     });
-  }
-
-  checkBingo(boxNumber, team) {
-    const xMax = this.grid.length - 1;
-    const yMax = this.grid[0].length - 1;
-    var totalCount = 0;
-    let location = utils.boxNumberToLocation(boxNumber, this.props.maxLocation);
-
-    /*  가로
-    /* --------------------------------------------------- */
-    var x = location[0];
-    var y = location[1];
-    var count = 0;
-
-    /* ------ 맨 왼쪽으로 이동 ------ */
-    while(x > 0 && this.grid[x-1][y] == team) {
-      x--;
-    }
-
-    /* ------ 오른쪽으로 2개 발견할때까지 이동 왜냐면 내가 방금 누른곳이 거기니까 ------ */
-    while(x <= xMax && this.grid[x][y] == team) {
-      x += 1;
-      count++;
-
-      // 딱 3개만 발견해야 하는거니까, 3개째는 추가하고 4개째는 멈춰! 4개째 멈췄으니까 5개째는 당연히 없겠지 !
-      // 왜 이렇게 하냐고? 다 세고 3개 이상인지 체크하는건 비효율 적이기 때문이지
-      if ( count == 3) {
-        totalCount += 1;
-      }
-
-      // 왜 3개에서 안끝내냐면, 3개 이상(4,5..)이면 안되니까 !
-      if ( count == 4 ) {
-        // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
-        totalCount -= 1;
-        break;
-      }
-    }
-
-
-
-    /*  세로
-    /* --------------------------------------------------- */
-    x = location[0];
-    y = location[1];
-    count = 0;
-
-    /* ------ 위쪽으로 이동 ------ */
-    while(y > 0 && this.grid[x][y-1] == team) {
-      y--;
-    }
-
-    /* ------ 아래쪽으로 3개 발견할때까지 이동 ------ */
-    while(y <= yMax && this.grid[x][y] == team) {
-      y += 1;
-      count++;
-
-      if ( count == 3) {
-        totalCount += 1;
-      }
-
-      // 왜 3개에서 안끝내냐면, 3개 이상(4,5..)이면 안되니까 !
-      if ( count == 4 ) {
-        // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
-        totalCount -= 1;
-        break;
-      }
-    }
-
-
-
-    /*  오른쪽 위 대각
-    /* --------------------------------------------------- */
-    x = location[0];
-    y = location[1];
-    count = 0;
-
-    /* ------ 오른쪽위으로 이동 ------ */
-    while((y > 0 && x < xMax) && this.grid[x+1][y-1] == team) {
-      x++;
-      y--;
-    }
-
-    /* ------ 아래왼쪽으로 3개 발견할때까지 이동 ------ */
-    while((y <= yMax && x >= 0) && this.grid[x][y] == team) {
-      x--;
-      y++;
-      count++;
-
-      if ( count == 3) {
-        totalCount += 1;
-      }
-
-      // 왜 3개에서 안끝내냐면, 3개 이상(4,5..)이면 안되니까 !
-      if ( count == 4 ) {
-        // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
-        totalCount -= 1;
-        break;
-      }
-    }
-
-
-
-    /*  왼쪽 위 대각
-    /* --------------------------------------------------- */
-    x = location[0];
-    y = location[1];
-    count = 0;
-
-    /* ------ 왼쪽위으로 이동 ------ */
-    while((x > 0 && y > 0) && this.grid[x-1][y-1] == team) {
-      x--;
-      y--;
-    }
-
-    /* ------ 아래오른쪽으로 2개 발견할때까지 이동 ------ */
-    while((y <= yMax && x <= xMax) && this.grid[x][y] == team) {
-      x++;
-      y++;
-      count++;
-
-      if ( count == 3) {
-        totalCount += 1;
-      }
-      if ( count == 4 ) {
-        // 야 취소취소, 하나 추가한거 취소 퇘퇘퇘 !
-        totalCount -= 1;
-        break;
-      }
-    }
-
-    return totalCount;
-  }
-
-  updateGrid(boxNumber, team) {
-    let location = utils.boxNumberToLocation(boxNumber, this.props.maxLocation);
-    console.log( 'location : ', location );
-    this.grid[location[0]][location[1]] = team;
   }
 
   componentWillUnmount() {

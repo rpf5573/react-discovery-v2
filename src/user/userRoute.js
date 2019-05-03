@@ -47,14 +47,16 @@ module.exports = (app, DCQuery, upload) => {
   });
 
   app.post('/user/openBox', async (req, res) => {
+    var hrstart = process.hrtime();
+    const { team, teamCount, maxLocation, boxNumber, boxOpenUse, type, puzzlePoint, bingoPointPerLine } = req.body;
     try {
       // 다른 팀이 이미 점령했는지 체크해야지
-      var result = await DCQuery.puzzles.getAll(req.body.teamCount);
-      for ( var i = 0; i < result.length; i++ ) {
-        let boxNumbers = JSON.parse( result[i].boxNumbers );
+      var allTeamBoxNumbers = await DCQuery.puzzles.getAll(teamCount);
+      for ( var i = 0; i < allTeamBoxNumbers.length; i++ ) {
+        let boxNumbers = JSON.parse( allTeamBoxNumbers[i].boxNumbers );
         if ( Array.isArray(boxNumbers) ) {
           for ( var z = 0; z < boxNumbers.length; z++ ) {
-            if ( boxNumbers[z] == req.body.boxNumber ) {
+            if ( boxNumbers[z] == boxNumber ) {
               return res.status(201).json({
                 error: "이미 다른팀에의해 점령당했습니다"
               });
@@ -64,32 +66,48 @@ module.exports = (app, DCQuery, upload) => {
       }
 
       // 돈 체크 합니다잉~
-      result = await DCQuery.points.get('useable', req.body.team);
-      if ( result[0].useable < req.body.boxOpenUse ) {
+      let result = await DCQuery.points.get('useable', team);
+      if ( result[0].useable < boxOpenUse ) {
         return res.status(201).json({ error: '가용점수가 부족합니다' });
       }
 
       // 퍼즐 먼저 업데이트 하즈아 !
-      await DCQuery.puzzles.update( req.body.team, req.body.boxNumber, req.body.type );
-      console.log( `/user/openBox - after puzzles.update / team : ${req.body.team} / bingo : ${req.body.bingoPoint}` );
+      await DCQuery.puzzles.update( team, boxNumber, type );
+      console.log( `/user/openBox - after puzzles.update / team : ${team} / bingo : ${req.body.bingoPoint}` );
+
+      result = await DCQuery.puzzles.get( team );
+      let ourTeamBoxNumbers = JSON.parse(result[0].boxNumbers);
+      console.log( 'ourTeamBoxNumbers : ', ourTeamBoxNumbers );
+      let grid = utils.makeGrid(maxLocation, ourTeamBoxNumbers, team);
+      console.log( 'grid : ', grid );
+      let bingoCount = utils.checkBingo(grid, maxLocation, boxNumber, team);
+      let bingoPoint = bingoCount * bingoPointPerLine;
+
+      console.log( 'bingoCount : ', bingoCount );
+      console.log( 'bingoPoint : ', bingoPoint );
 
       // 포인트 업데이트
       await DCQuery.points.update({ 
-        team: req.body.team, 
-        useable: -(req.body.boxOpenUse),
-        puzzle: req.body.puzzlePoint,
-        bingo: req.body.bingoPoint
+        team, 
+        useable: -(boxOpenUse),
+        puzzle: puzzlePoint,
+        bingo: bingoPoint
       });
-      console.log( '/user/openBox - after puzzle update' );
+
+      let hrend = process.hrtime(hrstart);
+
+      console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
 
       res.status(201).json({
-        team: req.body.team,
-        boxNumber: req.body.boxNumber
+        team,
+        boxNumber,
+        bingoCount,
+        bingoPoint
       });
     } catch (err) {
       console.error( 'err : ', err );
       return res.status(201).json({
-        error: '데이터베이스 통신중 에러가 발생하였습니다'
+        error: '데이터베이스 통신중 에러가 발생하였습니다. 새로고침 해주세요'
       })
     }
   });
