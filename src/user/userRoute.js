@@ -199,9 +199,9 @@ module.exports = (app, DCQuery, upload) => {
             const currentTime = utils.getCurrentTimeInSeconds();
             await DCQuery.points.update({
               team,
-              temp: point, // useable이 아니라 temp를 업데이트 한다,
+              useable: point, // useable이 아니라 temp를 업데이트 한다,
             });
-            await DCQuery.uploads.add(team, filename, currentTime, true);
+            await DCQuery.uploads.add(team, filename, currentTime, false);
             res.sendStatus(201); // 우선 보내고 그다음 할일을 하자. 아래꺼는 좀 오래걸리니까 !
 
             await DCQuery.uploads.addStackFile(team, filename);
