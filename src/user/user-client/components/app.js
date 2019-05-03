@@ -9,7 +9,7 @@ import Point from './point';
 import Puzzle from './puzzle';
 import Upload from './upload';
 import PostInfo from './post-info';
-import AlertModal from 'react-modal'; 
+import AlertModal from 'react-modal';
 
 // css
 import '../scss/style.scss';
