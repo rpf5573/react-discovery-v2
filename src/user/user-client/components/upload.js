@@ -129,12 +129,12 @@ class Upload extends Component {
     if ( this.props.tempBoxState ) {
       this.timerCheck(
         this.intervalCheck(() => {
-          uploadFile();
+          this.uploadFile();
         })
       );
     } else {
       this.intervalCheck(() => {
-        uploadFile();
+        this.uploadFile();
       });
     }
   }
