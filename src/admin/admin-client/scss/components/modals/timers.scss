@@ -5,8 +5,12 @@
     justify-content: space-between;
     align-items: center;
 
+    & > .l-left > label {
+      font-size: 20px;
+    }
+
     label {
-      font-size: 18px;
+      font-size: 14px;
       margin-bottom: 0;
     }
 
@@ -15,23 +19,32 @@
       align-items: center;
       justify-content: flex-end;
 
+      & > div {
+        margin-right: 15px;
+      }
+
       label {
         margin-right: 10px;
       }
 
       .input-group {
-        width: 60%;
-
         input {
           text-align: center;
         }
       }
-    }
 
-    .eniac-on-off {
-      font-size: inherit;
-      .radio {
-        padding-top: 2px;
+      .eniac-on-off {
+        font-size: inherit;
+        .radio {
+          padding-top: 2px;
+        }
+      }
+
+      .laptime {
+        flex-basis: 200px;
+        label {
+          word-break: keep-all;
+        }
       }
     }
   }

@@ -26,7 +26,7 @@ class DCQuery {
       case 'admin':
         var teamCount = await this.teamPasswords.getTeamCount();
         var teamPasswords = await this.teamPasswords.getAll();
-        var metas = await this.metas.get(['laptime', 'companyImage', 'map', 'puzzleBoxCount', 'originalEniacWords', 'randomEniacWords', 'lastBoxUrl', 'eniacState', 'lastBoxState', 'adminPasswords', 'mappingPoints']);
+        var metas = await this.metas.get(['laptime', 'companyImage', 'map', 'puzzleBoxCount', 'originalEniacWords', 'randomEniacWords', 'lastBoxUrl', 'eniacState', 'tempBoxState', 'lastBoxState', 'adminPasswords', 'mappingPoints']);
         var teamTimers = await this.timers.getAll();
         var postInfos = await this.postInfos.getAll();
         return {
@@ -169,7 +169,7 @@ class Metas {
     return result;
   }
   async reset() {
-    var sql = `UPDATE ${this.table} SET metaValue = 0 WHERE metaKey IN ('eniacState', 'lastBoxState', 'laptime', 'puzzleBoxCount')`;
+    var sql = `UPDATE ${this.table} SET metaValue = 0 WHERE metaKey IN ('eniacState', 'tempBoxState', 'lastBoxState', 'laptime', 'puzzleBoxCount')`;
     var result = await this.mysql.query(sql);
 
     sql = `UPDATE ${this.table} SET metaValue = NULL WHERE metaKey IN ('companyImage', 'map', 'originalEniacWords', 'eniacSuccessTeams', 'randomEniacWords', 'lastBoxUrl')`;

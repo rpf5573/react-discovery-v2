@@ -119,6 +119,15 @@ module.exports = (app, DCQuery, upload) => {
       return res.sendStatus(404);
     }
   });
+  app.post('/admin/timers/temp-box-state', async (req, res) => {
+    try {
+      await DCQuery.metas.update('tempBoxState', req.body.tempBoxState);
+      return res.sendStatus(201);
+    } catch (e) {
+      console.log( 'error : ', e );
+      return res.sendStatus(404);
+    }
+  });
   app.post('/admin/timers/get-team-timers', async (req, res) => {
     try {
       let teamTimers = await DCQuery.timers.getAll(req.body.teamCount);

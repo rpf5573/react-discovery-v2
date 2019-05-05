@@ -27,6 +27,7 @@ export default function configureStore(initialSettings) {
       laptime: parseInt(initialSettings.laptime),
       teamTimers: initialSettings.teamTimers,
       eniacState: parseInt(initialSettings.eniacState),
+      tempBoxState: parseInt(initialSettings.tempBoxState)
     },
     uploads: {
       companyImage: initialSettings.companyImage,

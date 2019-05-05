@@ -3,7 +3,7 @@ import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, Row, Col, InputGroup, InputGroupAddon, InputGroupText, Label } from 'reactstrap';
-import { closeModal, updateTeamTimerState, updateLapTime, updateEniacState } from '../../actions';
+import { closeModal, updateTeamTimerState, updateLapTime, updateEniacState, updateTempBoxState } from '../../actions';
 import axios from 'axios';
 import cn from 'classnames';
 
@@ -19,6 +19,7 @@ class TimerModal extends React.Component {
     this.handleTimerBtnClick = this.handleTimerBtnClick.bind(this);
     this.allTimerStart = this.allTimerStart.bind(this);
     this.updateEniacState = this.updateEniacState.bind(this);
+    this.updateTempBoxState = this.updateTempBoxState.bind(this);
   }
 
   close() {
@@ -117,6 +118,22 @@ class TimerModal extends React.Component {
     });
   }
 
+  async updateTempBoxState(e) {
+    let val = parseInt(e.currentTarget.value);
+
+    const config = {
+      method: 'POST',
+      url: '/admin/timers/temp-box-state',
+      data: {
+        tempBoxState: val
+      }
+    };
+    utils.simpleAxios(axios, config).then(() => {
+      this.props.updateTempBoxState(val);
+      alert("성공");
+    });
+  }
+
   renderTimerManageBtns(count) {
     let currentTime = utils.getCurrentTimeInSeconds();
     var btnList = [];
@@ -168,27 +185,36 @@ class TimerModal extends React.Component {
 
   render() {
     return (
-      <Modal isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} size="lg">
+      <Modal isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} size="xl">
         <ModalHeader toggle={this.close}>
           <div className="l-left">
-            타이머
+            <label>타이머</label>
           </div>
           <div className="l-right">
-            <div className="l-left d-flex eniac-on-off">
-              <span className="mr-3">
-                문장해독 : 
-              </span>
-              <div className="radio abc-radio abc-radio-primary mr-3">
+            <div className="eniac-on-off d-flex align-items-center abc">
+              <label className="mr-3">문장해독 : </label>
+              <div className="radio abc-radio abc-radio-primary mr-3 d-flex align-items-center">
                 <input type="radio" id="eniacStateRadioInput01" onChange={this.updateEniacState} checked={ this.props.eniacState ? true : false } value={constants.ON}/>
                 <label htmlFor="eniacStateRadioInput01">ON</label>
               </div>
-              <div className="radio abc-radio abc-radio-danger">
+              <div className="radio abc-radio abc-radio-danger d-flex align-items-center">
                 <input type="radio" id="eniacStateRadioInput02" onChange={this.updateEniacState} checked={ this.props.eniacState ? false : true } value={constants.OFF}/>
                 <label htmlFor="eniacStateRadioInput02">OFF</label>
               </div>
             </div>
-            <div className="l-right d-flex align-items-center justify-content-end">
-              <Label>랩타임 설정 : </Label>
+            <div className="temp-box d-flex align-items-center">
+              <label className="mr-3">임시저장 : </label>
+              <div className="radio abc-radio abc-radio-primary mr-3 d-flex align-items-center">
+                <input type="radio" id="tempBoxStateRadioInput01" onChange={this.updateTempBoxState} checked={ this.props.tempBoxState ? true : false } value={constants.ON}/>
+                <label htmlFor="tempBoxStateRadioInput01">ON</label>
+              </div>
+              <div className="radio abc-radio abc-radio-danger d-flex align-items-center">
+                <input type="radio" id="tempBoxStateRadioInput02" onChange={this.updateTempBoxState} checked={ this.props.tempBoxState ? false : true } value={constants.OFF}/>
+                <label htmlFor="tempBoxStateRadioInput02">OFF</label>
+              </div>
+            </div>
+            <div className="laptime d-flex align-items-center">
+              <label>랩타임:</label>
               <InputGroup>
                 <input type="number" className="form-control" placeholder={utils.secondToMinute(this.props.laptime)} ref={input => this.lapTimeInput = input}/>
                 <InputGroupAddon addonType="append">
@@ -222,7 +248,8 @@ function mapStateToProps(state, ownProps) {
     teamTimers: state.timer.teamTimers,
     mappingPoints: state.mappingPoints,
     eniacState: state.timer.eniacState,
+    tempBoxState: state.timer.tempBoxState
   };
 }
 
-export default connect(mapStateToProps, { closeModal, updateTeamTimerState, updateLapTime, updateEniacState })(TimerModal);
+export default connect(mapStateToProps, { closeModal, updateTeamTimerState, updateLapTime, updateEniacState, updateTempBoxState })(TimerModal);
