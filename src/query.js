@@ -38,7 +38,7 @@ class DCQuery {
         };
 
       case 'user':
-        var metas = await this.metas.get(['laptime', 'companyImage', 'map', 'puzzleBoxCount', 'originalEniacWords', 'randomEniacWords', 'lastBoxUrl', 'lastBoxState', 'mappingPoints']);
+        var metas = await this.metas.get(['laptime', 'companyImage', 'map', 'puzzleBoxCount', 'originalEniacWords', 'randomEniacWords', 'tempBoxState', 'lastBoxUrl', 'lastBoxState', 'mappingPoints']);
         var teamCount = await this.teamPasswords.getTeamCount();
         var points = await this.points.get('useable');
         var puzzleColonInfos = await this.puzzles.getAll();

@@ -31,10 +31,15 @@ class Upload extends Component {
 
     this.fileUploadInput = React.createRef();
     this.fileSelectHandler = this.fileSelectHandler.bind(this);
+    this.uploadWithCheckes = this.uploadWithCheckes.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
     this.cancelPreview = this.cancelPreview.bind(this);
     this.reset = this.reset.bind(this);
     this.changeVideoSrc = this.changeVideoSrc.bind(this);
+    this.intervalCheck = this.intervalCheck.bind(this);
+    this.timerCheck = this.timerCheck.bind(this);
+
+    console.log( 'this.props.tempBoxState : ', this.props.tempBoxState );
   }
 
   async fileSelectHandler(e) {
@@ -78,8 +83,67 @@ class Upload extends Component {
     }
   }
 
-  async uploadFile(e) {
+  async uploadFile() {
+    // 이제 업로드 시작
+    const file = this.fileUploadInput.current.files[0];
+    if ( !file ) {
+      this.props.openAlertModal(true, 'error', '업로드할 파일이 없습니다', false, this.props.closeAlertModal);
+      return;
+    }
+    // 이제 여기서 업로드 함.
+    const fd = new FormData();
+    // 이거를 먼저 써주는게 중요하다. 왜냐하면 서버입장에서는 userFile을 다 받기 전에는 team을 못읽을 수 가 있거든. 
+    // http body부분이 엄청 길거 아니냐 ! 근데 team정보가 맨 마지막에 있으면 좀 곤란하지 !
+    fd.append('team', this.props.ourTeam);
+    fd.append('tempBoxState', this.props.tempBoxState);
+    fd.append('userFile', file, file.name);
+    fd.append('point', this.props.mappingPoints.upload);
 
+    let config = {
+      method: 'POST',
+      url: '/user/upload',
+      data: fd,
+      onUploadProgress: (progressEvent) => {
+        let val = Math.floor( (progressEvent.loaded / progressEvent.total) * 100 );
+        if ( val%10 == 0 || val > 97 ) {
+          this.props.updateProgressVal(val);
+        }
+      }
+    };
+
+    axios(config).then(response => {
+      if ( response.data.error ) {
+        this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
+        return;
+      }
+      this.props.openAlertModal(false, false, '업로드 성공',() => { 
+        this.props.closeAlertModal(); 
+        this.reset(); 
+      }, false);
+    }).catch(e => {
+      this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
+    });
+  }
+
+  async uploadWithCheckes(e) {
+    if ( this.props.tempBoxState ) {
+      this.timerCheck(
+        this.intervalCheck(() => {
+          uploadFile();
+        })
+      );
+    } else {
+      this.intervalCheck(() => {
+        uploadFile();
+      });
+    }
+  }
+
+  async cancelPreview(e) {
+    this.reset();
+  }
+
+  intervalCheck(callback) {
     let config = {
       method: 'POST',
       url: '/user/upload-interval-check',
@@ -87,7 +151,6 @@ class Upload extends Component {
         team: this.props.ourTeam
       },
     };
-
     // 업로드 한지 3분이 지났는지 안지났는지 체크
     axios(config).then(response => {
       if (response.data.error) {
@@ -95,51 +158,31 @@ class Upload extends Component {
         return;
       }
 
-      // 이제 업로드 시작
-      const file = this.fileUploadInput.current.files[0];
-      if ( !file ) {
-        this.props.openAlertModal(true, 'error', '업로드할 파일이 없습니다', false, this.props.closeAlertModal);
-        return;
-      }
-      // 이제 여기서 업로드 함.
-      const fd = new FormData();
-      // 이거를 먼저 써주는게 중요하다. 왜냐하면 서버입장에서는 userFile을 다 받기 전에는 team을 못읽을 수 가 있거든. 
-      // http body부분이 엄청 길거 아니냐 ! 근데 team정보가 맨 마지막에 있으면 좀 곤란하지 !
-      fd.append('team', this.props.ourTeam);
-      fd.append('userFile', file, file.name);
-      fd.append('point', this.props.mappingPoints.upload);
-
-      config = {
-        method: 'POST',
-        url: '/user/upload',
-        data: fd,
-        onUploadProgress: (progressEvent) => {
-          let val = Math.floor( (progressEvent.loaded / progressEvent.total) * 100 );
-          if ( val%10 == 0 || val > 97 ) {
-            this.props.updateProgressVal(val);
-          }
-        }
-      };
-
-      axios(config).then(response => {
-        if ( response.data.error ) {
-          this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
-        }
-        this.props.openAlertModal(false, false, '업로드 성공',() => { 
-          this.props.closeAlertModal(); 
-          this.reset(); 
-        }, false);
-      }).catch(e => {
-        this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
-      });
+      callback();
     
     }).catch(e => {
       this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     })
   }
 
-  async cancelPreview(e) {
-    this.reset();
+  timerCheck(callback) {
+    let config = {
+      method: 'POST',
+      url: '/user/timer-check',
+      data: {
+        team: this.props.ourTeam,
+        laptime: this.props.laptime
+      },
+    };
+    axios(config).then(response => {
+      if ( response.data.error ) {
+        this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
+        return;
+      }
+      callback();
+    }).catch(e => {
+      this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
+    });
   }
 
   changeVideoSrc(src, type) {
@@ -222,7 +265,7 @@ class Upload extends Component {
               <DeleteForever></DeleteForever>
               <span>취소</span>
             </button>
-            <button className="ok" onClick={this.uploadFile}>
+            <button className="ok" onClick={this.uploadWithCheckes}>
               <Done></Done>
               <span>업로드</span>
             </button>
@@ -268,7 +311,8 @@ function mapStateToProps(state, ownProps) {
     mappingPoints: state.mappingPoints,
     fileInfo: state.fileInfo,
     progressVal: state.progressVal,
-    laptime: state.laptime
+    laptime: state.laptime,
+    tempBoxState: state.tempBoxState
   };
 }
 
