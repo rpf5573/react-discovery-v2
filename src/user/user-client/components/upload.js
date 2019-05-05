@@ -179,6 +179,7 @@ class Upload extends Component {
         this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
         return;
       }
+      console.log( "Did I called ?" );
       callback();
     }).catch(e => {
       this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
