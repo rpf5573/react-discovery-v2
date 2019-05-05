@@ -127,11 +127,11 @@ class Upload extends Component {
 
   async uploadWithCheckes(e) {
     if ( this.props.tempBoxState ) {
-      this.timerCheck(
+      this.timerCheck(() => {
         this.intervalCheck(() => {
           this.uploadFile();
         })
-      );
+      });
     } else {
       this.intervalCheck(() => {
         this.uploadFile();
@@ -157,9 +157,7 @@ class Upload extends Component {
         this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
         return;
       }
-
       callback();
-    
     }).catch(e => {
       this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     })
@@ -175,7 +173,9 @@ class Upload extends Component {
       },
     };
     axios(config).then(response => {
+      console.log( 'response.data : ', response.data );
       if ( response.data.error ) {
+        console.log( 'response.data.error', ' is called' );
         this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
         return;
       }
