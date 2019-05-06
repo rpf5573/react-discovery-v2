@@ -3,7 +3,7 @@ import * as constants from '../../../../utils/constants';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, Row, Col, InputGroup, InputGroupAddon, InputGroupText, Label } from 'reactstrap';
-import { closeModal, updateTeamTimerState, updateLapTime, updateEniacState, updateTempBoxState } from '../../actions';
+import { closeModal, updateTeamTimerState, updateLapTime, updateEniacState, updateTempBoxState, updateMappingPoints } from '../../actions';
 import axios from 'axios';
 import cn from 'classnames';
 
@@ -128,7 +128,9 @@ class TimerModal extends React.Component {
         tempBoxState: val
       }
     };
-    utils.simpleAxios(axios, config).then(() => {
+    utils.simpleAxios(axios, config).then(response => {
+      console.log( 'response.data : ', response.data );
+      this.props.updateMappingPoints(response.data);
       this.props.updateTempBoxState(val);
       alert("성공");
     });
@@ -252,4 +254,4 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, { closeModal, updateTeamTimerState, updateLapTime, updateEniacState, updateTempBoxState })(TimerModal);
+export default connect(mapStateToProps, { closeModal, updateTeamTimerState, updateLapTime, updateEniacState, updateTempBoxState, updateMappingPoints })(TimerModal);

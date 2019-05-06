@@ -130,7 +130,7 @@ module.exports = (app, DCQuery, upload) => {
         upload: point
       });
       await DCQuery.metas.update('mappingPoints', JSON.stringify(newMappingPoints));
-      return res.sendStatus(201);
+      return res.status(201).json({point});
     } catch (e) {
       console.log( 'error : ', e );
       return res.sendStatus(404);
