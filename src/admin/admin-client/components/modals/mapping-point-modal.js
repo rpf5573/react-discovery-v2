@@ -52,7 +52,6 @@ class PointPart extends React.Component {
       }
     };
     utils.simpleAxios(axios, config).then((response) => {
-
       alert("성공");
       this.setState({
         isEditing: false,

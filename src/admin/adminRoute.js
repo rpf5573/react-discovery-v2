@@ -121,7 +121,15 @@ module.exports = (app, DCQuery, upload) => {
   });
   app.post('/admin/timers/temp-box-state', async (req, res) => {
     try {
-      await DCQuery.metas.update('tempBoxState', req.body.tempBoxState);
+      const tempBoxState = req.body.tempBoxState;
+      await DCQuery.metas.update('tempBoxState', tempBoxState);
+      let json = await DCQuery.metas.get('mappingPoints');
+      let mappingPoints = JSON.parse(json);
+      let point = tempBoxState ? 0 : 1000;
+      const newMappingPoints = Object.assign(mappingPoints, {
+        upload: point
+      });
+      await DCQuery.metas.update('mappingPoints', JSON.stringify(newMappingPoints));
       return res.sendStatus(201);
     } catch (e) {
       console.log( 'error : ', e );
