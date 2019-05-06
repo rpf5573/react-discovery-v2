@@ -206,7 +206,7 @@ class TimerModal extends React.Component {
               </div>
             </div>
             <div className="temp-box d-flex align-items-center">
-              <label className="mr-3">임시저장 : </label>
+              <label className="mr-3">업로드 임시저장 : </label>
               <div className="radio abc-radio abc-radio-primary mr-3 d-flex align-items-center">
                 <input type="radio" id="tempBoxStateRadioInput01" onChange={this.updateTempBoxState} checked={ this.props.tempBoxState ? true : false } value={constants.ON}/>
                 <label htmlFor="tempBoxStateRadioInput01">ON</label>
