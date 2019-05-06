@@ -129,8 +129,9 @@ class TimerModal extends React.Component {
       }
     };
     utils.simpleAxios(axios, config).then(response => {
-      console.log( 'response.data : ', response.data );
-      this.props.updateMappingPoints(response.data);
+      this.props.updateMappingPoints({
+        upload: parseInt(response.data.point)
+      });
       this.props.updateTempBoxState(val);
       alert("성공");
     });
