@@ -197,7 +197,7 @@ module.exports = (app, DCQuery, upload) => {
             const filename = req.files.userFile[0].filename;
             const point  = req.body.point;
             const currentTime = utils.getCurrentTimeInSeconds();
-            const tempBoxState = req.body.tempBoxState;
+            const tempBoxState = parseInt(req.body.tempBoxState);
             console.log( 'tempBoxState : ', tempBoxState );
             if ( tempBoxState ) {
               await DCQuery.points.update({
