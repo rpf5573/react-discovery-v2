@@ -2,6 +2,7 @@
   position: fixed;
   right: 20px;
   bottom: 70px;
+  width: 130px;
 
   cursor: pointer;
 }
@@ -12,7 +13,6 @@
 }
 
 .open-media-files-page {
-  position: fixed;
-  right: 20px;
+  @extend .load-files-btn ;
   bottom: 20px;
 }
