@@ -125,7 +125,7 @@ module.exports = (app, DCQuery, upload) => {
       await DCQuery.metas.update('tempBoxState', tempBoxState);
       let json = await DCQuery.metas.get('mappingPoints');
       let mappingPoints = JSON.parse(json);
-      let point = tempBoxState ? 0 : 1000;
+      let point = tempBoxState ? 1000 : 0;
       const newMappingPoints = Object.assign(mappingPoints, {
         upload: point
       });
