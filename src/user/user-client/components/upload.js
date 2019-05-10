@@ -26,7 +26,7 @@ class Upload extends Component {
         body: '',
         onPositive: false,
         onNegative: false
-      }
+      },
     }
 
     this.fileUploadInput = React.createRef();
@@ -38,8 +38,7 @@ class Upload extends Component {
     this.changeVideoSrc = this.changeVideoSrc.bind(this);
     this.intervalCheck = this.intervalCheck.bind(this);
     this.timerCheck = this.timerCheck.bind(this);
-
-    console.log( 'this.props.tempBoxState : ', this.props.tempBoxState );
+    this.isUploadBtnClicked = false;
   }
 
   async fileSelectHandler(e) {
@@ -126,6 +125,10 @@ class Upload extends Component {
   }
 
   async uploadWithCheckes(e) {
+    this.isUploadBtnClicked = true;
+    setTimeout(() => {
+      this.isUploadBtnClicked = false;
+    }, 1000);
     if ( this.props.tempBoxState ) {
       this.timerCheck(() => {
         this.intervalCheck(() => {
