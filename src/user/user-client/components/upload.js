@@ -131,7 +131,7 @@ class Upload extends Component {
     this.isUploadBtnClicked = true;
     setTimeout(() => {
       this.isUploadBtnClicked = false;
-    }, 1000);
+    }, 3000);
     if ( this.props.tempBoxState ) {
       this.timerCheck(() => {
         this.intervalCheck(() => {
