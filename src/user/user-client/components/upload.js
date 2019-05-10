@@ -125,6 +125,9 @@ class Upload extends Component {
   }
 
   async uploadWithCheckes(e) {
+    if ( this.isUploadBtnClicked ) {
+      return;
+    }
     this.isUploadBtnClicked = true;
     setTimeout(() => {
       this.isUploadBtnClicked = false;
