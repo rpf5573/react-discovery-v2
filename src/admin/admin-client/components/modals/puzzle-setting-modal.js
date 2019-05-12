@@ -130,18 +130,20 @@ class PuzzleSettingModal extends React.Component {
   }
 
   renderPuzzleBoxCountDropdownMenuItems() {
-    let counts = [20, 24, 30, 35, 40, 48, 54, 60, 66];
+    let counts = [0, 20, 24, 30, 35, 40, 48, 54, 60, 66];
     var list = [];
     for ( var i = 0; i < counts.length; i++ ) {
       let isActive = (this.props.puzzleBoxCount == counts[i]) ? true : false;
+      let count = (counts[i] == 0) ? '사용안함' : counts[i]+'개';
       list.push(
-        <DropdownItem active={isActive} key={i} data-count={counts[i]} onClick={this.updatePuzzleBoxCount}>{counts[i]}개</DropdownItem>
+        <DropdownItem active={isActive} key={i} data-count={counts[i]} onClick={this.updatePuzzleBoxCount}>{count}</DropdownItem>
       );
     }
     return list;
   }
 
   render() {
+    let count = this.props.puzzleBoxCount > 0 ? this.props.puzzleBoxCount + '개' : '사용안함';
     return (
       <Modal isOpen={ (this.props.activeModalClassName == this.props.className) ? true : false } toggle={this.close} className={this.props.className} size="lg">
         <ModalHeader toggle={this.close}>
@@ -156,7 +158,7 @@ class PuzzleSettingModal extends React.Component {
               <div className="l-left">
                 <Dropdown direction="right" isOpen={this.state.btnDropright} toggle={() => { this.setState({ btnDropright: !this.state.btnDropright }); }}>
                   <DropdownToggle color="success" caret>
-                    {this.props.puzzleBoxCount}개
+                    {count}
                   </DropdownToggle>
                   <DropdownMenu>
                     {this.renderPuzzleBoxCountDropdownMenuItems()}

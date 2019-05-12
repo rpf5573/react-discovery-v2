@@ -1,6 +1,7 @@
 // react & redux
 import React, { Component, Fragment } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 // components
 import BottomNavigation from './bottom-navigation';
@@ -93,7 +94,7 @@ class App extends Component {
             </Switch>
           </div>
           <div className="l-bottom">
-            <BottomNavigation></BottomNavigation>
+            <BottomNavigation puzzleBoxCount={this.props.puzzleBoxCount}></BottomNavigation>
           </div>
           {this.renderAlertModal()}
         </div>
@@ -103,4 +104,11 @@ class App extends Component {
 
 }
 
-export default App;
+function mapStateToProps(state, ownProps) {
+  console.log( 'state : ', state );
+  return {
+    puzzleBoxCount: state.puzzleBoxCount
+  };
+}
+
+export default connect(mapStateToProps, null)(App);
