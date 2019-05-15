@@ -27,6 +27,7 @@ class Upload extends Component {
         onPositive: false,
         onNegative: false
       },
+      uploadDisabled: false
     }
 
     this.fileUploadInput = React.createRef();
@@ -83,6 +84,12 @@ class Upload extends Component {
   }
 
   async uploadFile() {
+    
+    // 버튼 클릭 못하게 한다
+    this.setState({
+      uploadDisabled: true
+    });
+
     // 이제 업로드 시작
     const file = this.fileUploadInput.current.files[0];
     if ( !file ) {
@@ -117,7 +124,7 @@ class Upload extends Component {
       }
       this.props.openAlertModal(false, false, '업로드 성공',() => { 
         this.props.closeAlertModal(); 
-        this.reset(); 
+        this.reset();
       }, false);
     }).catch(e => {
       this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
@@ -125,13 +132,6 @@ class Upload extends Component {
   }
 
   async uploadWithCheckes(e) {
-    if ( this.isUploadBtnClicked ) {
-      return;
-    }
-    this.isUploadBtnClicked = true;
-    setTimeout(() => {
-      this.isUploadBtnClicked = false;
-    }, 10000);
     if ( this.props.tempBoxState ) {
       this.timerCheck(() => {
         this.intervalCheck(() => {
@@ -214,6 +214,10 @@ class Upload extends Component {
     if ( this.player ) {
       this.player.reset();
     }
+
+    this.setState({
+      uploadDisabled: false
+    });
   }
 
   render() {
@@ -270,7 +274,7 @@ class Upload extends Component {
               <DeleteForever></DeleteForever>
               <span>취소</span>
             </button>
-            <button className="ok" onClick={this.uploadWithCheckes}>
+            <button className="ok" disabled={this.state.uploadDisabled} onClick={this.uploadWithCheckes}>
               <Done></Done>
               <span>업로드</span>
             </button>
