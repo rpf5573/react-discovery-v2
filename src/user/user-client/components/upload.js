@@ -83,8 +83,8 @@ class Upload extends Component {
     }
   }
 
-  async uploadFile() {
-    
+  async uploadFile(callback, failCallback) {
+
     // 버튼 클릭 못하게 한다
     this.setState({
       uploadDisabled: true
@@ -119,29 +119,43 @@ class Upload extends Component {
 
     axios(config).then(response => {
       if ( response.data.error ) {
+        failCallback();
         this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
         return;
       }
       this.props.openAlertModal(false, false, '업로드 성공',() => { 
+        callback();
         this.props.closeAlertModal(); 
         this.reset();
       }, false);
     }).catch(e => {
+      failCallback();
       this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     });
   }
 
   async uploadWithCheckes(e) {
+    const disableBtn = () => {
+      this.setState({
+        uploadDisabled: true
+      });
+    }
+    const enableBtn = () => {
+      this.setState({
+        uploadDisabled: false
+      });
+    }
+    disableBtn();
     if ( this.props.tempBoxState ) {
       this.timerCheck(() => {
         this.intervalCheck(() => {
-          this.uploadFile();
-        })
-      });
+          this.uploadFile(enableBtn, enableBtn);
+        }, enableBtn)
+      }, enableBtn);
     } else {
       this.intervalCheck(() => {
-        this.uploadFile();
-      });
+        this.uploadFile(enableBtn, enableBtn);
+      }, enableBtn);
     }
   }
 
@@ -149,7 +163,7 @@ class Upload extends Component {
     this.reset();
   }
 
-  intervalCheck(callback) {
+  intervalCheck(callback, failCallback) {
     let config = {
       method: 'POST',
       url: '/user/upload-interval-check',
@@ -160,16 +174,18 @@ class Upload extends Component {
     // 업로드 한지 3분이 지났는지 안지났는지 체크
     axios(config).then(response => {
       if (response.data.error) {
+        failCallback();
         this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
         return;
       }
       callback();
     }).catch(e => {
+      failCallback();
       this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     })
   }
 
-  timerCheck(callback) {
+  timerCheck(callback, failCallback) {
     let config = {
       method: 'POST',
       url: '/user/timer-check',
@@ -181,11 +197,13 @@ class Upload extends Component {
     axios(config).then(response => {
       if ( response.data.error ) {
         console.log( 'response.data.error', ' is called' );
+        failCallback();
         this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
         return;
       }
       callback();
     }).catch(e => {
+      failCallback();
       this.props.openAlertModal(true, 'error', e, false, this.props.closeAlertModal);
     });
   }
