@@ -12,6 +12,7 @@
     "axios": "^0.18.0",
     "blueimp-load-image": "^2.20.1",
     "classnames": "^2.2.6",
+    "console-remote-client": "^0.5.0",
     "date-utils": "^1.2.21",
     "exif": "^0.6.0",
     "prop-types": "^15.6.2",

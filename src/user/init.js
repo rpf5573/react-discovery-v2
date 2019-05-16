@@ -11,6 +11,7 @@ module.exports = (app, path, multer, DCQuery) => {
       cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
+      console.log('file in server', file);
       let date = utils.getYYYYMMDDHHMMSS();
       let filename = date + path.extname(file.originalname);
       cb(null, filename);

@@ -12,12 +12,14 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import * as loadImage from 'blueimp-load-image';
+import { toServerRe } from 'console-remote-client';
+
+var consolere = toServerRe.connect('console.re','80','rpf5573');
 
 class Upload extends Component {
-
   constructor(props) {
     super(props);
-
+    this._mounted = false;
     this.state = {
       progressVal: null,
       modal: {
@@ -56,11 +58,13 @@ class Upload extends Component {
       }
 
       const type = file.type;
+      const fileName = file.name;
 
       // video인경우에 src를 업데이트 해줘야함
       if ( mediaType == constants.VIDEO ) {
         const src = URL.createObjectURL(file);
         this.props.updateFileInfo({
+          fileName,
           src,
           type,
           mediaType
@@ -71,11 +75,15 @@ class Upload extends Component {
       // image인경우에는 이미지 돌려서 다시 해야함
       else if ( mediaType == constants.IMAGE ) {
         loadImage(file, (canvas) => {
-          this.props.updateFileInfo({
-            src: canvas.toDataURL(),
-            type,
-            mediaType
-          });
+          canvas.toBlob((blob) =>{
+            let src = URL.createObjectURL(blob);
+            this.props.updateFileInfo({
+              fileName,
+              src,
+              type,
+              mediaType
+            });
+          }, undefined, 0.5);
         }, { canvas: true, orientation: true });
       }
     } else {
@@ -91,7 +99,12 @@ class Upload extends Component {
     });
 
     // 이제 업로드 시작
-    const file = this.fileUploadInput.current.files[0];
+    let file = this.fileUploadInput.current.files[0];
+    if ( !file ) {
+      const src = this.props.fileInfo.src
+      file = await fetch(src).then(r => r.blob()).then(blobFile => new File([blobFile], this.props.fileInfo.fileName, { type: this.props.fileInfo.mediaType }))
+    }
+
     if ( !file ) {
       this.props.openAlertModal(true, 'error', '업로드할 파일이 없습니다', false, this.props.closeAlertModal);
       return;
@@ -136,14 +149,19 @@ class Upload extends Component {
 
   async uploadWithCheckes(e) {
     const disableBtn = () => {
-      this.setState({
-        uploadDisabled: true
-      });
+      // mount 되었을 때에만 setState를 쓰자!
+      if (this._mounted) {
+        this.setState({
+          uploadDisabled: true
+        });
+      }
     }
     const enableBtn = () => {
-      this.setState({
-        uploadDisabled: false
-      });
+      if (this._mounted) {
+        this.setState({
+          uploadDisabled: false
+        });
+      }
     }
     disableBtn();
     if ( this.props.tempBoxState ) {
@@ -196,7 +214,6 @@ class Upload extends Component {
     };
     axios(config).then(response => {
       if ( response.data.error ) {
-        console.log( 'response.data.error', ' is called' );
         failCallback();
         this.props.openAlertModal(true, 'error', response.data.error, false, this.props.closeAlertModal);
         return;
@@ -218,24 +235,18 @@ class Upload extends Component {
     }
 
     if ( this.props.fileInfo.src ) {
+      // 메모리 누수를 방지하기 위해서 이거를 해주는거다
       URL.revokeObjectURL(this.props.fileInfo.src);
     }
 
     this.props.updateFileInfo({
+      fileName: null,
       src: null,
       type: null,
       mediaType: null
     });
 
     this.props.updateProgressVal(0);
-
-    if ( this.player ) {
-      this.player.reset();
-    }
-
-    this.setState({
-      uploadDisabled: false
-    });
   }
 
   render() {
@@ -263,7 +274,6 @@ class Upload extends Component {
           </div>
           <div className="l-bottom">
             여기를 눌러 촬영 및 업로드 해주세요
-
             <div className="notice">
               <h4>주의</h4>
               <ol>
@@ -304,12 +314,11 @@ class Upload extends Component {
   }
 
   componentWillUnmount() {
-
+    this._mounted = false
     // 만약에 업로드 중이 아니라면, reset시켜버리자
     if ( ! this.props.progressVal ) {
-      this.reset();
+      // this.reset();
     }
-
     // player 메모리에서 떼어내야되 왜냐면, 어차피 ComponentDidMount에서 다시 회복될꺼니까 !!
     if (this.player) {
       this.player.dispose();
@@ -317,6 +326,7 @@ class Upload extends Component {
   }
 
   componentDidMount() {
+    this._mounted = true;
     const config = {
       controls: true,
       controlBar: {
