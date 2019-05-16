@@ -180,6 +180,7 @@ class Upload extends Component {
   async cancelPreview(e) {
     this.props.openAlertModal(true, '주의', '정말 삭제하시겠습니까?', () => {
       this.reset();
+      this.props.closeAlertModal();
     }, () => {
       this.props.closeAlertModal();
     });
