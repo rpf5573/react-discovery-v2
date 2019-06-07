@@ -45,6 +45,7 @@ class AdminPasswordModal extends React.Component {
       }
     };
     utils.simpleAxios(axios, config).then((response) => {
+      this.props.updateAdminPasswords(config.data.adminPasswords);
       alert( '성공' );
       if ( this.adminInput.current.value ) {
         this.adminInput.current.placeholder = this.adminInput.current.value;
