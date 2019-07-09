@@ -37,10 +37,11 @@ class PointInput extends Component {
     }
   }
   handleOnInputChange(e) {
-    this.props.onInputChange(this.props.team, e.currentTarget.value);
-    this.setState({
-      point: parseInt(e.currentTarget.value)
-    });
+    let point = parseInt(e.currentTarget.value);
+    if ( ! isNaN(point) ) {
+      this.props.onInputChange(this.props.team, point);
+      this.setState({ point });
+    }
   }
   render() {
     let inputCN = cn({
