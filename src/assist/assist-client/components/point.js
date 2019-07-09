@@ -56,11 +56,10 @@ class PointInput extends Component {
             {this.props.team}
           </InputGroupText>
         </InputGroupAddon>
-        <input type="number" value={this.state.point} className={inputCN} placeholder={this.props.placeholder} onChange={this.handleOnInputChange}/>
+        <input value={this.state.point} className={inputCN} placeholder={this.props.placeholder} onChange={this.handleOnInputChange}/>
       </InputGroup>
     );
   }
-
   componentWillReceiveProps(nextProps) {
     // parent에서 setState를 통해 다시 그릴때 여기 state.point 도 초기화 해준다
     // 그래야 placeholder만 보이고 value는 초기화됨
