@@ -39,7 +39,7 @@ class PointInput extends Component {
   handleOnInputChange(e) {
     this.props.onInputChange(this.props.team, e.currentTarget.value);
     this.setState({
-      point: e.currentTarget.value
+      point: parseInt(e.currentTarget.value)
     });
   }
   render() {
