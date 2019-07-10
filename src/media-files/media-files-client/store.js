@@ -6,7 +6,6 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 let middleWare = [thunk];
 
 export default function configureStore(initialSettings) {
-  
   var initialState = initialSettings.map((obj) => {
     return (JSON.parse(obj.stackFiles));
   });

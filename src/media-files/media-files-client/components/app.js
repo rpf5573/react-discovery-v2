@@ -25,9 +25,10 @@ class FileItem extends Component {
     const curtainCN = cn({
       curtain: true,
       'd-none': this.props.downloaded
-    })
+    });
     return (
       <Card body className="file-item">
+        <div className="team">{this.props.team}</div>
         <div className={curtainCN} onClick={this.onClickCurtain}></div>
         { this.props.type == null ? <div className="unsupport-file-type"></div> : '' }
         { this.props.type == constants.IMAGE ? <div className="image-container"> <img src={this.props.src}></img> </div> : '' }

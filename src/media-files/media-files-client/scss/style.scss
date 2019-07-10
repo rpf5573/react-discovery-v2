@@ -28,3 +28,17 @@ video {
 .file-item {
   margin-bottom: 20px;
 }
+.team {
+  position: absolute;
+  z-index: 9999;
+  background: white;
+  left: 0;
+  top: 0;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 600;
+}
