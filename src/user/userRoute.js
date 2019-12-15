@@ -73,7 +73,6 @@ module.exports = (app, DCQuery, upload) => {
       // 퍼즐 먼저 업데이트 하즈아 !
       await DCQuery.puzzles.update( team, boxNumber, type );
 
-      // 
       result = await DCQuery.puzzles.get( team );
       let ourTeamBoxNumbers = JSON.parse(result[0].boxNumbers);
       console.log( 'ourTeamBoxNumbers : ', ourTeamBoxNumbers );
